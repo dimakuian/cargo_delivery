@@ -8,13 +8,14 @@ import java.util.List;
 import java.util.Optional;
 
 public class RoleDao extends AbstractDao<Role, Integer> {
-    public static final String INSERT = "INSERT INTO role (id, name) VALUES (DEFAULT,?)";
-    public static final String UPDATE = "UPDATE role SET name = ? WHERE id = ?";
-    public static final String SELECT_BY_ID = "SELECT id,name FROM role WHERE id = ?";
-    public static final String SELECT_BY_NAME = "SELECT id,name FROM role WHERE name = ?";
-    public static final String EXIST = "SELECT id FROM role WHERE id=?";
-    public static final String SELECT_ALL = "SELECT id,name FROM role";
-    public static final String DELETE = "DELETE FROM role WHERE id =?";
+
+    private static final String INSERT = "INSERT INTO role (id, name) VALUES (DEFAULT,?)";
+    private static final String UPDATE = "UPDATE role SET name = ? WHERE id = ?";
+    private static final String SELECT_BY_ID = "SELECT id,name FROM role WHERE id = ?";
+    private static final String SELECT_BY_NAME = "SELECT id,name FROM role WHERE name = ?";
+    private static final String EXIST = "SELECT id FROM role WHERE id=?";
+    private static final String SELECT_ALL = "SELECT id,name FROM role";
+    private static final String DELETE = "DELETE FROM role WHERE id =?";
 
     public RoleDao(Connection connection) {
         super(connection);

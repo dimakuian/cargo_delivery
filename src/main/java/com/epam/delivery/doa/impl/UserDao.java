@@ -1,6 +1,5 @@
 package com.epam.delivery.doa.impl;
 
-import com.epam.delivery.doa.SimpleConnection;
 import com.epam.delivery.entities.Role;
 import com.epam.delivery.entities.User;
 
@@ -11,13 +10,13 @@ import java.util.Optional;
 
 public class UserDao extends AbstractDao<User, Integer> {
 
-    public static final String INSERT = "INSERT INTO user (id,login,password,role_id) VALUES (DEFAULT,?,?,?)";
-    public static final String UPDATE = "UPDATE user SET login = ?, password = ?, role_id = ? WHERE id = ?";
-    public static final String SELECT_BY_ID = "SELECT id, login, password, role_id FROM user WHERE id = ?";
-    //    public static final String SELECT_BY_NAME = "SELECT id,name FROM role WHERE name = ?";
-    public static final String EXIST = "SELECT id FROM user WHERE id=?";
-    public static final String SELECT_ALL = "SELECT id, login, password, role_id FROM user";
-//    public static final String DELETE = "DELETE FROM role WHERE id =?";
+    private static final String INSERT = "INSERT INTO user (id,login,password,role_id) VALUES (DEFAULT,?,?,?)";
+    private static final String UPDATE = "UPDATE user SET login = ?, password = ?, role_id = ? WHERE id = ?";
+    private static final String SELECT_BY_ID = "SELECT id, login, password, role_id FROM user WHERE id = ?";
+    private static final String SELECT_BY_LOGIN = "SELECT id, login, password, role_id FROM user WHERE login = ?";
+    private static final String EXIST = "SELECT id FROM user WHERE id=?";
+    private static final String SELECT_ALL = "SELECT id, login, password, role_id FROM user";
+    private static final String DELETE = "DELETE FROM user WHERE id =?";
 
     protected UserDao(Connection connection) {
         super(connection);
@@ -56,7 +55,7 @@ public class UserDao extends AbstractDao<User, Integer> {
             stat.setInt(4, entity.getId());
             if (stat.executeUpdate() > 0) result = true;
         } catch (SQLException exception) {
-            System.out.println("SQLException while update user " + exception.getMessage());
+            System.err.println("SQLException while update user " + exception.getMessage());
             exception.printStackTrace();
         }
         return result;
@@ -127,24 +126,38 @@ public class UserDao extends AbstractDao<User, Integer> {
     }
 
     @Override
-    boolean deleteById(Integer integer) {
-        return false;
+    boolean deleteById(Integer id) {
+        boolean result = false;
+        try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
+            stat.setInt(1, id);
+            if (stat.executeUpdate() > 0) result = true;
+        } catch (SQLException exception) {
+            System.err.println("SQLException while delete all users ==> " + exception.getMessage());
+            exception.printStackTrace();
+        }
+        return result;
     }
 
-    public static void main(String[] args) {
-        SimpleConnection.createDataBase();
-        UserDao userDao = new UserDao(SimpleConnection.getConnection());
-        RoleDao roleDao = new RoleDao(SimpleConnection.getConnection());
-        Role role = roleDao.getById(1).orElse(null);
-        User dima = User.createUser("dimakuian", "pass123", role);
-        User fff = User.createUser("fffff", "pass123", role);
-        System.out.println(userDao.insert(fff));
-        System.out.println(userDao.insert(dima));
-//        System.out.println(user);
-//        System.out.println(dima);
-//        System.out.println(userDao.existsById(1));
-//        System.out.println(userDao.existsById(2));
-        ArrayList<User> users = (ArrayList<User>) userDao.findAll();
-        System.out.println(users);
+    Optional<User> getByLogin(String login) {
+        User user = null;
+        try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_LOGIN)) {
+            stat.setString(1, login);
+            try (ResultSet rs = stat.executeQuery()) {
+                if (rs.next()) {
+                    int id = rs.getInt("id");
+                    String password = rs.getString("password");
+                    int roleID = rs.getInt("role_id");
+                    RoleDao roleDao = new RoleDao(super.connection);
+                    Role role = roleDao.getById(roleID).orElseThrow(() ->
+                            new SQLException("Can't find Role for User while User getById"));
+                    user = User.createUser(login, password, role);
+                    user.setId(id);
+                }
+            }
+        } catch (SQLException exception) {
+            System.err.println("SQLException while select user by login ==> " + exception.getMessage());
+            exception.printStackTrace();
+        }
+        return Optional.ofNullable(user);
     }
 }

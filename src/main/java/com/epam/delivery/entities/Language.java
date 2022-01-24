@@ -36,7 +36,7 @@ public class Language implements Serializable {
         this.fullName = fullName;
     }
 
-    public Language createLanguage(String shortName, String fullName) {
+    public static Language createLanguage(String shortName, String fullName) {
         return new Language(shortName, fullName);
     }
 

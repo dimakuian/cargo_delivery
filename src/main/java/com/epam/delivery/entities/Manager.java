@@ -46,7 +46,7 @@ public class Manager implements Serializable {
         this.surname = surname;
     }
 
-    public Manager createManager(User user, String name, String surname) {
+    public static Manager createManager(User user, String name, String surname) {
         return new Manager(user, name, surname);
     }
 

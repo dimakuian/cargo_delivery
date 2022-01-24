@@ -74,7 +74,7 @@ public class Person implements Serializable {
         this.phone = phone;
     }
 
-    public Person createPerson(User user, String name, String surname) {
+    public static Person createPerson(User user, String name, String surname) {
         return new Person(user, name, surname);
     }
 

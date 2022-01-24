@@ -7,7 +7,7 @@ DROP TABLE IF EXISTS `language`;
 
 CREATE TABLE IF NOT EXISTS `language`(
     `id` INT NOT NULL AUTO_INCREMENT,
-    `short_name` VARCHAR(2) NOT NULL,
+    `short_name` VARCHAR(2) UNIQUE NOT NULL,
     `full_name` VARCHAR(45),
     PRIMARY KEY (`id`)
     );
@@ -24,7 +24,7 @@ DROP TABLE IF EXISTS `user`;
 
 CREATE TABLE IF NOT EXISTS `user` (
     `id` INT NOT NULL AUTO_INCREMENT,
-    `login` VARCHAR (45) NOT NULL,
+    `login` VARCHAR (45) UNIQUE NOT NULL,
     `password` VARCHAR (45) NOT NULL,
     `role_id` INT NOT NULL,
     PRIMARY KEY (`id`),
@@ -50,9 +50,9 @@ CREATE TABLE IF NOT EXISTS `person` (
     `user_id` INT NOT NULL,
     `name` VARCHAR (45) NOT NULL,
     `surname` VARCHAR (45) NOT NULL,
-    `patronymic` VARCHAR (45) NOT NULL,
-    `email` VARCHAR(45) NOT NULL,
-    `phone` VARCHAR (45) NOT NULL,
+    `patronymic` VARCHAR (45) DEFAULT NULL,
+    `email` VARCHAR(45) DEFAULT NULL,
+    `phone` VARCHAR (45) DEFAULT NULL,
     CONSTRAINT `fk_person_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
     PRIMARY KEY (`id`)
     );
@@ -109,6 +109,10 @@ INSERT INTO role (id, name) VALUES (DEFAULT,'admin');
 INSERT INTO role (id, name) VALUES (DEFAULT,'person');
 
 
+INSERT INTO user (id, login, password, role_id) VALUES (DEFAULT,'dimakuian','pass123',2),
+                                                       (DEFAULT,'john99','pass321',1);
+
+INSERT INTO manager (id, user_id, name, surname) VALUES (DEFAULT, 2, 'John', 'Jonson');
 
 
 
