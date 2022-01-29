@@ -18,12 +18,12 @@ public class UserDao extends AbstractDao<User, Integer> {
     private static final String SELECT_ALL = "SELECT id, login, password, role_id FROM user";
     private static final String DELETE = "DELETE FROM user WHERE id =?";
 
-    protected UserDao(Connection connection) {
+    public UserDao(Connection connection) {
         super(connection);
     }
 
     @Override
-    boolean insert(User entity) {
+    public boolean insert(User entity) {
         boolean result = false;
         try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             stat.setString(1, entity.getLogin());
@@ -46,7 +46,7 @@ public class UserDao extends AbstractDao<User, Integer> {
     }
 
     @Override
-    boolean update(User entity) {
+    public boolean update(User entity) {
         boolean result = false;
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             stat.setString(1, entity.getLogin());
@@ -62,7 +62,7 @@ public class UserDao extends AbstractDao<User, Integer> {
     }
 
     @Override
-    Optional<User> getById(Integer id) {
+    public Optional<User> getById(Integer id) {
         User user = null;
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
             stat.setInt(1, id);
@@ -101,7 +101,7 @@ public class UserDao extends AbstractDao<User, Integer> {
     }
 
     @Override
-    Iterable<User> findAll() {
+    public Iterable<User> findAll() {
         List<User> users = new ArrayList<>();
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
@@ -126,7 +126,7 @@ public class UserDao extends AbstractDao<User, Integer> {
     }
 
     @Override
-    boolean deleteById(Integer id) {
+    public boolean deleteById(Integer id) {
         boolean result = false;
         try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
             stat.setInt(1, id);
@@ -138,7 +138,7 @@ public class UserDao extends AbstractDao<User, Integer> {
         return result;
     }
 
-    Optional<User> getByLogin(String login) {
+    public Optional<User> getByLogin(String login) {
         User user = null;
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_LOGIN)) {
             stat.setString(1, login);
