@@ -4,11 +4,12 @@ import java.io.Serializable;
 
 public class ShippingStatus implements Serializable {
     private int id;
-    private Language language;
-    private String name;
+    private String nameEN;
+    private String nameUK;
 
-    private ShippingStatus(String name) {
-        this.name = name;
+    private ShippingStatus(String nameEN, String nameUK) {
+        this.nameEN = nameEN;
+        this.nameUK = nameUK;
     }
 
     public int getId() {
@@ -19,32 +20,32 @@ public class ShippingStatus implements Serializable {
         this.id = id;
     }
 
-    public Language getLanguage() {
-        return language;
+    public String getNameEN() {
+        return nameEN;
     }
 
-    public void setLanguage(Language language) {
-        this.language = language;
+    public void setNameEN(String nameEN) {
+        this.nameEN = nameEN;
     }
 
-    public String getName() {
-        return name;
+    public String getNameUK() {
+        return nameUK;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setNameUK(String nameUK) {
+        this.nameUK = nameUK;
     }
 
-    public ShippingStatus createShippingStatus(String name) {
-        return new ShippingStatus(name);
+    public static ShippingStatus createShippingStatus(String nameEN, String nameUK) {
+        return new ShippingStatus(nameEN, nameUK);
     }
 
     @Override
     public String toString() {
         return "ShippingStatus{" +
                 "id=" + id +
-                ", language=" + language +
-                ", name='" + name + '\'' +
+                ", nameEN='" + nameEN + '\'' +
+                ", nameUK='" + nameUK + '\'' +
                 '}';
     }
 }

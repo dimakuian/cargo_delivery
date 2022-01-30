@@ -1,6 +1,5 @@
 package com.epam.delivery.doa.impl;
 
-import com.epam.delivery.entities.Role;
 import com.epam.delivery.entities.User;
 
 import java.sql.*;
@@ -28,7 +27,7 @@ public class UserDao extends AbstractDao<User, Integer> {
         try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             stat.setString(1, entity.getLogin());
             stat.setString(2, entity.getPassword());
-            stat.setInt(3, entity.getRole().getId());
+            stat.setInt(3, entity.getRoleID());
             if (stat.executeUpdate() > 0) {
                 try (ResultSet rs = stat.getGeneratedKeys()) {
                     if (rs.next()) {
@@ -51,7 +50,7 @@ public class UserDao extends AbstractDao<User, Integer> {
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             stat.setString(1, entity.getLogin());
             stat.setString(2, entity.getPassword());
-            stat.setInt(3, entity.getRole().getId());
+            stat.setInt(3, entity.getRoleID());
             stat.setInt(4, entity.getId());
             if (stat.executeUpdate() > 0) result = true;
         } catch (SQLException exception) {
@@ -61,8 +60,7 @@ public class UserDao extends AbstractDao<User, Integer> {
         return result;
     }
 
-    @Override
-    public Optional<User> getById(Integer id) {
+    public Optional<User> findById(Integer id) {
         User user = null;
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
             stat.setInt(1, id);
@@ -71,10 +69,7 @@ public class UserDao extends AbstractDao<User, Integer> {
                     String login = rs.getString("login");
                     String password = rs.getString("password");
                     int roleID = rs.getInt("role_id");
-                    RoleDao roleDao = new RoleDao(super.connection);
-                    Role role = roleDao.getById(roleID).orElseThrow(() ->
-                            new SQLException("Can't find Role for User while User getById"));
-                    user = User.createUser(login, password, role);
+                    user = User.createUser(login, password, roleID);
                     user.setId(id);
                 }
             }
@@ -86,7 +81,7 @@ public class UserDao extends AbstractDao<User, Integer> {
     }
 
     @Override
-    boolean existsById(Integer id) {
+    public boolean existsById(Integer id) {
         boolean result = false;
         try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
             stat.setInt(1, id);
@@ -106,14 +101,11 @@ public class UserDao extends AbstractDao<User, Integer> {
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
                 while (rs.next()) {
-                    RoleDao roleDao = new RoleDao(super.connection); //edit connection
                     int userID = rs.getInt("id");
                     String login = rs.getString("login");
                     String password = rs.getString("password");
                     int roleID = rs.getInt("role_id");
-                    Role role = roleDao.getById(roleID).orElseThrow(() ->
-                            new SQLException("Can't find Role for User while User getById"));
-                    User user = User.createUser(login, password, role);
+                    User user = User.createUser(login, password, roleID);
                     user.setId(userID);
                     users.add(user);
                 }
@@ -147,10 +139,7 @@ public class UserDao extends AbstractDao<User, Integer> {
                     int id = rs.getInt("id");
                     String password = rs.getString("password");
                     int roleID = rs.getInt("role_id");
-                    RoleDao roleDao = new RoleDao(super.connection);
-                    Role role = roleDao.getById(roleID).orElseThrow(() ->
-                            new SQLException("Can't find Role for User while User getById"));
-                    user = User.createUser(login, password, role);
+                    user = User.createUser(login, password, roleID);
                     user.setId(id);
                 }
             }

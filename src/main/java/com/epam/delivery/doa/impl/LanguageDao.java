@@ -21,14 +21,14 @@ public class LanguageDao extends AbstractDao<Language, Integer> {
 
     private static final String SELECT_ALL = "SELECT id, short_name, full_name FROM language";
 
-    public static final String DELETE = "DELETE FROM language WHERE id=?";
+    private static final String DELETE = "DELETE FROM language WHERE id=?";
 
-    protected LanguageDao(Connection connection) {
+    public LanguageDao(Connection connection) {
         super(connection);
     }
 
     @Override
-    boolean insert(Language entity) {
+    public boolean insert(Language entity) {
         try (PreparedStatement stat = connection.prepareStatement(INSERT, RETURN_GENERATED_KEYS)) {
             stat.setString(1, entity.getShortName());
             stat.setString(2, entity.getFullName());
@@ -49,7 +49,7 @@ public class LanguageDao extends AbstractDao<Language, Integer> {
     }
 
     @Override
-    boolean update(Language entity) {
+    public boolean update(Language entity) {
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             stat.setString(1, entity.getShortName());
             stat.setString(2, entity.getFullName());
@@ -62,8 +62,7 @@ public class LanguageDao extends AbstractDao<Language, Integer> {
         return false;
     }
 
-    @Override
-    Optional<Language> getById(Integer id) {
+    public Optional<Language> findById(Integer id) {
         Language language = null;
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
             stat.setInt(1, id);
@@ -83,7 +82,7 @@ public class LanguageDao extends AbstractDao<Language, Integer> {
     }
 
     @Override
-    boolean existsById(Integer id) {
+    public boolean existsById(Integer id) {
         try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
             stat.setInt(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -97,7 +96,7 @@ public class LanguageDao extends AbstractDao<Language, Integer> {
     }
 
     @Override
-    Iterable<Language> findAll() {
+    public Iterable<Language> findAll() {
         List<Language> languageList = new ArrayList<>();
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
@@ -118,7 +117,7 @@ public class LanguageDao extends AbstractDao<Language, Integer> {
     }
 
     @Override
-    boolean deleteById(Integer id) {
+   public boolean deleteById(Integer id) {
         try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
             stat.setInt(1, id);
             if (stat.executeUpdate() > 0) return true;

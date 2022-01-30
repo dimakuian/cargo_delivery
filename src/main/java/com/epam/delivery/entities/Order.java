@@ -8,7 +8,7 @@ public class Order implements Serializable {
     private String shippingAddress;
     private String deliveryAddress;
     private Timestamp creationTime;
-    private Person person;
+    private Client client;
     private String consignee;
     private String description;
     private double distance;
@@ -57,12 +57,12 @@ public class Order implements Serializable {
         this.creationTime = creationTime;
     }
 
-    public Person getPerson() {
-        return person;
+    public Client getPerson() {
+        return client;
     }
 
-    public void setPerson(Person person) {
-        this.person = person;
+    public void setPerson(Client client) {
+        this.client = client;
     }
 
     public String getConsignee() {
@@ -172,7 +172,7 @@ public class Order implements Serializable {
                 ", shippingAddress='" + shippingAddress + '\'' +
                 ", deliveryAddress='" + deliveryAddress + '\'' +
                 ", creationTime=" + creationTime +
-                ", person=" + person +
+                ", person=" + client +
                 ", consignee='" + consignee + '\'' +
                 ", description='" + description + '\'' +
                 ", distance=" + distance +
@@ -200,8 +200,8 @@ public class Order implements Serializable {
             return this;
         }
 
-        public Builder withPerson(Person val) {
-            order.person = val;
+        public Builder withPerson(Client val) {
+            order.client = val;
             return this;
         }
 

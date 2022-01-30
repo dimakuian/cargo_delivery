@@ -1,9 +1,8 @@
 package com.epam.delivery.entities;
 
 import java.io.Serializable;
-import java.util.Objects;
 
-public class Person implements Serializable {
+public class Client implements Serializable {
     private int id;
     private User user;
     private String name;
@@ -12,7 +11,7 @@ public class Person implements Serializable {
     private String email;
     private String phone;
 
-    private Person(User user, String name, String surname) {
+    private Client(User user, String name, String surname) {
         this.user = user;
         this.name = name;
         this.surname = surname;
@@ -74,8 +73,8 @@ public class Person implements Serializable {
         this.phone = phone;
     }
 
-    public static Person createPerson(User user, String name, String surname) {
-        return new Person(user, name, surname);
+    public static Client createPerson(User user, String name, String surname) {
+        return new Client(user, name, surname);
     }
 
     @Override

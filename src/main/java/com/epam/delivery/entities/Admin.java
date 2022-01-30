@@ -2,13 +2,13 @@ package com.epam.delivery.entities;
 
 import java.io.Serializable;
 
-public class Manager implements Serializable {
+public class Admin implements Serializable {
     private int id;
     private User user;
     private String name;
     private String surname;
 
-    private Manager(User user, String name, String surname) {
+    private Admin(User user, String name, String surname) {
         this.user = user;
         this.name = name;
         this.surname = surname;
@@ -46,8 +46,8 @@ public class Manager implements Serializable {
         this.surname = surname;
     }
 
-    public static Manager createManager(User user, String name, String surname) {
-        return new Manager(user, name, surname);
+    public static Admin createManager(User user, String name, String surname) {
+        return new Admin(user, name, surname);
     }
 
     @Override

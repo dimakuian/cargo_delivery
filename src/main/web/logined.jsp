@@ -9,11 +9,9 @@
 <html>
 <head>
     <title>Title</title>
-  <p>
-
-    ${res}
-
-  </p>
+    <p>Hello ${user}</p>
+    <p>your id is: ${id} <br></p>
+    <p>Your role is: ${role}</p>
 </head>
 <body>
 

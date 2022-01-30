@@ -8,21 +8,21 @@ public abstract class AbstractDao<T, ID> {
 
     protected Connection connection;
 
-    protected AbstractDao(Connection connection) {
+    public AbstractDao(Connection connection) {
         this.connection = connection;
     }
 
-    abstract boolean insert(T entity);
+    public abstract boolean insert(T entity);
 
-    abstract boolean update(T entity);
+    public abstract boolean update(T entity);
 
-    abstract Optional<T> getById(ID id);
+//    public abstract Optional<T> findById(ID id);
 
-    abstract boolean existsById(ID id);
+    public abstract boolean existsById(ID id);
 
-    abstract Iterable<T> findAll();
+    public abstract Iterable<T> findAll();
 
-    abstract boolean deleteById(ID id);
+    public abstract boolean deleteById(ID id);
 
     protected void closeConnection() {
         if (connection != null) {

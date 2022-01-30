@@ -1,7 +1,7 @@
 package com.epam.delivery.doa.impl;
 
 
-import com.epam.delivery.entities.Manager;
+import com.epam.delivery.entities.Admin;
 import com.epam.delivery.entities.User;
 
 import java.sql.*;
@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class ManagerDao extends AbstractDao<Manager, Integer> {
+public class AdminDao extends AbstractDao<Admin, Integer> {
 
     private static final String INSERT = "INSERT INTO manager (id, user_id, name, surname) VALUES (DEFAULT,?,?,?)";
     private static final String UPDATE = "UPDATE manager SET user_id = ?, name = ?, surname = ? WHERE id = ?";
@@ -17,14 +17,14 @@ public class ManagerDao extends AbstractDao<Manager, Integer> {
     private static final String SELECT_BY_USER_ID = "SELECT id, user_id, name, surname FROM manager WHERE user_id = ?";
     private static final String EXIST = "SELECT id FROM manager WHERE id=?";
     private static final String SELECT_ALL = "SELECT id, user_id, name, surname FROM manager";
-    public static final String DELETE = "DELETE FROM manager WHERE id=?";
+    private static final String DELETE = "DELETE FROM manager WHERE id=?";
 
-    protected ManagerDao(Connection connection) {
+    protected AdminDao(Connection connection) {
         super(connection);
     }
 
     @Override
-    public boolean insert(Manager entity) {
+    public boolean insert(Admin entity) {
         boolean result = false;
         try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             stat.setInt(1, entity.getUser().getId());
@@ -47,7 +47,7 @@ public class ManagerDao extends AbstractDao<Manager, Integer> {
     }
 
     @Override
-    public boolean update(Manager entity) {
+    public boolean update(Admin entity) {
         boolean result = false;
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             stat.setInt(1, entity.getUser().getId());
@@ -62,27 +62,27 @@ public class ManagerDao extends AbstractDao<Manager, Integer> {
         return result;
     }
 
-    @Override
-    public Optional<Manager> getById(Integer id) {
-        Manager manager = null;
+
+    public Optional<Admin> findById(Integer id) {
+        Admin admin = null;
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
             stat.setInt(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
                     int userID = rs.getInt("user_id");
                     UserDao userDao = new UserDao(super.connection);
-                    User user = userDao.getById(userID).orElseThrow(() ->
+                    User user = userDao.findById(userID).orElseThrow(() ->
                             new SQLException("Can't find User for Manager while Manager getById"));
                     String name = rs.getString("name");
                     String surname = rs.getString("surname");
-                    manager = Manager.createManager(user, name, surname);
+                    admin = Admin.createManager(user, name, surname);
                 }
             }
         } catch (SQLException exception) {
             System.err.println("SQLException while getById manager " + exception.getMessage());
             exception.printStackTrace();
         }
-        return Optional.ofNullable(manager);
+        return Optional.ofNullable(admin);
     }
 
     @Override
@@ -100,28 +100,28 @@ public class ManagerDao extends AbstractDao<Manager, Integer> {
     }
 
     @Override
-    public Iterable<Manager> findAll() {
-        List<Manager> managers = new ArrayList<>();
+    public Iterable<Admin> findAll() {
+        List<Admin> admins = new ArrayList<>();
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
                 while (rs.next()) {
                     int managerID = rs.getInt("id");
                     int userID = rs.getInt("user_id");
                     UserDao userDao = new UserDao(super.connection);
-                    User user = userDao.getById(userID).orElseThrow(() ->
+                    User user = userDao.findById(userID).orElseThrow(() ->
                             new SQLException("Can't find User for Manager while Manager findAll"));
                     String name = rs.getString("name");
                     String surname = rs.getString("surname");
-                    Manager manager = Manager.createManager(user, name, surname);
-                    manager.setId(managerID);
-                    managers.add(manager);
+                    Admin admin = Admin.createManager(user, name, surname);
+                    admin.setId(managerID);
+                    admins.add(admin);
                 }
             }
         } catch (SQLException exception) {
             System.err.println("SQLException while findAll manager " + exception.getMessage());
             exception.printStackTrace();
         }
-        return managers;
+        return admins;
     }
 
     @Override
@@ -137,26 +137,26 @@ public class ManagerDao extends AbstractDao<Manager, Integer> {
         return result;
     }
 
-    public Optional<Manager> getByUserId(Integer userID) {
-        Manager manager = null;
+    public Optional<Admin> getByUserId(Integer userID) {
+        Admin admin = null;
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_USER_ID)) {
             stat.setInt(1, userID);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
                     int id = rs.getInt("id");
                     UserDao userDao = new UserDao(super.connection);
-                    User user = userDao.getById(userID).orElseThrow(() ->
+                    User user = userDao.findById(userID).orElseThrow(() ->
                             new SQLException("Can't find User for Manager while Manager getByUserId"));
                     String name = rs.getString("name");
                     String surname = rs.getString("surname");
-                    manager = Manager.createManager(user, name, surname);
-                    manager.setId(id);
+                    admin = Admin.createManager(user, name, surname);
+                    admin.setId(id);
                 }
             }
         } catch (SQLException exception) {
             System.err.println("SQLException while getById manager " + exception.getMessage());
             exception.printStackTrace();
         }
-        return Optional.ofNullable(manager);
+        return Optional.ofNullable(admin);
     }
 }

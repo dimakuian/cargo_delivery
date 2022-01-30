@@ -2,10 +2,14 @@
 <project version="4">
   <component name="SqlDialectMappings">
     <file url="file://$PROJECT_DIR$/SQL/db-create.sql" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/AdminDao.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/ClientDao.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/LanguageDao.java" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/ManagerDao.java" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/PersonDao.java" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/RoleDao.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/LocalityDao.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/LocalityDescriptionDao.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/PaymentStatusDao.java" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/ShippingStatusDao.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/UserDao.java" dialect="GenericSQL" />
+    <file url="PROJECT" dialect="MySQL" />
   </component>
 </project>

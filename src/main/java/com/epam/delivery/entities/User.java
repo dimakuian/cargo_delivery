@@ -6,16 +6,16 @@ public class User implements Serializable {
     private int id;
     private final String login;
     private String password;
-    private Role role;
+    private int roleID;
 
     private User(String login) {
         this.login = login;
     }
 
-    private User(String login, String password, Role role) {
+    private User(String login, String password, int roleID) {
         this.login = login;
         this.password = password;
-        this.role = role;
+        this.roleID = roleID;
     }
 
     public int getId() {
@@ -38,25 +38,17 @@ public class User implements Serializable {
         this.password = password;
     }
 
-    public Role getRole() {
-        return role;
+    public int getRoleID() {
+        return roleID;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setRoleID(int roleID) {
+        this.roleID = roleID;
     }
 
-    public static User createUser(String login, String password, Role role) {
-        return new User(login,password,role);
+    public static User createUser(String login, String password, int roleID) {
+        return new User(login,password, roleID);
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
-                ", password='" + password + '\'' +
-                ", role=" + role +
-                '}';
-    }
+
 }

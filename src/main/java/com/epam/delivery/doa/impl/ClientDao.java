@@ -1,6 +1,6 @@
 package com.epam.delivery.doa.impl;
 
-import com.epam.delivery.entities.Person;
+import com.epam.delivery.entities.Client;
 import com.epam.delivery.entities.User;
 
 import java.sql.*;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class PersonDao extends AbstractDao<Person, Integer> {
+public class ClientDao extends AbstractDao<Client, Integer> {
 
     private static final String INSERT = "INSERT INTO person (id, user_id, name, surname, patronymic, email, phone)\n" +
             "VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)";
@@ -29,14 +29,14 @@ public class PersonDao extends AbstractDao<Person, Integer> {
     private static final String SELECT_ALL = "SELECT id, user_id, name, surname, patronymic, email, phone "
             + "FROM person";
 
-    public static final String DELETE = "DELETE FROM person WHERE id=?";
+    private static final String DELETE = "DELETE FROM person WHERE id=?";
 
-    protected PersonDao(Connection connection) {
+    public ClientDao(Connection connection) {
         super(connection);
     }
 
     @Override
-    boolean insert(Person entity) {
+    public boolean insert(Client entity) {
         try (PreparedStatement stat = connection.prepareStatement(INSERT, RETURN_GENERATED_KEYS)) {
             stat.setInt(1, entity.getUser().getId());
             stat.setString(2, entity.getName());
@@ -61,7 +61,7 @@ public class PersonDao extends AbstractDao<Person, Integer> {
     }
 
     @Override
-    boolean update(Person entity) {
+    public boolean update(Client entity) {
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             stat.setInt(1, entity.getUser().getId());
             stat.setString(2, entity.getName());
@@ -78,9 +78,9 @@ public class PersonDao extends AbstractDao<Person, Integer> {
         return false;
     }
 
-    @Override
-    Optional<Person> getById(Integer id) {
-        Person person = null;
+
+    public Optional<Client> findById(Integer id) {
+        Client client = null;
         UserDao userDao = new UserDao(super.connection);
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
             stat.setInt(1, id);
@@ -88,29 +88,29 @@ public class PersonDao extends AbstractDao<Person, Integer> {
                 if (rs.next()) {
                     int personID = rs.getInt("id");
                     int userID = rs.getInt("user_id");
-                    User user = userDao.getById(userID).orElseThrow(() ->
+                    User user = userDao.findById(userID).orElseThrow(() ->
                             new SQLException("Can't find User for Person while Person findAll"));
                     String name = rs.getString("name");
                     String surname = rs.getString("surname");
                     String patronymic = rs.getString("patronymic");
                     String email = rs.getString("email");
                     String phone = rs.getString("phone");
-                    person = Person.createPerson(user, name, surname);
-                    person.setId(id);
-                    person.setPatronymic(patronymic);
-                    person.setEmail(email);
-                    person.setPhone(phone);
+                    client = Client.createPerson(user, name, surname);
+                    client.setId(id);
+                    client.setPatronymic(patronymic);
+                    client.setEmail(email);
+                    client.setPhone(phone);
                 }
             }
         } catch (SQLException exception) {
             System.err.println("SQLException while findAll person " + exception.getMessage());
             exception.printStackTrace();
         }
-        return Optional.ofNullable(person);
+        return Optional.ofNullable(client);
     }
 
     @Override
-    boolean existsById(Integer id) {
+    public boolean existsById(Integer id) {
         try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
             stat.setInt(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -124,38 +124,38 @@ public class PersonDao extends AbstractDao<Person, Integer> {
     }
 
     @Override
-    Iterable<Person> findAll() {
-        List<Person> personList = new ArrayList<>();
+    public Iterable<Client> findAll() {
+        List<Client> clientList = new ArrayList<>();
         UserDao userDao = new UserDao(super.connection);
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
                 while (rs.next()) {
                     int id = rs.getInt("id");
                     int userID = rs.getInt("user_id");
-                    User user = userDao.getById(userID).orElseThrow(() ->
+                    User user = userDao.findById(userID).orElseThrow(() ->
                             new SQLException("Can't find User for Person while Person findAll"));
                     String name = rs.getString("name");
                     String surname = rs.getString("surname");
                     String patronymic = rs.getString("patronymic");
                     String email = rs.getString("email");
                     String phone = rs.getString("phone");
-                    Person person = Person.createPerson(user, name, surname);
-                    person.setId(id);
-                    person.setPatronymic(patronymic);
-                    person.setEmail(email);
-                    person.setPhone(phone);
-                    personList.add(person);
+                    Client client = Client.createPerson(user, name, surname);
+                    client.setId(id);
+                    client.setPatronymic(patronymic);
+                    client.setEmail(email);
+                    client.setPhone(phone);
+                    clientList.add(client);
                 }
             }
         } catch (SQLException exception) {
             System.err.println("SQLException while findAll person " + exception.getMessage());
             exception.printStackTrace();
         }
-        return personList;
+        return clientList;
     }
 
     @Override
-    boolean deleteById(Integer id) {
+    public boolean deleteById(Integer id) {
         try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
             stat.setInt(1, id);
             if (stat.executeUpdate() > 0) return true;
@@ -166,32 +166,32 @@ public class PersonDao extends AbstractDao<Person, Integer> {
         return false;
     }
 
-    Optional<Person> getByUserId(Integer userID) {
-        Person person = null;
+    public Optional<Client> getByUserId(Integer userID) {
+        Client client = null;
         UserDao userDao = new UserDao(super.connection);
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_USER_ID)) {
             stat.setInt(1, userID);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
                     int personID = rs.getInt("id");
-                    User user = userDao.getById(userID).orElseThrow(() ->
+                    User user = userDao.findById(userID).orElseThrow(() ->
                             new SQLException("Can't find User for Person while Person findAll"));
                     String name = rs.getString("name");
                     String surname = rs.getString("surname");
                     String patronymic = rs.getString("patronymic");
                     String email = rs.getString("email");
                     String phone = rs.getString("phone");
-                    person = Person.createPerson(user, name, surname);
-                    person.setId(personID);
-                    person.setPatronymic(patronymic);
-                    person.setEmail(email);
-                    person.setPhone(phone);
+                    client = Client.createPerson(user, name, surname);
+                    client.setId(personID);
+                    client.setPatronymic(patronymic);
+                    client.setEmail(email);
+                    client.setPhone(phone);
                 }
             }
         } catch (SQLException exception) {
             System.err.println("SQLException while findAll person " + exception.getMessage());
             exception.printStackTrace();
         }
-        return Optional.ofNullable(person);
+        return Optional.ofNullable(client);
     }
 }
