@@ -21,7 +21,7 @@ public class LocalityDao extends AbstractDao<Locality, Integer> {
 
     private static final String DELETE = "DELETE FROM locality WHERE id=?";
 
-    protected LocalityDao(Connection connection) {
+    public LocalityDao(Connection connection) {
         super(connection);
     }
 

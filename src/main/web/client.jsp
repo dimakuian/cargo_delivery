@@ -8,12 +8,11 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
-    <p>Hello ${user}</p>
-    <p>your id is: ${id} <br></p>
-    <p>Your role is: ${role}</p>
+    <title>Client</title>
 </head>
 <body>
-
+<p>Hello ${user}</p>
+<p>your id is: ${id} <br></p>
+<p>Your role is: ${role}</p>
 </body>
 </html>

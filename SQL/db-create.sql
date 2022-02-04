@@ -151,6 +151,15 @@ INSERT INTO language (id, short_name, full_name) VALUES (DEFAULT,'EN','English')
 INSERT INTO language (id, short_name, full_name) VALUES (DEFAULT,'UA','Ukraine');
 
 INSERT INTO locality (id, name) VALUES (DEFAULT,'Kiev');
+INSERT INTO locality (id, name) VALUES (DEFAULT,'Lviv');
+INSERT INTO locality (id, name) VALUES (DEFAULT,'Odesa');
+INSERT INTO locality (id, name) VALUES (DEFAULT,'Ternopil');
+INSERT INTO locality (id, name) VALUES (DEFAULT,'Rivne');
+
+
+
+
+
 
 
 

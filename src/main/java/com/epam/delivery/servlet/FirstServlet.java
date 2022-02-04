@@ -1,4 +1,4 @@
-package com.epam.delivery;
+package com.epam.delivery.servlet;
 
 import com.epam.delivery.doa.ConnectionPool;
 import com.epam.delivery.doa.impl.UserDao;
@@ -25,13 +25,19 @@ public class FirstServlet extends HttpServlet {
         userDao = new UserDao(ConnectionPool.getConnection());
         User user = userDao.getByLogin(login).orElse(null);
         if (user != null) {
-            req.setAttribute("user", user.getLogin());
-            req.setAttribute("id", user.getId());
-            req.setAttribute("role", Role.getRole(user).getName());
-            req.getRequestDispatcher("/logined.jsp").forward(req, resp);
+            req.getServletContext().setAttribute("user", user.getLogin());
+            req.getServletContext().setAttribute("id", user.getId());
+            req.getServletContext().setAttribute("role", Role.getRole(user).getName());
+            if (Role.getRole(user).getName().equals("admin")) {
+                resp.sendRedirect("/admin.jsp");
+            }
+            if (Role.getRole(user).getName().equals("client")) {
+                resp.sendRedirect("/client.jsp");
+            }
         } else {
-            req.setAttribute("res",  login);
+            req.setAttribute("res", login);
+            resp.sendRedirect("/index.jsp");
         }
-        req.getRequestDispatcher("/notlogined.jsp").forward(req, resp);
+
     }
 }
