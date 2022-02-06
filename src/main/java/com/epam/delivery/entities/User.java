@@ -50,5 +50,12 @@ public class User implements Serializable {
         return new User(login,password, roleID);
     }
 
-
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", login='" + login + '\'' +
+                ", roleID=" + roleID +
+                '}';
+    }
 }

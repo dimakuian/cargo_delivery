@@ -8,13 +8,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Login</title>
 </head>
 <body>
-<form ACTION="hello" method="post">
-    <input type="text" name="login"/> <br/>
-    <input type="password" name="password"/> <br/>
-    <input type="submit" value="Submit"/>
+<form action="login" method="post">
+    <fieldset>
+        <legend>Login:</legend>
+        <input type="text" name="login" placeholder="login"/> <br/>
+        <input type="password" name="password" placeholder="password"/> <br/>
+        <input type="submit" value="Submit"/>
+        <button type="button" onclick="window.location.href='/register.jsp'">Register</button>
+    </fieldset>
 </form>
 </body>
 </html>

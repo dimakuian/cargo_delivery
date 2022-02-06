@@ -10,34 +10,37 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 
-@WebServlet("/hello")
-public class FirstServlet extends HttpServlet {
+@WebServlet("/login")
+public class LoginServlet extends HttpServlet {
 
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        System.out.println("Start LoginServlet #doPost");
         String login = req.getParameter("login");
-
-        UserDao userDao = null;
-        userDao = new UserDao(ConnectionPool.getConnection());
+        HttpSession session = req.getSession(true);
+        UserDao userDao = new UserDao(ConnectionPool.getConnection());
         User user = userDao.getByLogin(login).orElse(null);
         if (user != null) {
-            req.getServletContext().setAttribute("user", user.getLogin());
-            req.getServletContext().setAttribute("id", user.getId());
-            req.getServletContext().setAttribute("role", Role.getRole(user).getName());
+            session.setAttribute("user", user);
+            session.setAttribute("role", Role.getRole(user).getName());
+            String name = Role.getRole(user).getName();
+            System.out.println(name);
             if (Role.getRole(user).getName().equals("admin")) {
                 resp.sendRedirect("/admin.jsp");
             }
             if (Role.getRole(user).getName().equals("client")) {
-                resp.sendRedirect("/client.jsp");
+//                resp.sendRedirect("/client.jsp");
+                resp.sendRedirect("/index.jsp");
             }
         } else {
             req.setAttribute("res", login);
             resp.sendRedirect("/index.jsp");
         }
-
+        System.out.println("End LoginServlet #doPost");
     }
 }

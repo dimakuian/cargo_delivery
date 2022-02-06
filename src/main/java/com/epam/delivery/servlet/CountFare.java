@@ -13,11 +13,13 @@ public class CountFare extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String shippingAddress = req.getParameter("shipAddres");
         String deliveryAddress = req.getParameter("delivAddres");
-        Integer length = Integer.parseInt(req.getParameter("length"));
-        Integer height = Integer.parseInt(req.getParameter("height"));
-        Integer width = Integer.parseInt(req.getParameter("width"));
-        Integer weight = Integer.parseInt(req.getParameter("weight"));
-        String str = String.format("Shipping address: %s, Delivery address: %s, length: %s, height: %s"
+        Double length = Double.parseDouble(req.getParameter("length"));
+        Double height = Double.parseDouble(req.getParameter("height"));
+        Double width = Double.parseDouble(req.getParameter("width"));
+        Double weight = Double.parseDouble(req.getParameter("weight"));
+        Double volume = Double.parseDouble(req.getParameter("vol"));
+        System.out.println(volume);
+        String str = String.format("Shipping address: %s, Delivery address: %s, length: %s, height: %s "
                 + "width: %s, weight: %s", shippingAddress, deliveryAddress, length, height, width, weight);
         getServletContext().setAttribute("str", str);
         System.out.println(str);
