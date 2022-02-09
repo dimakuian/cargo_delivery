@@ -40,6 +40,8 @@ public class ShippingStatus implements Serializable {
         return new ShippingStatus(nameEN, nameUK);
     }
 
+
+
     @Override
     public String toString() {
         return "ShippingStatus{" +

@@ -10,10 +10,13 @@ function loginButton() {
     }
 }
 
-function countVolume() {
-    var l = parseFloat(document.getElementById('length').value);
-    var h = parseFloat(document.getElementById('height').value);
-    var w = parseFloat(document.getElementById('width').value);
-    var value = (l * h * w).toFixed(2);
-    document.getElementById("vol").value=value;
-}
+// function confirmPassword() {
+//     var pass = document.getElementById('password').value;
+//     var confirm = document.getElementById('confirm_password').value;
+//     if (pass != confirm) {
+//         confirm.setCustomValidity("Passwords Don't Match");
+//     } else {
+//         confirm.setCustomValidity('');
+//     }
+
+// }

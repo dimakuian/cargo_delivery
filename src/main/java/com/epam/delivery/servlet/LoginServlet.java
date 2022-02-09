@@ -17,28 +17,33 @@ import java.io.IOException;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
 
+    @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.sendRedirect("/index.jsp");
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         System.out.println("Start LoginServlet #doPost");
         String login = req.getParameter("login");
+        String password = req.getParameter("password");
         HttpSession session = req.getSession(true);
         UserDao userDao = new UserDao(ConnectionPool.getConnection());
         User user = userDao.getByLogin(login).orElse(null);
         if (user != null) {
-            session.setAttribute("user", user);
-            session.setAttribute("role", Role.getRole(user).getName());
-            String name = Role.getRole(user).getName();
-            System.out.println(name);
-            if (Role.getRole(user).getName().equals("admin")) {
-                resp.sendRedirect("/admin.jsp");
-            }
-            if (Role.getRole(user).getName().equals("client")) {
-//                resp.sendRedirect("/client.jsp");
+            if (user.getPassword().equals(password)) {
+                session.setAttribute("userId", user.getId());
+                session.setAttribute("role", Role.getRole(user).getName());
+                String role = Role.getRole(user).getName();
+                if (Role.getRole(user).getName() != null) {
+                    resp.sendRedirect("/index.jsp");
+                }
+            } else {
+                getServletContext().setAttribute("message", "Incorrect password");
                 resp.sendRedirect("/index.jsp");
             }
         } else {
-            req.setAttribute("res", login);
+            getServletContext().setAttribute("message", "Can't find this user: " + login);
             resp.sendRedirect("/index.jsp");
         }
         System.out.println("End LoginServlet #doPost");

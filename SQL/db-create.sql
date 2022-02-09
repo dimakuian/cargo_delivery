@@ -104,6 +104,19 @@ CREATE TABLE IF NOT EXISTS `description_locality`
     CONSTRAINT `fk_language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`)
 );
 
+DROP TABLE IF EXISTS tariff;
+
+CREATE TABLE IF NOT EXISTS `tariff`
+(
+    weight             DOUBLE NOT NULL,
+    price_up_to_500_km INT    NOT NULL,
+    price_up_to_700_km INT    NOT NULL,
+    price_up_to_900_km INT    NOT NULL,
+    price_up_to_1200_km   INT    NOT NULL,
+    price_up_to_1500_km   INT    NOT NULL,
+    PRIMARY KEY (weight)
+);
+
 DROP TABLE IF EXISTS `order`;
 
 CREATE TABLE IF NOT EXISTS `order`
@@ -147,14 +160,37 @@ VALUES (DEFAULT, 'dimakuian', 'pass123', 1),
 INSERT INTO admin (id, user_id, name, surname)
 VALUES (DEFAULT, 2, 'John', 'Jonson');
 
-INSERT INTO language (id, short_name, full_name) VALUES (DEFAULT,'EN','English');
-INSERT INTO language (id, short_name, full_name) VALUES (DEFAULT,'UA','Ukraine');
+INSERT INTO language (id, short_name, full_name)
+VALUES (DEFAULT, 'EN', 'English');
+INSERT INTO language (id, short_name, full_name)
+VALUES (DEFAULT, 'UA', 'Ukraine');
 
-INSERT INTO locality (id, name) VALUES (DEFAULT,'Kiev');
-INSERT INTO locality (id, name) VALUES (DEFAULT,'Lviv');
-INSERT INTO locality (id, name) VALUES (DEFAULT,'Odesa');
-INSERT INTO locality (id, name) VALUES (DEFAULT,'Ternopil');
-INSERT INTO locality (id, name) VALUES (DEFAULT,'Rivne');
+INSERT INTO locality (id, name)
+VALUES (DEFAULT, 'Kiev');
+INSERT INTO locality (id, name)
+VALUES (DEFAULT, 'Lviv');
+INSERT INTO locality (id, name)
+VALUES (DEFAULT, 'Odesa');
+INSERT INTO locality (id, name)
+VALUES (DEFAULT, 'Ternopil');
+INSERT INTO locality (id, name)
+VALUES (DEFAULT, 'Rivne');
+
+INSERT INTO tariff (weight, price_up_to_500_km, price_up_to_700_km, price_up_to_900_km, price_up_to_1200_km, price_up_to_1500_km)
+VALUES (0.5, 35, 39, 46, 53, 70),
+       (1, 40, 44, 52, 60, 80),
+       (2, 45, 50, 59, 68, 90),
+       (5, 50, 55, 65, 75, 100),
+       (10, 55, 61, 72, 83, 110),
+       (20, 70, 77, 91, 105, 140),
+       (30, 85, 94, 111, 128, 170),
+       (40, 100, 110, 130, 150, 200),
+       (50, 120, 132, 156, 180, 240),
+       (60, 150, 165, 195, 225, 300),
+       (70, 180, 198, 234, 270, 360),
+       (80, 210, 231, 273, 315, 420),
+       (90, 250, 275, 325, 375, 500),
+       (100, 300, 330, 390, 450, 600);
 
 
 
