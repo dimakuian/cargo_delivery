@@ -14,6 +14,7 @@ public class UserDao extends AbstractDao<User, Integer> {
     private static final String SELECT_BY_ID = "SELECT id, login, password, role_id FROM user WHERE id = ?";
     private static final String SELECT_BY_LOGIN = "SELECT id, login, password, role_id FROM user WHERE login = ?";
     private static final String EXIST = "SELECT id FROM user WHERE id=?";
+    private static final String EXIST_BY_LOGIN = "SELECT login FROM user WHERE login=?";
     private static final String SELECT_ALL = "SELECT id, login, password, role_id FROM user";
     private static final String DELETE = "DELETE FROM user WHERE id =?";
 
@@ -149,4 +150,19 @@ public class UserDao extends AbstractDao<User, Integer> {
         }
         return Optional.ofNullable(user);
     }
+
+    public boolean existsByLogin(String userName) {
+        boolean result = false;
+        try (PreparedStatement stat = connection.prepareStatement(EXIST_BY_LOGIN)) {
+            stat.setString(1, userName);
+            try (ResultSet rs = stat.executeQuery()) {
+                if (rs.next()) result = true;
+            }
+        } catch (SQLException exception) {
+            System.err.println("SQLException while check if exist user by id ==> " + exception.getMessage());
+            exception.printStackTrace();
+        }
+        return result;
+    }
+
 }

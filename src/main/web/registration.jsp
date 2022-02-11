@@ -6,7 +6,7 @@
   Time: 22:49
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
     <title>Title</title>
@@ -31,7 +31,8 @@
             cursor: pointer;
             font-family: Raleway;
         }
-        input[type=checkbox]{
+
+        input[type=checkbox] {
             font-family: Raleway;
         }
 
@@ -89,9 +90,11 @@
 </head>
 <body>
 <p>REGISTER JSP</p>
-<c:out value="${message}"></c:out>
+<c:out value="${message}"/>
+<c:remove var="message"></c:remove>
 <div class="container">
-    <form action="/register_new_user" method="post">
+    <form action="/controller" method="post">
+        <input type="hidden" name="command" value="registration">
         <input type="text" name="login" placeholder="create login" required pattern="^(\w{4,15})$"><br>
         <input type="password" id="psw" name="password" placeholder="enter password" required
                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$"><br>
@@ -124,7 +127,7 @@
         , confirm_password = document.getElementById("conf_psw");
 
     function validatePassword() {
-        if (password.value != confirm_password.value) {
+        if (password.value !== confirm_password.value) {
             confirm_password.setCustomValidity("Passwords Don't Match");
         } else {
             confirm_password.setCustomValidity('');

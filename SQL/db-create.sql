@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `client`
     `patronymic` VARCHAR(45) DEFAULT NULL,
     `email`      VARCHAR(45) DEFAULT NULL,
     `phone`      VARCHAR(45) DEFAULT NULL,
-    CONSTRAINT `fk_client_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+    CONSTRAINT `fk_client_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
     PRIMARY KEY (`id`)
 );
 
@@ -108,12 +108,12 @@ DROP TABLE IF EXISTS tariff;
 
 CREATE TABLE IF NOT EXISTS `tariff`
 (
-    weight             DOUBLE NOT NULL,
-    price_up_to_500_km INT    NOT NULL,
-    price_up_to_700_km INT    NOT NULL,
-    price_up_to_900_km INT    NOT NULL,
-    price_up_to_1200_km   INT    NOT NULL,
-    price_up_to_1500_km   INT    NOT NULL,
+    weight              DOUBLE NOT NULL,
+    price_up_to_500_km  INT    NOT NULL,
+    price_up_to_700_km  INT    NOT NULL,
+    price_up_to_900_km  INT    NOT NULL,
+    price_up_to_1200_km INT    NOT NULL,
+    price_up_to_1500_km INT    NOT NULL,
     PRIMARY KEY (weight)
 );
 
@@ -154,11 +154,14 @@ VALUES (1, 'client');
 
 
 INSERT INTO user (id, login, password, role_id)
-VALUES (DEFAULT, 'dimakuian', 'pass123', 1),
-       (DEFAULT, 'john99', 'pass321', 0);
+VALUES (DEFAULT, 'dimakuian', '32250170a0dca92d53ec9624f336ca24', 1),
+       (DEFAULT, 'john99', '32250170a0dca92d53ec9624f336ca24', 0);
 
 INSERT INTO admin (id, user_id, name, surname)
 VALUES (DEFAULT, 2, 'John', 'Jonson');
+
+INSERT INTO client (id, user_id, name, surname, patronymic, email, phone)
+VALUES (DEFAULT,1,'Dmytro','Kuian','Bogdanovich','mail@example.com','+380671111111');
 
 INSERT INTO language (id, short_name, full_name)
 VALUES (DEFAULT, 'EN', 'English');
@@ -176,7 +179,8 @@ VALUES (DEFAULT, 'Ternopil');
 INSERT INTO locality (id, name)
 VALUES (DEFAULT, 'Rivne');
 
-INSERT INTO tariff (weight, price_up_to_500_km, price_up_to_700_km, price_up_to_900_km, price_up_to_1200_km, price_up_to_1500_km)
+INSERT INTO tariff (weight, price_up_to_500_km, price_up_to_700_km, price_up_to_900_km, price_up_to_1200_km,
+                    price_up_to_1500_km)
 VALUES (0.5, 35, 39, 46, 53, 70),
        (1, 40, 44, 52, 60, 80),
        (2, 45, 50, 59, 68, 90),

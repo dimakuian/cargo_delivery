@@ -105,18 +105,22 @@
     <div class="login-container">
         <%--        <input id="home_page" type="button" value="Home page" onclick="window.location.href='index.jsp'">--%>
         <c:choose>
-            <c:when test="${empty userId}">
-                <form action="login" method="post">
+            <c:when test="${empty user}">
+                <form action="/controller" method="post">
+                    <input type="hidden" name="command" value="login"/>
                     <label for="log"></label>
                     <input id="log" type="text" placeholder="Username" name="login">
                     <label for="psw"></label>
                     <input id="psw" type="password" placeholder="Password" name="password">
-                    <button type="button" onclick="window.location.href='/register.jsp'">Register</button>
+                    <button type="button" onclick="window.location.href='/registration.jsp'">Register</button>
                     <button type="submit">Login</button>
                 </form>
             </c:when>
-            <c:when test="${not empty userId}">
-                <button type="button" onclick="window.location.href='logout'">Logout</button>
+            <c:when test="${not empty user}">
+                <form action="/controller" method="post">
+                    <input type="hidden" name="command" value="logout">
+                    <button type="submit">Logout</button>
+                </form>
             </c:when>
         </c:choose>
     </div>

@@ -1,7 +1,4 @@
-package com.epam.delivery.servlet.filter;
-
-import com.epam.delivery.entities.Role;
-import com.epam.delivery.entities.User;
+package com.epam.delivery.filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -79,13 +76,12 @@ public class CreateOrderFilter implements Filter {
         HttpServletRequest req = (HttpServletRequest) request;
         HttpServletResponse resp = (HttpServletResponse) response;
         HttpSession session = req.getSession();
-        User user = (User) session.getAttribute("user");
+        Integer user = (Integer) session.getAttribute("userId");
+        String role = (String) session.getAttribute("role");
         if (user == null) {
-            req.getServletContext().setAttribute("message","You mast login or register before create order.");
+            req.getServletContext().setAttribute("message", "You mast login or register before create order.");
             resp.sendRedirect("/index.jsp");
-
         } else {
-            String role = Role.getRole(user).getName();
             if (!role.equals("client")) resp.sendRedirect("/index.jsp");
         }
         chain.doFilter(request, response);

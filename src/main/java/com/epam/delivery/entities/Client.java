@@ -73,7 +73,7 @@ public class Client implements Serializable {
         this.phone = phone;
     }
 
-    public static Client createPerson(User user, String name, String surname) {
+    public static Client createClient(User user, String name, String surname) {
         return new Client(user, name, surname);
     }
 

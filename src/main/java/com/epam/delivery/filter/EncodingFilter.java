@@ -1,4 +1,4 @@
-package com.epam.delivery.servlet.filter;
+package com.epam.delivery.filter;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;

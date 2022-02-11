@@ -1,5 +1,7 @@
 package com.epam.delivery.entities;
 
+import com.epam.delivery.service.PasswordEncoder;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
@@ -47,7 +49,7 @@ public class User implements Serializable {
     }
 
     public static User createUser(String login, String password, int roleID) {
-        return new User(login,password, roleID);
+        return new User(login, password, roleID);
     }
 
     @Override
