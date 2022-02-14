@@ -1,5 +1,6 @@
 package com.epam.delivery.doa.impl;
 
+import com.epam.delivery.doa.SimpleConnection;
 import com.epam.delivery.entities.Locality;
 
 import java.sql.*;
@@ -9,17 +10,31 @@ import java.util.Optional;
 
 public class LocalityDao extends AbstractDao<Locality, Integer> {
 
-    private static final String INSERT = "INSERT INTO locality (id, name) VALUES (DEFAULT,?)";
+    private static final String INSERT = "INSERT INTO lINSERT INTO locality VALUES (DEFAULT,?,?,?)";
 
-    private static final String UPDATE = "UPDATE locality SET name=? WHERE id=?";
+    private static final String UPDATE = "UPDATE locality SET name=?,lat=?,lng=? WHERE id=?";
 
-    private static final String SELECT_BY_ID = "SELECT id, name FROM locality WHERE id =?";
+    private static final String SELECT_BY_ID = "SELECT id, name, lat, lng FROM locality WHERE id =?";
 
     private static final String EXIST = "SELECT id FROM locality WHERE id =?";
 
-    private static final String SELECT_ALL = "SELECT id, name FROM locality";
+    private static final String SELECT_ALL = "SELECT id, name, lat, lng FROM locality";
 
     private static final String DELETE = "DELETE FROM locality WHERE id=?";
+
+    public static final String CALC_DISTANCE = "SELECT a.name AS from_city,\n" +
+            "       b.name AS to_city,\n" +
+            "       ROUND(\n" +
+            "                   111.111 *\n" +
+            "                   DEGREES(ACOS(LEAST(1.0, COS(RADIANS(a.lat))\n" +
+            "                   * COS(RADIANS(b.lat))\n" +
+            "                   * COS(RADIANS(a.lng - b.lng))\n" +
+            "                   + SIN(RADIANS(a.lat))\n" +
+            "                   * SIN(RADIANS(b.lat)))))) + 40 AS distance_in_km\n" +
+            "FROM locality AS a\n" +
+            "         JOIN locality AS b ON a.id <> b.id\n" +
+            "WHERE a.id = ?\n" +
+            "  AND b.id = ?";
 
     public LocalityDao(Connection connection) {
         super(connection);
@@ -49,7 +64,9 @@ public class LocalityDao extends AbstractDao<Locality, Integer> {
     public boolean update(Locality entity) {
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             stat.setString(1, entity.getName());
-            stat.setInt(2, entity.getId());
+            stat.setDouble(2, entity.getLatitude());
+            stat.setDouble(3, entity.getLongitude());
+            stat.setInt(4, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
             System.err.println("SQLException while update Locality " + exception.getMessage());
@@ -66,7 +83,9 @@ public class LocalityDao extends AbstractDao<Locality, Integer> {
                 while (rs.next()) {
                     int locID = rs.getInt("id");
                     String name = rs.getString("name");
-                    locality = Locality.createLocality(name);
+                    double lat = rs.getDouble("lat");
+                    double lng = rs.getDouble("lng");
+                    locality = Locality.createLocality(name, lat, lng);
                     locality.setId(locID);
                 }
             }
@@ -99,7 +118,9 @@ public class LocalityDao extends AbstractDao<Locality, Integer> {
                 while (rs.next()) {
                     int locID = rs.getInt("id");
                     String name = rs.getString("name");
-                    Locality locality = Locality.createLocality(name);
+                    double lat = rs.getDouble("lat");
+                    double lng = rs.getDouble("lng");
+                    Locality locality = Locality.createLocality(name, lat, lng);
                     locality.setId(locID);
                     list.add(locality);
                 }
@@ -121,5 +142,22 @@ public class LocalityDao extends AbstractDao<Locality, Integer> {
             exception.printStackTrace();
         }
         return false;
+    }
+
+    public Optional<Double> calcDistanceBetweenTwoLocality(Locality from, Locality to) {
+        Double distance_in_km = null;
+        try (PreparedStatement stat = connection.prepareStatement(CALC_DISTANCE)) {
+            stat.setInt(1, from.getId());
+            stat.setInt(2, to.getId());
+            try (ResultSet rs = stat.executeQuery()) {
+                if (rs.next()) {
+                    distance_in_km = rs.getDouble("distance_in_km");
+                }
+            }
+        } catch (SQLException exception) {
+            System.err.println("SQLException while calcDistanceBetweenTwoLocality Locality " + exception.getMessage());
+            exception.printStackTrace();
+        }
+        return Optional.ofNullable(distance_in_km);
     }
 }

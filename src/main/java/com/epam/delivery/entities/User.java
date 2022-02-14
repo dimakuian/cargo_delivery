@@ -1,10 +1,10 @@
 package com.epam.delivery.entities;
 
-import com.epam.delivery.service.PasswordEncoder;
 
 import java.io.Serializable;
 
 public class User implements Serializable {
+    private static final long serialVersionUID = -284361597729519633L;
     private int id;
     private final String login;
     private String password;

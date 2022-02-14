@@ -12,6 +12,8 @@ public class CommandContainer {
         commands.put("login", new LoginCommand());
         commands.put("logout", new LogoutCommand());
         commands.put("registration", new RegistrationCommand());
+        commands.put("countFare", new CountFareCommand());
+        commands.put("createOrder",new CreateOrderCommand());
         // client commands
 
         // admin commands

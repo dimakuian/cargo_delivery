@@ -21,7 +21,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Integer> {
 
     private static final String DELETE = "DELETE FROM shipping_status WHERE id=?";
 
-    protected ShippingStatusDao(Connection connection) {
+    public ShippingStatusDao(Connection connection) {
         super(connection);
     }
 

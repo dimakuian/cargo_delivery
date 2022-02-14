@@ -3,6 +3,7 @@ package com.epam.delivery.entities;
 import java.io.Serializable;
 
 public class Client implements Serializable {
+    private static final long serialVersionUID = -4550748709679018382L;
     private int id;
     private User user;
     private String name;

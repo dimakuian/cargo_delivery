@@ -18,6 +18,16 @@
             margin: auto;
         }
 
+        .count_container select {
+            width: 30%;
+            height: 30px;
+            font-size: 17px;
+            border: none;
+            font-family: Raleway;
+            border: 1px;
+            box-sizing: border-box;
+        }
+
         .count_container input[type=submit], .count_container button[type=button] {
             background-color: #555;
             color: white;
@@ -54,6 +64,7 @@
         .count_container input[type=number], .count_container input[type=text] {
             width: 15%;
         }
+
         .count_container .address {
             width: 45%;
             display: inline-block;
@@ -65,25 +76,26 @@
 <c:set var="list" value="${applicationScope['localities']}"/>
 <c:import url="heder.jsp"></c:import>
 <div class="count_container">
-    <form action="count_fare" method="post"
+    <form action="/controller" method="post"
           oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)">
+        <input type="hidden" name="command" value="countFare">
         <h5>Route</h5>
         <label>
-            <input class="address" list="shipping" name="shipping_address" required>
-            <datalist id="shipping">
-                <c:forEach items="${list}" var="loc">
-                    <option value="${loc.name}">${loc.name}</option>
-                </c:forEach>
-            </datalist>
-        </label>
-        <span>==&gt</span>
-        <label>
-            <input class="address" list="delivery" name="delivery_address" required>
-            <datalist id="delivery">
-                <c:forEach items="${list}" var="loc">
-                    <option value="${loc.name}">${loc.name}</option>
-                </c:forEach>
-            </datalist>
+            <label>
+                <select id="ship" class="address" list="shipping" name="shipping_address" required>
+                    <c:forEach items="${list}" var="loc">
+                        <option value="${loc.id}">${loc.name}</option>
+                    </c:forEach>
+                </select>
+            </label>
+            <span>==&gt</span>
+            <label>
+                <select id="deliv" class="address" list="delivery" name="delivery_address" required>
+                    <c:forEach items="${list}" var="loc">
+                        <option value="${loc.id}">${loc.name}</option>
+                    </c:forEach>
+                </select>
+            </label>
         </label>
         <br>
         <label class="param" for="length">Length, сm.</label>

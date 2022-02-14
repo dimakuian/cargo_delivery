@@ -3,6 +3,7 @@ package com.epam.delivery.entities;
 import java.io.Serializable;
 
 public class PaymentStatus implements Serializable {
+    private static final long serialVersionUID = 5920354141897471791L;
     private int id;
     private String nameEN;
     private String nameUK;

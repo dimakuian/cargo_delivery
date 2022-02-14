@@ -16,7 +16,7 @@ public abstract class AbstractDao<T, ID> {
 
     public abstract boolean update(T entity);
 
-//    public abstract Optional<T> findById(ID id);
+    public abstract Optional<T> findById(ID id);
 
     public abstract boolean existsById(ID id);
 

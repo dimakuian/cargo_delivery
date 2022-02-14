@@ -1,6 +1,5 @@
 package com.epam.delivery.doa.impl;
 
-import com.epam.delivery.doa.SimpleConnection;
 import com.epam.delivery.entities.LocalityDescription;
 
 import java.sql.*;
@@ -63,6 +62,12 @@ public class LocalityDescriptionDao extends AbstractDao<LocalityDescription, Int
             exception.printStackTrace();
         }
         return false;
+    }
+
+    //not use
+    @Override
+    public Optional<LocalityDescription> findById(Integer integer) {
+        return Optional.empty();
     }
 
 
@@ -135,9 +140,5 @@ public class LocalityDescriptionDao extends AbstractDao<LocalityDescription, Int
             exception.printStackTrace();
         }
         return false;
-    }
-
-    public static void main(String[] args) {
-        SimpleConnection.createDataBase();
     }
 }

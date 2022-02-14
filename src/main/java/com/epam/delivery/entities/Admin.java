@@ -3,6 +3,7 @@ package com.epam.delivery.entities;
 import java.io.Serializable;
 
 public class Admin implements Serializable {
+    private static final long serialVersionUID = 8470261035583724747L;
     private int id;
     private User user;
     private String name;

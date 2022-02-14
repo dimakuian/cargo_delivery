@@ -4,9 +4,10 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 public class Order implements Serializable {
+    private static final long serialVersionUID = -2667467651139601650L;
     private int id;
-    private String shippingAddress;
-    private String deliveryAddress;
+    private Locality shippingAddress;
+    private Locality deliveryAddress;
     private Timestamp creationTime;
     private Client client;
     private String consignee;
@@ -33,20 +34,28 @@ public class Order implements Serializable {
         this.id = id;
     }
 
-    public String getShippingAddress() {
+    public Locality getShippingAddress() {
         return shippingAddress;
     }
 
-    public void setShippingAddress(String shippingAddress) {
+    public void setShippingAddress(Locality shippingAddress) {
         this.shippingAddress = shippingAddress;
     }
 
-    public String getDeliveryAddress() {
+    public Locality getDeliveryAddress() {
         return deliveryAddress;
     }
 
-    public void setDeliveryAddress(String deliveryAddress) {
+    public void setDeliveryAddress(Locality deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 
     public Timestamp getCreationTime() {
@@ -161,7 +170,7 @@ public class Order implements Serializable {
         this.deliveryDate = deliveryDate;
     }
 
-    public Order createOrder() {
+    public static Order createOrder() {
         return new Order();
     }
 
@@ -169,10 +178,10 @@ public class Order implements Serializable {
     public String toString() {
         return "Order{" +
                 "id=" + id +
-                ", shippingAddress='" + shippingAddress + '\'' +
-                ", deliveryAddress='" + deliveryAddress + '\'' +
+                ", shippingAddress=" + shippingAddress +
+                ", deliveryAddress=" + deliveryAddress +
                 ", creationTime=" + creationTime +
-                ", person=" + client +
+                ", client=" + client +
                 ", consignee='" + consignee + '\'' +
                 ", description='" + description + '\'' +
                 ", distance=" + distance +
@@ -189,10 +198,26 @@ public class Order implements Serializable {
     }
 
     public class Builder {
+
         private Order order;
 
         public Builder(Order order) {
             this.order = order;
+        }
+
+        public Builder withID(Integer id) {
+            order.id = id;
+            return this;
+        }
+
+        public Builder withShippingAddress(Locality val) {
+            order.shippingAddress = val;
+            return this;
+        }
+
+        public Builder withDeliveryAddress(Locality val) {
+            order.deliveryAddress = val;
+            return this;
         }
 
         public Builder withCreationTimestamp(Timestamp val) {
@@ -200,7 +225,12 @@ public class Order implements Serializable {
             return this;
         }
 
-        public Builder withPerson(Client val) {
+        public Builder withDescription(String val) {
+            order.description = val;
+            return this;
+        }
+
+        public Builder withClient(Client val) {
             order.client = val;
             return this;
         }
@@ -215,6 +245,21 @@ public class Order implements Serializable {
             return this;
         }
 
+        public Builder withLength(double val) {
+            order.length = val;
+            return this;
+        }
+
+        public Builder withHeight(double val) {
+            order.height = val;
+            return this;
+        }
+
+        public Builder withWidth(double val) {
+            order.width = val;
+            return this;
+        }
+
         public Builder withWeight(double val) {
             order.weight = val;
             return this;
@@ -225,8 +270,23 @@ public class Order implements Serializable {
             return this;
         }
 
+        public Builder withFare(double val) {
+            order.fare = val;
+            return this;
+        }
+
         public Builder withShippingStatus(ShippingStatus val) {
             order.shippingStatus = val;
+            return this;
+        }
+
+        public Builder withPaymentStatus(PaymentStatus val) {
+            order.paymentStatus = val;
+            return this;
+        }
+
+        public Builder withDeliveryDate(Timestamp val) {
+            order.deliveryDate = val;
             return this;
         }
 

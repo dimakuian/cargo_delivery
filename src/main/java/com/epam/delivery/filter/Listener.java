@@ -2,9 +2,7 @@ package com.epam.delivery.filter;
 
 import com.epam.delivery.doa.ConnectionPool;
 import com.epam.delivery.doa.impl.LocalityDao;
-import com.epam.delivery.doa.impl.TariffDao;
 import com.epam.delivery.entities.Locality;
-import com.epam.delivery.entities.Tariff;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -24,9 +22,6 @@ public class Listener implements ServletContextListener {
         ArrayList <Locality> loc = new ArrayList<>();
         localities.forEach(loc::add);
         System.out.println(localities);
-        TariffDao tariffDao = new TariffDao(con);
-        Iterable<Tariff> tariffs = tariffDao.findAll();
-        sce.getServletContext().setAttribute("tariff",tariffs);
         sce.getServletContext().setAttribute("localities", loc);
         sce.getServletContext().setAttribute("name", "name");
     }

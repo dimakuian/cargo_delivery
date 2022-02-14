@@ -21,7 +21,7 @@ public class PaymentStatusDao extends AbstractDao<PaymentStatus, Integer> {
 
     private static final String DELETE = "DELETE FROM payment_status WHERE id=?";
 
-    protected PaymentStatusDao(Connection connection) {
+    public PaymentStatusDao(Connection connection) {
         super(connection);
     }
 

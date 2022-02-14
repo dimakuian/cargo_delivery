@@ -3,6 +3,7 @@ package com.epam.delivery.entities;
 import java.io.Serializable;
 
 public class LocalityDescription implements Serializable {
+    private static final long serialVersionUID = 1806149083009772391L;
     private int localityID;
     private int languageID;
     private String city;
