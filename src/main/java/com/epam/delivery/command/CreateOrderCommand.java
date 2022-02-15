@@ -7,6 +7,8 @@ import com.epam.delivery.entities.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.Timestamp;
 
@@ -45,6 +47,8 @@ public class CreateOrderCommand extends Command {
         HttpSession session = request.getSession();
 
         User user = (User) session.getAttribute("user");
+        if (user == null) return forward;
+
         ClientDao clientDao = new ClientDao(connection);
         Client client = clientDao.findById(user.getId()).orElse(null);
 
@@ -52,7 +56,9 @@ public class CreateOrderCommand extends Command {
                 weight != null && volume != null && distance != null && consignee != null && description != null &&
                 client != null) {
 
-            volume = Math.round(length * height * width) / Math.pow(10, 2);
+            volume = length * height * width;
+            BigDecimal bigDecimal = new BigDecimal(volume).setScale(2, RoundingMode.HALF_UP);
+            volume = bigDecimal.doubleValue();
             double volumeWeight = volume / 4000;
             double usedWeight = Double.max(weight, volumeWeight);
             double total;

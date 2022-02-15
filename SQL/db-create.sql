@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS `client`
     `patronymic` VARCHAR(45) DEFAULT NULL,
     `email`      VARCHAR(45) DEFAULT NULL,
     `phone`      VARCHAR(45) DEFAULT NULL,
+    `balance`    DOUBLE      DEFAULT 0,
     CONSTRAINT `fk_client_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
     PRIMARY KEY (`id`)
 );
@@ -139,7 +140,7 @@ CREATE TABLE IF NOT EXISTS `order`
     `fare`               DECIMAL(8, 2) NOT NULL DEFAULT 0,
     `shipping_status_id` INT           NOT NULL,
     `payment_status_id`  INT           NOT NULL,
-    `delivery_date`      TIMESTAMP     DEFAULT NULL,
+    `delivery_date`      TIMESTAMP              DEFAULT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_shipping_address` FOREIGN KEY (`shipping_address`) REFERENCES `locality` (id),
     CONSTRAINT `fk_delivery_address` FOREIGN KEY (`delivery_address`) REFERENCES `locality` (id),

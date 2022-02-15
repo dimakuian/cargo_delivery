@@ -1,6 +1,5 @@
 package com.epam.delivery.doa.impl;
 
-import com.epam.delivery.doa.SimpleConnection;
 import com.epam.delivery.entities.Client;
 import com.epam.delivery.entities.User;
 
@@ -13,16 +12,16 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class ClientDao extends AbstractDao<Client, Integer> {
 
-    private static final String INSERT = "INSERT INTO client (id, user_id, name, surname, patronymic, email, phone)\n" +
-            "VALUES (DEFAULT, ?, ?, ?, ?, ?, ?)";
+    private static final String INSERT = "INSERT INTO client (id, user_id, name, surname, patronymic, email, phone, " +
+            "balance) VALUES (DEFAULT,?,?,?,?,?,?,?)";
 
-    private static final String UPDATE = "UPDATE client SET user_id=?,name=?,surname=?,patronymic=?,email=?,phone=?" +
-            "WHERE id=?\n";
+    private static final String UPDATE = "UPDATE client SET user_id=?,name=?,surname=?,patronymic=?,email=?,phone=?," +
+            "balance=? WHERE id=?";
 
-    private static final String SELECT_BY_ID = "SELECT id, user_id, name, surname, patronymic, email, phone "
+    private static final String SELECT_BY_ID = "SELECT id, user_id, name, surname, patronymic, email, phone, balance "
             + "FROM client WHERE id=?";
 
-    private static final String SELECT_BY_USER_ID = "SELECT id, user_id, name, surname, patronymic, email, phone "
+    private static final String SELECT_BY_USER_ID = "SELECT id, user_id, name, surname, patronymic, email, phone, balance "
             + "FROM client WHERE user_id=?";
 
     private static final String EXIST = "SELECT id FROM client WHERE id=?";
@@ -31,7 +30,7 @@ public class ClientDao extends AbstractDao<Client, Integer> {
 
     private static final String EXIST_PHONE = "SELECT phone FROM client WHERE phone=?";
 
-    private static final String SELECT_ALL = "SELECT id, user_id, name, surname, patronymic, email, phone "
+    private static final String SELECT_ALL = "SELECT id, user_id, name, surname, patronymic, email, phone, balance "
             + "FROM client";
 
     private static final String DELETE = "DELETE FROM client WHERE id=?";
@@ -49,6 +48,7 @@ public class ClientDao extends AbstractDao<Client, Integer> {
             stat.setString(4, entity.getPatronymic());
             stat.setString(5, entity.getEmail());
             stat.setString(6, entity.getPhone());
+            stat.setDouble(7,entity.getBalance());
             if (stat.executeUpdate() > 0) {
                 try (ResultSet rs = stat.getGeneratedKeys()) {
                     if (rs.next()) {
@@ -74,7 +74,8 @@ public class ClientDao extends AbstractDao<Client, Integer> {
             stat.setString(4, entity.getPatronymic());
             stat.setString(5, entity.getEmail());
             stat.setString(6, entity.getPhone());
-            stat.setInt(7, entity.getId());
+            stat.setDouble(7,entity.getBalance());
+            stat.setInt(8, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
             System.err.println("SQLException while update client " + exception.getMessage());
@@ -99,11 +100,13 @@ public class ClientDao extends AbstractDao<Client, Integer> {
                     String patronymic = rs.getString("patronymic");
                     String email = rs.getString("email");
                     String phone = rs.getString("phone");
+                    double balance = rs.getDouble("balance");
                     client = Client.createClient(user, name, surname);
                     client.setId(id);
                     client.setPatronymic(patronymic);
                     client.setEmail(email);
                     client.setPhone(phone);
+                    client.setBalance(balance);
                 }
             }
         } catch (SQLException exception) {
@@ -143,11 +146,13 @@ public class ClientDao extends AbstractDao<Client, Integer> {
                     String patronymic = rs.getString("patronymic");
                     String email = rs.getString("email");
                     String phone = rs.getString("phone");
+                    double balance = rs.getDouble("balance");
                     Client client = Client.createClient(user, name, surname);
                     client.setId(id);
                     client.setPatronymic(patronymic);
                     client.setEmail(email);
                     client.setPhone(phone);
+                    client.setBalance(balance);
                     clientList.add(client);
                 }
             }
@@ -185,11 +190,13 @@ public class ClientDao extends AbstractDao<Client, Integer> {
                     String patronymic = rs.getString("patronymic");
                     String email = rs.getString("email");
                     String phone = rs.getString("phone");
+                    double balance = rs.getDouble("balance");
                     client = Client.createClient(user, name, surname);
                     client.setId(clientID);
                     client.setPatronymic(patronymic);
                     client.setEmail(email);
                     client.setPhone(phone);
+                    client.setBalance(balance);
                 }
             }
         } catch (SQLException exception) {
@@ -223,13 +230,5 @@ public class ClientDao extends AbstractDao<Client, Integer> {
             exception.printStackTrace();
         }
         return false;
-    }
-
-    public static void main(String[] args) {
-        Connection con = SimpleConnection.getConnection();
-        ClientDao dao = new ClientDao(con);
-        ClientDao dao2 = new ClientDao(con);
-        System.out.println(dao.existsEmail("mail@example.com"));
-        System.out.println(dao2.existsPhone("+380671111111"));
     }
 }

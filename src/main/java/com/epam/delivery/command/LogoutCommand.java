@@ -20,8 +20,6 @@ public class LogoutCommand extends Command {
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         System.out.println("start command");  //replace to logger
         HttpSession session = request.getSession(false);
-//        User user = (User) session.getAttribute("user");
-//        String userRole = (String) session.getAttribute("role");
         if (session != null) session.invalidate();
         String forward = "/index.jsp";
         System.out.println("Command finished"); //replace to logger

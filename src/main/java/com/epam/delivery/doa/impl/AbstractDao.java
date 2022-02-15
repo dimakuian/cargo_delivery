@@ -1,10 +1,13 @@
 package com.epam.delivery.doa.impl;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Optional;
 
-public abstract class AbstractDao<T, ID> {
+public abstract class AbstractDao<T, ID> implements Serializable {
+
+    private static final long serialVersionUID = -1589363087043147391L;
 
     protected Connection connection;
 

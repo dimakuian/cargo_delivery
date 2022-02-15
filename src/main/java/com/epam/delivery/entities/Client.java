@@ -11,6 +11,7 @@ public class Client implements Serializable {
     private String patronymic;
     private String email;
     private String phone;
+    private double balance;
 
     private Client(User user, String name, String surname) {
         this.user = user;
@@ -74,13 +75,21 @@ public class Client implements Serializable {
         this.phone = phone;
     }
 
+    public double getBalance() {
+        return balance;
+    }
+
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
+
     public static Client createClient(User user, String name, String surname) {
         return new Client(user, name, surname);
     }
 
     @Override
     public String toString() {
-        return "Person{" +
+        return "Client{" +
                 "id=" + id +
                 ", user=" + user +
                 ", name='" + name + '\'' +
@@ -88,6 +97,7 @@ public class Client implements Serializable {
                 ", patronymic='" + patronymic + '\'' +
                 ", email='" + email + '\'' +
                 ", phone='" + phone + '\'' +
+                ", balance=" + balance +
                 '}';
     }
 }

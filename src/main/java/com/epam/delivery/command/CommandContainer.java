@@ -13,8 +13,11 @@ public class CommandContainer {
         commands.put("logout", new LogoutCommand());
         commands.put("registration", new RegistrationCommand());
         commands.put("countFare", new CountFareCommand());
-        commands.put("createOrder",new CreateOrderCommand());
+        commands.put("createOrder", new CreateOrderCommand());
         // client commands
+        commands.put("userCabinet", new UserCabinetCommand());
+        commands.put("editUser", new EditUserCommand());
+        commands.put("recharge",new RechargeCommand());
 
         // admin commands
     }

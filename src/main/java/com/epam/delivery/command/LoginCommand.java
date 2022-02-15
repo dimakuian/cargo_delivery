@@ -60,7 +60,7 @@ public class LoginCommand extends Command {
                 forward = "/controller?command=listMenu";
 
             if (role == Role.CLIENT)
-                forward = "/index.jsp";
+                forward = "/controller?command=userCabinet";
 
             request.getServletContext().setAttribute("message", user.getLogin());
 

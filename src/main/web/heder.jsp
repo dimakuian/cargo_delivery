@@ -102,6 +102,7 @@
     <a id="home_page" class="active" href="index.jsp">Home</a>
     <a href="#about">About</a>
     <a href="countCost.jsp">Count coast</a>
+    <a href="createOrder.jsp">Create order</a>
     <div class="login-container">
         <%--        <input id="home_page" type="button" value="Home page" onclick="window.location.href='index.jsp'">--%>
         <c:choose>
@@ -117,10 +118,16 @@
                 </form>
             </c:when>
             <c:when test="${not empty user}">
-                <form action="/controller" method="post">
-                    <input type="hidden" name="command" value="logout">
-                    <button type="submit">Logout</button>
-                </form>
+<%--                <form action="/controller" method="post">--%>
+<%--                    <input type="hidden" name="command" value="logout">--%>
+<%--                    <button type="submit">Logout</button>--%>
+<%--                </form>--%>
+<%--                <form action="/controller" method="post">--%>
+<%--                    <input type="hidden" name="command" value="userCabinet">--%>
+<%--                    <button type="submit">${user.getLogin()}</button>--%>
+<%--                </form>--%>
+                <button onclick="window.location.href='/controller?command=logout'">Logout</button>
+                <button onclick="window.location.href='/controller?command=userCabinet'">${user.getLogin()}</button>
             </c:when>
         </c:choose>
     </div>
