@@ -1,4 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="language"
+       value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
+       scope="session"/>
+<fmt:setLocale value="${language}"/>
+<fmt:setBundle basename="resource"/>
 <%--
   Created by IntelliJ IDEA.
   User: dimakuian
@@ -9,10 +15,10 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <title>Title</title>
+    <title>Registration</title>
     <style>
         /* Style all input fields */
-        input, button {
+        .container input, .container button {
             width: 100%;
             padding: 12px;
             border: 1px solid #ccc;
@@ -23,7 +29,7 @@
         }
 
         /* Style the submit button */
-        input[type=submit], button[type=button] {
+        .container input[type=submit], .container button[type=button] {
             background-color: #555;
             color: white;
             font-size: 17px;
@@ -32,7 +38,7 @@
             font-family: Raleway;
         }
 
-        input[type=checkbox] {
+        .container input[type=checkbox] {
             font-family: Raleway;
         }
 
@@ -82,43 +88,56 @@
             content: "✖";
         }
 
-        body {
+        .container {
             width: 50%;
             margin: auto;
         }
     </style>
 </head>
+
 <body>
-<p>REGISTER JSP</p>
 <c:out value="${message}"/>
 <c:remove var="message"></c:remove>
+<div class="header">
+    <c:import url="heder.jsp"/>
+</div>
 <div class="container">
     <form action="/controller" method="post">
         <input type="hidden" name="command" value="registration">
-        <input type="text" name="login" placeholder="create login" required pattern="^(\w{4,15})$"><br>
-        <input type="password" id="psw" name="password" placeholder="enter password" required
+        <fmt:message key="placeholder.register.create_login" var="placeholder_create_login"/>
+        <input type="text" name="login" placeholder="${placeholder_create_login}" required pattern="^(\w{4,15})$"><br>
+        <fmt:message key="placeholder.register.enter_password" var="placeholder_entre_password"/>
+        <input type="password" id="psw" name="password" placeholder="${placeholder_entre_password}" required
                pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$"><br>
-        <input type="checkbox" onclick="showPsw('psw')">show password
-        <input type="password" id="conf_psw" name="confirm_password" placeholder="repeat entered password"
+        <input type="checkbox" onclick="showPsw('psw')"><fmt:message key="input.show_password"/>
+        <fmt:message key="placeholder.confirm_password" var="placeholder_confirm_password"/>
+        <input type="password" id="conf_psw" name="confirm_password" placeholder="${placeholder_confirm_password}"
                required><br>
-        <input type="checkbox" onclick="showPsw('conf_psw')">show password
+        <input type="checkbox" onclick="showPsw('conf_psw')"><fmt:message key="input.show_password"/>
         <div id="message">
-            <h3>Password must contain the following:</h3>
-            <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
-            <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
-            <p id="number" class="invalid">A <b>number</b></p>
-            <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+            <h3><fmt:message key="registration.message.validation_password"/></h3>
+            <p id="letter" class="invalid">A <b><fmt:message key="registration.message.lowercase"/></b> letter</p>
+            <p id="capital" class="invalid">A <b><fmt:message key="registration.message.uppercase"/></b> letter</p>
+            <p id="number" class="invalid">A <b><fmt:message key="registration.message.number"/></b></p>
+            <p id="length" class="invalid"><fmt:message key="registration.message.minimum"/>
+                <b><fmt:message key="registration.message.characters"/></b></p>
         </div>
-        <input type="text" name="name" placeholder="enter your name" required pattern="^[a-zA-Zа-яА-Я]+$"><br>
-        <input type="text" name="surname" placeholder="enter your surname" required pattern="^[a-zA-Zа-яА-Я]+$"><br>
-        <input type="text" name="patronymic" placeholder="enter your patronymic" required
+        <fmt:message key="registration.placeholder.enter_name" var="placeholder_name"/>
+        <input type="text" name="name" placeholder="${placeholder_name}" required pattern="^[a-zA-Zа-яА-Я]+$"><br>
+        <fmt:message key="registration.placeholder.enter_surname" var="placeholder_surname"/>
+        <input type="text" name="surname" placeholder="${placeholder_surname}" required pattern="^[a-zA-Zа-яА-Я]+$"><br>
+        <fmt:message key="registration.placeholder.enter_patronymic" var="placeholder_patronymic"/>
+        <input type="text" name="patronymic" placeholder="${placeholder_patronymic}" required
                pattern="^[a-zA-Zа-яА-Я]+$"><br>
-        <input type="email" name="email" placeholder="enter your email" required
+        <fmt:message key="registration.placeholder.enter_email" var="placeholder_email"/>
+        <input type="email" name="email" placeholder="${placeholder_email}" required
                pattern='^[\w\-\.]+@([\w-]+\.)+[\w-]{2,4}$'><br>
-        <input type="tel" name="tel" placeholder="enter your phone number in format: +380677777777" required
+        <fmt:message key="registration.placeholder.enter_tel" var="placeholder_tel"/>
+        <input type="tel" name="tel" placeholder="${placeholder_tel}" required
                pattern="^(\+{1}(380){1}[0-9]{9}){1}$"><br>
-        <input type="submit" value="Register">
-        <button type="button" onclick="window.location.href='index.jsp'">Cancel</button>
+        <fmt:message key="button.register" var="register_button"/>
+        <input type="submit" value="${register_button}">
+        <button type="button" onclick="window.location.href='index.jsp'"><fmt:message key="button.cancel"/></button>
     </form>
 </div>
 

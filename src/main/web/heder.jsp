@@ -55,7 +55,7 @@
             float: right;
         }
 
-        .topnav input[type=text], input[type=password] {
+        .topnav input[type=text],.topnav input[type=password] {
             padding: 6px;
             margin-top: 8px;
             font-size: 17px;
@@ -119,7 +119,6 @@
         </c:when>
     </c:choose>
 
-
     <div class="login-container">
         <c:choose>
             <c:when test="${empty user}">
@@ -131,7 +130,7 @@
                     <label for="psw"></label>
                     <fmt:message key="input.password" var="pass"/>
                     <input id="psw" type="password" placeholder="${pass}" name="password">
-                    <button type="button" onclick="window.location.href='/registration.jsp'">
+                    <button id="register_button" type="button" onclick="window.location.href='/registration.jsp'">
                         <fmt:message key="button.register"/></button>
                     <button type="submit"><fmt:message key="button.login"/></button>
                 </form>
@@ -150,6 +149,13 @@
         homePage.style.display = "none";
     } else {
         homePage.style.display = "block";
+    }
+
+    var register_button = document.getElementById("register_button");
+    if (window.location.href.indexOf("/registration.jsp") !== -1) {
+        register_button.style.display = "none";
+    } else {
+        register_button.style.display = "block";
     }
 </script>
 </body>
