@@ -7,9 +7,14 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="language"
+       value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
+       scope="session"/>
+<fmt:setLocale value="${language}"/>
+<fmt:setBundle basename="resource"/>
 <html>
 <head>
-    <title>Title</title>
     <style>
         * {
             box-sizing: border-box;
@@ -99,34 +104,41 @@
 </head>
 <body>
 <div class="topnav">
-    <a id="home_page" class="active" href="index.jsp">Home</a>
-    <a href="#about">About</a>
-    <a href="countCost.jsp">Count coast</a>
-    <a href="createOrder.jsp">Create order</a>
+    <form style="display:inline; float: left; margin: auto">
+        <select id="language" name="language" onchange="submit()">
+            <option value="en" ${language == 'en' ? 'selected' : ''}>EN</option>
+            <option value="ua" ${language == 'ua' ? 'selected' : ''}>UA</option>
+        </select>
+    </form>
+    <a id="home_page" class="active" href="index.jsp"><fmt:message key="button.home"/></a>
+    <a href="#about"><fmt:message key="button.about"/></a>
+    <a href="countCost.jsp"><fmt:message key="button.count_coast"/></a>
+    <c:choose>
+        <c:when test="${role.getName() eq 'client'}">
+            <a href="createOrder.jsp"><fmt:message key="button.create_order"/></a>
+        </c:when>
+    </c:choose>
+
+
     <div class="login-container">
-        <%--        <input id="home_page" type="button" value="Home page" onclick="window.location.href='index.jsp'">--%>
         <c:choose>
             <c:when test="${empty user}">
-                <form action="/controller" method="post">
+                <form action="/controller" method="post" style="display: inline;">
                     <input type="hidden" name="command" value="login"/>
                     <label for="log"></label>
-                    <input id="log" type="text" placeholder="Username" name="login">
+                    <fmt:message key="input.username" var="userName"/>
+                    <input id="log" type="text" placeholder="${userName}" name="login">
                     <label for="psw"></label>
-                    <input id="psw" type="password" placeholder="Password" name="password">
-                    <button type="button" onclick="window.location.href='/registration.jsp'">Register</button>
-                    <button type="submit">Login</button>
+                    <fmt:message key="input.password" var="pass"/>
+                    <input id="psw" type="password" placeholder="${pass}" name="password">
+                    <button type="button" onclick="window.location.href='/registration.jsp'">
+                        <fmt:message key="button.register"/></button>
+                    <button type="submit"><fmt:message key="button.login"/></button>
                 </form>
             </c:when>
             <c:when test="${not empty user}">
-<%--                <form action="/controller" method="post">--%>
-<%--                    <input type="hidden" name="command" value="logout">--%>
-<%--                    <button type="submit">Logout</button>--%>
-<%--                </form>--%>
-<%--                <form action="/controller" method="post">--%>
-<%--                    <input type="hidden" name="command" value="userCabinet">--%>
-<%--                    <button type="submit">${user.getLogin()}</button>--%>
-<%--                </form>--%>
-                <button onclick="window.location.href='/controller?command=logout'">Logout</button>
+                <button onclick="window.location.href='/controller?command=logout'"><fmt:message
+                        key="button.logout"/></button>
                 <button onclick="window.location.href='/controller?command=userCabinet'">${user.getLogin()}</button>
             </c:when>
         </c:choose>

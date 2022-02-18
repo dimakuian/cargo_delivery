@@ -10,9 +10,30 @@
 <html>
 <head>
     <title>Title</title>
+    <style>
+        table {
+            width: 70%;
+            border: 1px solid #dddddd;
+            border-collapse: collapse;
+            margin: auto;
+            font-family: Raleway, serif;
+        }
+
+        table th {
+            color: white;
+            font-weight: bold;
+            padding: 5px;
+            background: #555;
+            border: 1px solid #dddddd;
+        }
+
+        table td {
+            border: 1px solid #dddddd;
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
-<c:set var="client" value="${client}"/>
 <c:import url="heder.jsp"/>
 <div id="edit" style="display: none">
     <form action="/controller" method="post">
@@ -33,6 +54,49 @@
         <input type="number" name="balance" value="0" autocomplete="false">
         <input type="submit" value="Recharge">
     </form>
+</div>
+
+<div>
+    <c:if test="${clientOrders.size()>0}">
+        <table>
+            <tr>
+                <th>From</th>
+                <th>To</th>
+                <th>Create date</th>
+                <th>Consignee</th>
+                <th>Fare</th>
+                <th>Shipping status</th>
+                <th>Payment status</th>
+                <th>Details</th>
+            </tr>
+            <c:forEach var="order" items="${clientOrders}">
+                <tr>
+                    <td>${order.getShippingAddress().getName()}</td>
+                    <td>${order.getDeliveryAddress().getName()}</td>
+                    <td>${order.getCreationTime()}</td>
+                    <td>${order.getConsignee()}</td>
+                    <td>${order.getFare()}</td>
+                    <td>${order.getShippingStatus().getNameEN()}</td>
+                    <td>${order.getPaymentStatus().getNameEN()}
+                        <c:if test="${order.getPaymentStatus().getNameEN()eq 'not paid'}">
+                            <form action="/controller" method="post">
+                                <input type="hidden" name="command" value="payOrder">
+                                <input type="hidden" name="order" value="${order.getId()}">
+                                <input type="submit" value="pay">
+                            </form>
+                        </c:if>
+                    </td>
+                    <td>
+                        <form action="/controller" method="post">
+                            <input type="hidden" name="command" value="editOrder">
+                            <input type="hidden" name="order" value="${order.getId()}">
+                            <input type="submit" value="show">
+                        </form>
+                    </td>
+                </tr>
+            </c:forEach>
+        </table>
+    </c:if>
 </div>
 <script>
     function showEditForm() {

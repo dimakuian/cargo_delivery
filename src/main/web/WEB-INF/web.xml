@@ -7,5 +7,4 @@
     <listener>
         <listener-class>com.epam.delivery.filter.Listener</listener-class>
     </listener>
-
 </web-app>

@@ -28,6 +28,10 @@ public class OrderDao extends AbstractDao<Order, Integer> {
             "consignee, description, distance, length, height, width, weight, volume, fare, shipping_status_id, " +
             "payment_status_id, delivery_date FROM `order`";
 
+    private static final String SELECT_ALL_FOR_CLIENT = "SELECT id, shipping_address, delivery_address, creation_time, client_id, " +
+            "consignee, description, distance, length, height, width, weight, volume, fare, shipping_status_id, " +
+            "payment_status_id, delivery_date FROM `order`WHERE client_id=?";
+
     private static final String DELETE = "DELETE FROM `order` WHERE id=?";
 
     public OrderDao(Connection connection) {
@@ -199,5 +203,23 @@ public class OrderDao extends AbstractDao<Order, Integer> {
             exception.printStackTrace();
         }
         return false;
+    }
+
+    public Iterable<Order> findAllByUserID(Integer id) {
+        List<Order> list = new ArrayList<>();
+        try (PreparedStatement stat = connection.prepareStatement(SELECT_ALL_FOR_CLIENT)) {
+            stat.setInt(1, id);
+            try (ResultSet rs = stat.executeQuery()) {
+                while (rs.next()) {
+                    Order order = Order.createOrder();
+                    Order.Builder builder = order.new Builder(order);
+                    order = getOrder(rs, builder);
+                    list.add(order);
+                }
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+        }
+        return list;
     }
 }

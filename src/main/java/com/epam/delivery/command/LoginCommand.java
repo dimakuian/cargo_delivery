@@ -57,12 +57,10 @@ public class LoginCommand extends Command {
             System.out.println("userRole --> " + role); //replace to logger
 
             if (role == Role.ADMIN)
-                forward = "/controller?command=listMenu";
+                forward = "/index.jsp";//replace to command
 
             if (role == Role.CLIENT)
                 forward = "/controller?command=userCabinet";
-
-            request.getServletContext().setAttribute("message", user.getLogin());
 
             session.setAttribute("user", user);
             System.out.println("Set the session attribute: user --> " + user); //replace to logger
@@ -71,9 +69,8 @@ public class LoginCommand extends Command {
             System.out.println("Set the session attribute: userRole --> " + role);//replace to logger
 
             System.out.println("User " + user + " logged as " + role.toString().toLowerCase()); //replace to logger
-
-            System.out.println("Command finished");
         }
+        System.out.println("Command finished");
         return forward;
     }
 }

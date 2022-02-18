@@ -158,7 +158,7 @@ VALUES (1, 'client');
 
 INSERT INTO user (id, login, password, role_id)
 VALUES (DEFAULT, 'dimakuian', '32250170a0dca92d53ec9624f336ca24', 1),
-       (DEFAULT, 'john99', '32250170a0dca92d53ec9624f336ca24', 0);
+       (DEFAULT, 'admin', '32250170a0dca92d53ec9624f336ca24', 0);
 
 INSERT INTO admin (id, user_id, name, surname)
 VALUES (DEFAULT, 2, 'John', 'Jonson');

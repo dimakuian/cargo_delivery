@@ -2,12 +2,17 @@ package com.epam.delivery.command;
 
 import com.epam.delivery.doa.ConnectionPool;
 import com.epam.delivery.doa.impl.ClientDao;
+import com.epam.delivery.doa.impl.OrderDao;
 import com.epam.delivery.entities.Client;
+import com.epam.delivery.entities.Order;
 import com.epam.delivery.entities.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserCabinetCommand extends Command {
     private static final long serialVersionUID = -6065564914771102683L;
@@ -27,10 +32,18 @@ public class UserCabinetCommand extends Command {
         String forward = "error_page.jsp";
         String errorMessage;
         if (user != null) {
-            ClientDao clientDao = new ClientDao(ConnectionPool.getConnection());
+            Connection connection = ConnectionPool.getConnection();
+            ClientDao clientDao = new ClientDao(connection);
             Client client = clientDao.getByUserId(user.getId()).orElse(null);
+
+
             if (client != null) {
+                OrderDao orderDao = new OrderDao(connection);
+                List<Order> orders = new ArrayList<>();
+                orderDao.findAllByUserID(user.getId()).forEach(orders::add);
                 session.setAttribute("client", client);
+
+                session.setAttribute("clientOrders", orders);
                 forward = "/userCabinet.jsp";
             } else {
                 errorMessage = "can't find this client";

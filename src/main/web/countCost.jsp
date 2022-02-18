@@ -1,4 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="language" value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}" scope="session" />
+<fmt:setLocale value="${language}" />
+<fmt:setBundle basename="resource"/>
 <%--
   Created by IntelliJ IDEA.
   User: dimakuian
@@ -28,7 +32,7 @@
             box-sizing: border-box;
         }
 
-        .count_container input[type=submit], .count_container button[type=button] {
+        .count_container button[type=submit], .count_container button[type=button] {
             background-color: #555;
             color: white;
             font-size: 17px;
@@ -79,7 +83,7 @@
     <form action="/controller" method="post"
           oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)">
         <input type="hidden" name="command" value="countFare">
-        <h5>Route</h5>
+        <h5><fmt:message key="rout"/></h5>
         <label>
             <label>
                 <select id="ship" class="address" list="shipping" name="shipping_address" required>
@@ -98,30 +102,25 @@
             </label>
         </label>
         <br>
-        <label class="param" for="length">Length, сm.</label>
+        <label class="param" for="length"><fmt:message key="countCost.length_cm"/> </label>
         <input id="length" name="length" type="number" required min="0.1" max="70" step="any" value="1"
                title="length can't be less the 1mm"/><br>
-        <label class="param" for="height">Height, сm.</label>
+        <label class="param" for="height"><fmt:message key="countCost.height_cm"/> </label>
         <input id="height" name="height" type="number" required min="0.1" max="70" step="any" value="1"
                title="height can't be less the 1mm"/><br>
-        <label class="param" for="width">Width, сm.</label>
+        <label class="param" for="width"><fmt:message key="countCost.width_cm"/></label>
         <input id="width" name="width" type="number" required min="0.1" max="70" step="any" value="1"
                title="width can't be less the 1mm"/><br>
-        <label class="param" for="volume">Volume, сc.</label>
+        <label class="param" for="volume"><fmt:message key="countCost.volume_cc"/></label>
         <input type="text" id="volume" name="volume" value="1" readonly>
         <br>
-        <label class="param" for="weight">Weight, kg.</label>
+        <label class="param" for="weight"><fmt:message key="countCost.weight_kg"/></label>
         <input id="weight" name="weight" type="number" required min="0.1" max="100" step="any" value="1"/><br>
-        <input type="submit" value="Count"/>
+        <button type="submit"><fmt:message key="button.count" /></button>
     </form>
     <c:if test="${not empty total}">
-        <c:out value="Total to pay: "/><c:out value="${total}"/><br>
-        <c:set var="tot" value="${total}"></c:set>
-        <form action="<c:url value="/create_order"/>" method="get">
-            <input type="hidden" name="total" value="${total}">
-            <input type="submit" value="Create order">
-            <button type="button" onclick="location.href='countCost.jsp'">Cancel</button>
-        </form>
+        <fmt:message key="countCost.total_to_pay"/><c:out value=" ${total} "/><fmt:message key="currency"/> <br>
+        <button type="button" onclick="location.href='countCost.jsp'"><fmt:message key="button.cancel"/></button>
         <c:remove var="total"/>
     </c:if>
 </div>

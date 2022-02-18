@@ -1,4 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="language"
+       value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
+       scope="session"/>
+<fmt:setLocale value="${language}"/>
+<fmt:setBundle basename="resource"/>
 <%--
   Created by IntelliJ IDEA.
   User: dimakuian
@@ -80,7 +86,7 @@
             <form action="/controller" method="post"
                   oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)">
                 <input type="hidden" name="command" value="createOrder">
-                <h5>Route</h5>
+                <h5><fmt:message key="rout"/></h5>
                 <label>
                     <label>
                         <select id="ship" class="address" list="shipping" name="shipping_address" required>
@@ -99,28 +105,31 @@
                     </label>
                 </label>
                 <br>
-                <label class="param" for="length">Length, сm.</label>
+                <label class="param" for="length"><fmt:message key="countCost.length_cm"/></label>
                 <input id="length" name="length" type="number" required min="0.1" max="70" step="any" value="1"
                        title="length can't be less the 1mm"/>
-                <label class="param" for="height">Height, сm.</label>
+                <label class="param" for="height"><fmt:message key="countCost.height_cm"/></label>
                 <input id="height" name="height" type="number" required min="0.1" max="70" step="any" value="1"
                        title="height can't be less the 1mm"/>
-                <label class="param" for="width">Width, сm.</label>
+                <label class="param" for="width"><fmt:message key="countCost.width_cm"/></label>
                 <input id="width" name="width" type="number" required min="0.1" max="70" step="any" value="1"
                        title="width can't be less the 1mm"/>
-                <label class="param" for="volume">Volume, сc.</label>
+                <label class="param" for="volume"><fmt:message key="countCost.volume_cc"/></label>
                 <input type="text" id="volume" name="volume" value="1" readonly>
-                <label class="param" for="weight">Weight, kg.</label>
+                <label class="param" for="weight"><fmt:message key="countCost.weight_kg"/></label>
                 <input id="weight" name="weight" type="number" required min="0.1" max="100" step="any" value="1"/><br>
+                <fmt:message key="placeholder.consignee" var="consignee_placeholder"/>
                 <input style="width: 48%" type="text" name="consignee" required
-                       placeholder="enter name surname and phone number"><br>
-                <input style="width: 48%" type="text" name="description" required placeholder="enter cargo description"><br>
-                <input type="submit" value="Create order"/>
+                       placeholder="${consignee_placeholder}"><br>
+                <fmt:message key="placeholder.description" var="description_placeholder"/>
+                <input style="width: 48%" type="text" name="description" required placeholder="${description_placeholder}"><br>
+                <fmt:message key="input.create_order" var="creteOrder"/>
+                <input type="submit" value="${creteOrder}"/>
             </form>
         </div>
     </c:when>
     <c:otherwise>
-        <p>You should login or create account before!</p>
+        <p><fmt:message key="message.login_before"/></p>
     </c:otherwise>
 </c:choose>
 
