@@ -11,26 +11,26 @@ public class OrderDao extends AbstractDao<Order, Integer> {
 
     private static final String INSERT = "INSERT INTO `order` (id, shipping_address, delivery_address, " +
             "creation_time, client_id, consignee, description, distance, length, height, width, weight, volume, " +
-            "fare, shipping_status_id, payment_status_id, delivery_date) \n" +
-            "VALUES (DEFAULT,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+            "fare, shipping_status_id, delivery_date) \n" +
+            "VALUES (DEFAULT,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
     private static final String UPDATE = "UPDATE `order` SET shipping_address=?,delivery_address=?,creation_time=?," +
             "client_id=?,consignee=?,description=?,distance=?,length=?,width=?,height=?,weight=?,volume=?,fare=?," +
-            "shipping_status_id=?, payment_status_id=?,delivery_date=? WHERE id=?";
+            "shipping_status_id=?,delivery_date=? WHERE id=?";
 
     private static final String SELECT_BY_ID = "SELECT id, shipping_address, delivery_address, creation_time, client_id," +
             " consignee, description, distance, length, height, width, weight, volume, fare, shipping_status_id, " +
-            "payment_status_id, delivery_date FROM `order` WHERE id=?";
+            " delivery_date FROM `order` WHERE id=?";
 
     private static final String EXIST = "SELECT id FROM `order` WHERE id =?";
 
     private static final String SELECT_ALL = "SELECT id, shipping_address, delivery_address, creation_time, client_id, " +
             "consignee, description, distance, length, height, width, weight, volume, fare, shipping_status_id, " +
-            "payment_status_id, delivery_date FROM `order`";
+            "delivery_date FROM `order`";
 
     private static final String SELECT_ALL_FOR_CLIENT = "SELECT id, shipping_address, delivery_address, creation_time, client_id, " +
             "consignee, description, distance, length, height, width, weight, volume, fare, shipping_status_id, " +
-            "payment_status_id, delivery_date FROM `order`WHERE client_id=?";
+            " delivery_date FROM `order`WHERE client_id=?";
 
     private static final String DELETE = "DELETE FROM `order` WHERE id=?";
 
@@ -85,18 +85,17 @@ public class OrderDao extends AbstractDao<Order, Integer> {
         stat.setDouble(12, entity.getVolume());
         stat.setDouble(13, entity.getFare());
         stat.setInt(14, entity.getShippingStatus().getId());
-        stat.setInt(15, entity.getPaymentStatus().getId());
         if (entity.getDeliveryDate() != null) {
-            stat.setTimestamp(16, entity.getDeliveryDate());
+            stat.setTimestamp(15, entity.getDeliveryDate());
         }
-        stat.setNull(16, 0);
+        stat.setNull(15, 0);
     }
 
     @Override
     public boolean update(Order entity) {
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             putDataToStatement(entity, stat);
-            stat.setInt(17, entity.getId());
+            stat.setInt(16, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
             exception.printStackTrace();
@@ -156,10 +155,6 @@ public class OrderDao extends AbstractDao<Order, Integer> {
         ShippingStatus shippingStatus = shippingStatusDao.findById(shippingStatusId).orElse(null);//replace to throw!!!
         builder.withShippingStatus(shippingStatus);
 
-        int paymentStatusId = rs.getInt("payment_status_id");
-        PaymentStatusDao paymentStatusDao = new PaymentStatusDao(connection);
-        PaymentStatus paymentStatus = paymentStatusDao.findById(paymentStatusId).orElse(null);//replace to throw!!!
-        builder.withPaymentStatus(paymentStatus);
         return builder.build();
     }
 

@@ -1,4 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:set var="language"
+       value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
+       scope="session"/>
+<fmt:setLocale value="${language}"/>
+<fmt:setBundle basename="resource"/>
 <%--
   Created by IntelliJ IDEA.
   User: dimakuian
@@ -9,7 +15,8 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <html>
 <head>
-    <title>Title</title>
+    <fmt:message key="userCabinet.title" var="user_cabinet_title"/>
+    <title>${user_cabinet_title}</title>
     <style>
         table {
             width: 70%;
@@ -48,11 +55,12 @@
 </div>
 <button id="button" type="button" onclick="showEditForm()">Edit user</button>
 <div>
-    <p>Your balance: <c:out value="${client.getBalance()}"/></p>
+    <p><fmt:message key="userCabinet.user_balance"/><c:out value=" ${client.getBalance()}"/></p>
     <form action="/controller" method="post">
         <input type="hidden" name="command" value="recharge">
         <input type="number" name="balance" value="0" autocomplete="false">
-        <input type="submit" value="Recharge">
+        <fmt:message key="userCabinet.recharge_balance" var="recharge_balance"/>
+        <input type="submit" value="${recharge_balance}">
     </form>
 </div>
 
@@ -60,14 +68,13 @@
     <c:if test="${clientOrders.size()>0}">
         <table>
             <tr>
-                <th>From</th>
-                <th>To</th>
-                <th>Create date</th>
-                <th>Consignee</th>
-                <th>Fare</th>
-                <th>Shipping status</th>
-                <th>Payment status</th>
-                <th>Details</th>
+                <th><fmt:message key="userCabinet.from"/></th>
+                <th><fmt:message key="userCabinet.to"/></th>
+                <th><fmt:message key="userCabinet.create_date"/></th>
+                <th><fmt:message key="userCabinet.consignee"/></th>
+                <th><fmt:message key="userCabinet.fare"/></th>
+                <th><fmt:message key="userCabinet.shipping_status"/></th>
+                <th><fmt:message key="userCabinet.details"/></th>
             </tr>
             <c:forEach var="order" items="${clientOrders}">
                 <tr>
@@ -76,21 +83,41 @@
                     <td>${order.getCreationTime()}</td>
                     <td>${order.getConsignee()}</td>
                     <td>${order.getFare()}</td>
-                    <td>${order.getShippingStatus().getNameEN()}</td>
-                    <td>${order.getPaymentStatus().getNameEN()}
-                        <c:if test="${order.getPaymentStatus().getNameEN()eq 'not paid'}">
-                            <form action="/controller" method="post">
-                                <input type="hidden" name="command" value="payOrder">
-                                <input type="hidden" name="order" value="${order.getId()}">
-                                <input type="submit" value="pay">
-                            </form>
-                        </c:if>
+                    <c:choose>
+                        <c:when test="${language=='en'}">
+                            <td>${order.getShippingStatus().getName()}
+                                <c:if test="${order.getShippingStatus().getName() eq 'not paid'}">
+                                    <form action="/controller" method="post">
+                                        <input type="hidden" name="command" value="payOrder">
+                                        <input type="hidden" name="order" value="${order.getId()}">
+                                        <fmt:message key="userCabinet.button.pay" var="button_pay"/>
+                                        <input type="submit" value="${button_pay}">
+                                    </form>
+                                </c:if>
+                            </td>
+                        </c:when>
+                        <c:when test="${language=='ua'}">
+                            <td>${order.getShippingStatus().getName()}
+                                <c:if test="${order.getShippingStatus().getName() eq 'не оплачено'}">
+                                    <form action="/controller" method="post">
+                                        <input type="hidden" name="command" value="payOrder">
+                                        <input type="hidden" name="order" value="${order.getId()}">
+                                        <fmt:message key="userCabinet.button.pay" var="button_pay"/>
+                                        <input type="submit" value="${button_pay}">
+                                    </form>
+                                </c:if>
+                            </td>
+                        </c:when>
+                    </c:choose>
+
+
                     </td>
                     <td>
                         <form action="/controller" method="post">
                             <input type="hidden" name="command" value="editOrder">
                             <input type="hidden" name="order" value="${order.getId()}">
-                            <input type="submit" value="show">
+                            <fmt:message key="userCabinet.button.show" var="button_show"/>
+                            <input type="submit" value="${button_show}">
                         </form>
                     </td>
                 </tr>

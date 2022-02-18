@@ -20,7 +20,6 @@ public class Order implements Serializable {
     private double volume;
     private double fare;
     private ShippingStatus shippingStatus;
-    private PaymentStatus paymentStatus;
     private Timestamp deliveryDate;
 
     private Order() {
@@ -154,14 +153,6 @@ public class Order implements Serializable {
         this.shippingStatus = shippingStatus;
     }
 
-    public PaymentStatus getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(PaymentStatus paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
     public Timestamp getDeliveryDate() {
         return deliveryDate;
     }
@@ -192,7 +183,6 @@ public class Order implements Serializable {
                 ", volume=" + volume +
                 ", fare=" + fare +
                 ", shippingStatus=" + shippingStatus +
-                ", paymentStatus=" + paymentStatus +
                 ", deliveryDate=" + deliveryDate +
                 '}';
     }
@@ -277,11 +267,6 @@ public class Order implements Serializable {
 
         public Builder withShippingStatus(ShippingStatus val) {
             order.shippingStatus = val;
-            return this;
-        }
-
-        public Builder withPaymentStatus(PaymentStatus val) {
-            order.paymentStatus = val;
             return this;
         }
 

@@ -7,4 +7,7 @@
     <listener>
         <listener-class>com.epam.delivery.filter.Listener</listener-class>
     </listener>
+    <welcome-file-list>
+        <welcome-file>index.jsp</welcome-file>
+    </welcome-file-list>
 </web-app>

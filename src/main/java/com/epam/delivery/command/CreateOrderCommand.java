@@ -88,9 +88,6 @@ public class CreateOrderCommand extends Command {
             ShippingStatus shippingStatus = shippingStatusDao.findById(1).orElse(null); //crate method in dao
             builder.withShippingStatus(shippingStatus);
 
-            PaymentStatusDao paymentStatusDao = new PaymentStatusDao(connection);
-            PaymentStatus paymentStatus = paymentStatusDao.findById(2).orElse(null);//crete method in dao
-            builder.withPaymentStatus(paymentStatus);
             order = builder.build();
 
             OrderDao orderDao = new OrderDao(connection);

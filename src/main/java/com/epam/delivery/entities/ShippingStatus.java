@@ -5,12 +5,10 @@ import java.io.Serializable;
 public class ShippingStatus implements Serializable {
     private static final long serialVersionUID = 8181521910693065637L;
     private int id;
-    private String nameEN;
-    private String nameUK;
+    private String name;
 
-    private ShippingStatus(String nameEN, String nameUK) {
-        this.nameEN = nameEN;
-        this.nameUK = nameUK;
+    private ShippingStatus(String name) {
+        this.name = name;
     }
 
     public int getId() {
@@ -21,34 +19,24 @@ public class ShippingStatus implements Serializable {
         this.id = id;
     }
 
-    public String getNameEN() {
-        return nameEN;
+    public String getName() {
+        return name;
     }
 
-    public void setNameEN(String nameEN) {
-        this.nameEN = nameEN;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getNameUK() {
-        return nameUK;
+    public static ShippingStatus createShippingStatus(String name) {
+        return new ShippingStatus(name);
     }
-
-    public void setNameUK(String nameUK) {
-        this.nameUK = nameUK;
-    }
-
-    public static ShippingStatus createShippingStatus(String nameEN, String nameUK) {
-        return new ShippingStatus(nameEN, nameUK);
-    }
-
 
 
     @Override
     public String toString() {
         return "ShippingStatus{" +
                 "id=" + id +
-                ", nameEN='" + nameEN + '\'' +
-                ", nameUK='" + nameUK + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

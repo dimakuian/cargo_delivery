@@ -1,5 +1,6 @@
 package com.epam.delivery.doa.impl;
 
+import com.epam.delivery.doa.SimpleConnection;
 import com.epam.delivery.entities.ShippingStatus;
 
 import java.sql.*;
@@ -9,15 +10,15 @@ import java.util.Optional;
 
 public class ShippingStatusDao extends AbstractDao<ShippingStatus, Integer> {
 
-    private static final String INSERT = "INSERT INTO shipping_status (id, name_EN, name_UK) VALUES (DEFAULT,?,?)";
+    private static final String INSERT = "INSERT INTO shipping_status (id, name) VALUES (DEFAULT,?)";
 
-    private static final String UPDATE = "UPDATE shipping_status SET name_EN=?,name_UK=? WHERE id=?";
+    private static final String UPDATE = "UPDATE shipping_status SET name=? WHERE id=?";
 
-    private static final String SELECT_BY_ID = "SELECT id, name_EN, name_UK from shipping_status WHERE id=?";
+    private static final String SELECT_BY_ID = "SELECT id, name from shipping_status WHERE id=?";
 
     private static final String EXIST = "SELECT id FROM shipping_status WHERE id=?";
 
-    private static final String SELECT_ALL = "select id, name_EN, name_UK from shipping_status";
+    private static final String SELECT_ALL = "select id, name from shipping_status";
 
     private static final String DELETE = "DELETE FROM shipping_status WHERE id=?";
 
@@ -28,8 +29,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Integer> {
     @Override
     public boolean insert(ShippingStatus entity) {
         try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
-            stat.setString(1, entity.getNameEN());
-            stat.setString(2, entity.getNameUK());
+            stat.setString(1, entity.getName());
             if (stat.executeUpdate() > 0) {
                 try (ResultSet rs = stat.getGeneratedKeys()) {
                     if (rs.next()) {
@@ -49,9 +49,8 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Integer> {
     @Override
     public boolean update(ShippingStatus entity) {
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
-            stat.setString(1, entity.getNameEN());
-            stat.setString(2, entity.getNameUK());
-            stat.setInt(3, entity.getId());
+            stat.setString(1, entity.getName());
+            stat.setInt(2, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
             System.err.println("SQLException while update ShippingStatus " + exception.getMessage());
@@ -67,9 +66,8 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Integer> {
             try (ResultSet rs = stat.executeQuery()) {
                 while (rs.next()) {
                     int statusID = rs.getInt("id");
-                    String nameEn = rs.getString("name_EN");
-                    String nameUk = rs.getString("name_UK");
-                    status = ShippingStatus.createShippingStatus(nameEn, nameUk);
+                    String name = rs.getString("name");
+                    status = ShippingStatus.createShippingStatus(name);
                     status.setId(statusID);
                 }
             }
@@ -101,9 +99,8 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Integer> {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
                 while (rs.next()) {
                     int statusID = rs.getInt("id");
-                    String nameEn = rs.getString("name_EN");
-                    String nameUk = rs.getString("name_UK");
-                    ShippingStatus status = ShippingStatus.createShippingStatus(nameEn, nameUk);
+                    String name = rs.getString("name");
+                    ShippingStatus status = ShippingStatus.createShippingStatus(name);
                     status.setId(statusID);
                     statusList.add(status);
                 }

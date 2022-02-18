@@ -7,7 +7,6 @@
     <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/LanguageDao.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/LocalityDao.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/LocalityDescriptionDao.java" dialect="GenericSQL" />
-    <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/PaymentStatusDao.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/ShippingStatusDao.java" dialect="GenericSQL" />
     <file url="file://$PROJECT_DIR$/src/main/java/com/epam/delivery/doa/impl/UserDao.java" dialect="GenericSQL" />
     <file url="PROJECT" dialect="MySQL" />

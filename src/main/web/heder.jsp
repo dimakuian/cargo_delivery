@@ -53,9 +53,10 @@
 
         .topnav .login-container {
             float: right;
+            padding-right: 10px;
         }
 
-        .topnav input[type=text],.topnav input[type=password] {
+        .topnav input[type=text], .topnav input[type=password] {
             padding: 6px;
             margin-top: 8px;
             font-size: 17px;
@@ -104,7 +105,7 @@
 </head>
 <body>
 <div class="topnav">
-    <form style="display:inline; float: left; margin: auto">
+    <form style="display:inline; float: left; margin: auto" method="post">
         <select id="language" name="language" onchange="submit()">
             <option value="en" ${language == 'en' ? 'selected' : ''}>EN</option>
             <option value="ua" ${language == 'ua' ? 'selected' : ''}>UA</option>

@@ -67,21 +67,24 @@ DROP TABLE IF EXISTS `shipping_status`;
 
 CREATE TABLE IF NOT EXISTS `shipping_status`
 (
-    `id`      INT         NOT NULL AUTO_INCREMENT,
-    `name_EN` VARCHAR(45) NOT NULL,
-    `name_UK` VARCHAR(45) NOT NULL,
+    `id`   INT         NOT NULL AUTO_INCREMENT,
+    `name` VARCHAR(45) NOT NULL,
     PRIMARY KEY (`id`)
 );
 
-DROP TABLE IF EXISTS `payment_status`;
+DROP DATABASE IF EXISTS `shipping_status_description`;
 
-CREATE TABLE IF NOT EXISTS `payment_status`
+CREATE TABLE IF NOT EXISTS `shipping_status_description`
 (
-    `id`      INT         NOT NULL AUTO_INCREMENT,
-    `name_EN` VARCHAR(45) NOT NULL,
-    `name_UK` VARCHAR(45) NOT NULL,
-    PRIMARY KEY (`id`)
+    `shipping_status_id` INT         NOT NULL,
+    `language_id`        INT         NOT NULL,
+    `description`        VARCHAR(45) NOT NULL,
+    CONSTRAINT `fk_shipping_status_description_id` FOREIGN KEY (`shipping_status_id`)
+        REFERENCES `shipping_status` (`id`) ON DELETE CASCADE,
+    CONSTRAINT `fk_shipping_status_language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`)  ON DELETE CASCADE
 );
+
+
 
 DROP TABLE IF EXISTS `locality`;
 
@@ -139,13 +142,11 @@ CREATE TABLE IF NOT EXISTS `order`
     `volume`             DOUBLE        NOT NULL DEFAULT 1,
     `fare`               DECIMAL(8, 2) NOT NULL DEFAULT 0,
     `shipping_status_id` INT           NOT NULL,
-    `payment_status_id`  INT           NOT NULL,
     `delivery_date`      TIMESTAMP              DEFAULT NULL,
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_shipping_address` FOREIGN KEY (`shipping_address`) REFERENCES `locality` (id),
     CONSTRAINT `fk_delivery_address` FOREIGN KEY (`delivery_address`) REFERENCES `locality` (id),
     CONSTRAINT `fk_shipping_status_id` FOREIGN KEY (`shipping_status_id`) REFERENCES `shipping_status` (`id`),
-    CONSTRAINT `fk_payment_status_id` FOREIGN KEY (`payment_status_id`) REFERENCES `payment_status` (`id`),
     CONSTRAINT `fk_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`)
 );
 
@@ -178,13 +179,30 @@ VALUES (DEFAULT, 'Kiev department №2', 50.430152159229465, 30.400358449390378)
        (DEFAULT, 'Ternopil department №4', 49.551989782699984, 25.57133777998255),
        (DEFAULT, 'Rivne department №5', 50.612594968969354, 26.246152539988664);
 
-INSERT INTO shipping_status (id, name_EN, name_UK)
-VALUES (DEFAULT, 'created', 'створений'),
-       (DEFAULT, 'confirmed', 'підтверджений');
+INSERT INTO shipping_status (id, name)
+VALUES (DEFAULT, 'created'),
+       (DEFAULT, 'paid'),
+       (DEFAULT, 'confirmed'),
+       (DEFAULT, 'preparing to ship'),
+       (DEFAULT, 'in the way'),
+       (DEFAULT, 'delivered'),
+       (DEFAULT, 'canceled');
 
-INSERT INTO payment_status (id, name_EN, name_UK)
-VALUES (DEFAULT, 'paid', 'оплачений'),
-       (DEFAULT, 'not paid', 'не оплачений');
+INSERT INTO shipping_status_description (shipping_status_id, language_id, description)
+VALUES (1, 1, 'created'),
+       (1, 2, 'створений'),
+       (2, 1, 'paid'),
+       (2, 2, 'оплачений'),
+       (3, 1, 'confirmed'),
+       (3, 2, 'підтверджений'),
+       (4, 1, 'preparing to ship'),
+       (4, 2, 'готується до відправлення'),
+       (5, 1, 'in the way'),
+       (5, 2, 'в дорозі'),
+       (6, 1, 'delivered'),
+       (6, 2, 'доставлений'),
+       (7, 1, 'canceled'),
+       (7, 2, 'скасований');
 
 
 

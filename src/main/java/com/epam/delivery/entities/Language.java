@@ -1,6 +1,7 @@
 package com.epam.delivery.entities;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Language implements Serializable {
     private static final long serialVersionUID = -7304907511028603803L;
@@ -48,5 +49,18 @@ public class Language implements Serializable {
                 ", shortName='" + shortName + '\'' +
                 ", fullName='" + fullName + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Language language = (Language) o;
+        return id == language.id && Objects.equals(shortName, language.shortName) && Objects.equals(fullName, language.fullName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, shortName, fullName);
     }
 }
