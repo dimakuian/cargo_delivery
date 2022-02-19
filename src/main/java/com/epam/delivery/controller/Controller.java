@@ -12,22 +12,22 @@ import java.io.IOException;
 
 @WebServlet("/controller")
 public class Controller extends HttpServlet {
+    private static final long serialVersionUID = 5248789422654095305L;
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String process = process(req, resp);
-        req.getRequestDispatcher(process).forward(req, resp);
+        process(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String process = process(req, resp);
-        resp.sendRedirect(process);
+        process(req, resp);
     }
 
     /**
      * Main method of this controller.
      */
-    private String process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    private void process(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         //add logger
 
         // extract command name from the request
@@ -38,15 +38,17 @@ public class Controller extends HttpServlet {
         Command command = CommandContainer.get(commandName);
         System.out.println("Obtained command --> " + command); //replace to logger
 
-        // execute command and get forward address
-        String forward = command.execute(req, resp);
-        System.out.println("Forward address --> " + forward); //replace to logger
+        // execute command and get page address
+        String page = command.execute(req, resp);
+        System.out.println("Forward address --> " + page); //replace to logger
 
-        System.out.println("Controller finished, now go to forward address --> " + forward);//replace to logger
-//        if (forward != null) {
-//            RequestDispatcher dispatcher = req.getRequestDispatcher(forward);
-//            dispatcher.forward(req, resp);
-//        }
-        return forward;
+        String method = req.getMethod();
+
+        if (method.equals("GET")) {
+            req.getRequestDispatcher(page).forward(req, resp);
+        } else if (method.equals("POST")) {
+            resp.sendRedirect(page);
+        }
+        System.out.println("Controller finished, now go to page address --> " + page);//replace to logger
     }
 }

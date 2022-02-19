@@ -1,7 +1,10 @@
 package com.epam.delivery.command;
 
 import com.epam.delivery.doa.ConnectionPool;
-import com.epam.delivery.doa.impl.*;
+import com.epam.delivery.doa.impl.ClientDao;
+import com.epam.delivery.doa.impl.LocalityDao;
+import com.epam.delivery.doa.impl.OrderDao;
+import com.epam.delivery.doa.impl.ShippingStatusDescriptionDao;
 import com.epam.delivery.entities.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,14 +37,15 @@ public class CreateOrderCommand extends Command {
         LocalityDao localityDao = new LocalityDao(connection);
         Locality shippingAddress = localityDao.findById(shipAddressID).orElse(null);
         Locality deliveryAddress = localityDao.findById(delAddressId).orElse(null);
+        assert shippingAddress != null;
+        assert deliveryAddress != null;
         Double distance = localityDao.calcDistanceBetweenTwoLocality(shippingAddress, deliveryAddress).orElse(null);
 
 
-        Double length = Double.parseDouble(request.getParameter("length"));
-        Double height = Double.parseDouble(request.getParameter("height"));
-        Double width = Double.parseDouble(request.getParameter("width"));
-        Double weight = Double.parseDouble(request.getParameter("weight"));
-        Double volume = Double.parseDouble(request.getParameter("volume"));
+        double length = Double.parseDouble(request.getParameter("length"));
+        double height = Double.parseDouble(request.getParameter("height"));
+        double width = Double.parseDouble(request.getParameter("width"));
+        double weight = Double.parseDouble(request.getParameter("weight"));
         String consignee = request.getParameter("consignee");
         String description = request.getParameter("description");
         HttpSession session = request.getSession();
@@ -52,11 +56,9 @@ public class CreateOrderCommand extends Command {
         ClientDao clientDao = new ClientDao(connection);
         Client client = clientDao.findById(user.getId()).orElse(null);
 
-        if (shippingAddress != null && deliveryAddress != null && length != null && height != null && width != null &&
-                weight != null && volume != null && distance != null && consignee != null && description != null &&
-                client != null) {
+        if (distance != null && consignee != null && description != null && client != null) {
 
-            volume = length * height * width;
+            double volume = length * height * width;
             BigDecimal bigDecimal = new BigDecimal(volume).setScale(2, RoundingMode.HALF_UP);
             volume = bigDecimal.doubleValue();
             double volumeWeight = volume / 4000;
@@ -84,8 +86,9 @@ public class CreateOrderCommand extends Command {
                     .withVolume(volume)
                     .withFare(total);
 
-            ShippingStatusDao shippingStatusDao = new ShippingStatusDao(connection);
-            ShippingStatus shippingStatus = shippingStatusDao.findById(1).orElse(null); //crate method in dao
+            ShippingStatusDescriptionDao shippingStatusDao = new ShippingStatusDescriptionDao(connection);
+            ShippingStatusDescription shippingStatus = shippingStatusDao.findById(1).orElse(null); //crate method in dao
+
             builder.withShippingStatus(shippingStatus);
 
             order = builder.build();

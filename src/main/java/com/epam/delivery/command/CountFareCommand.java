@@ -10,6 +10,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 public class CountFareCommand extends Command {
+    private static final long serialVersionUID = 438065897383166022L;
+
     /**
      * Execution method for command.
      *
@@ -32,21 +34,17 @@ public class CountFareCommand extends Command {
         Double length = Double.parseDouble(request.getParameter("length"));
         Double height = Double.parseDouble(request.getParameter("height"));
         Double width = Double.parseDouble(request.getParameter("width"));
-        Double weight = Double.parseDouble(request.getParameter("weight"));
-        Double volume = Double.parseDouble(request.getParameter("volume"));
+        double weight = Double.parseDouble(request.getParameter("weight"));
 
-
-        if (shippingAddress != null && deliveryAddress != null && length != null && height != null && width != null &&
-                weight != null && volume != null && distance != null) {
-            Double volumeWeight = length * height * width / 4000;
+        if (distance != null) {
+            double volumeWeight = length * height * width / 4000;
             double usedWeight = Double.max(weight, volumeWeight);
-            Double total;
+            double total;
             if (distance < 500) {
                 total = (30 + usedWeight * 3);
             } else {
                 total = distance / 500 * (30 + usedWeight * 3);
             }
-
             request.getServletContext().setAttribute("total", Math.round(total));
             forward = "/countCost.jsp";
         }

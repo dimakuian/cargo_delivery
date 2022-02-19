@@ -29,11 +29,11 @@ public class LoginCommand extends Command {
         HttpSession session = request.getSession(true);
         // obtain login and password from the request
         String login = request.getParameter("login");
-        System.out.println("Request parameter: loging --> " + login); //replace to logger
+        System.out.println("Request parameter: logging --> " + login); //replace to logger
 
         String password = request.getParameter("password");
         // error handler
-        String errorMessage = null;
+        String errorMessage;
         String forward = "error_page.jsp";
 
         if (login == null || password == null || login.isEmpty() || password.isEmpty()) {

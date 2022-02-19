@@ -1,9 +1,15 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<c:set var="language"
-       value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
-       scope="session"/>
-<fmt:setLocale value="${language}"/>
+<!-- Set actual locale -->
+<c:choose>
+    <c:when test="${empty locale}">
+        <fmt:setLocale value="ua" scope="session"/>
+        <c:set var="locale" value="ua" scope="session"/>
+    </c:when>
+    <c:otherwise>
+        <fmt:setLocale value="${locale}" scope="session"/>
+    </c:otherwise>
+</c:choose>
 <fmt:setBundle basename="resource"/>
 <%--
   Created by IntelliJ IDEA.
@@ -79,7 +85,19 @@
 <body>
 <%-- CONTENT --%>
 <c:set var="list" value="${applicationScope['localities']}"/>
-<c:import url="heder.jsp"></c:import>
+<c:import url="heder.jsp"/>
+<!-- Language switcher begin -->
+<form name="locales" action="/controller" method="post">
+    <select name="lang" onchange="this.form.submit()">
+        <option selected disabled><fmt:message
+                key="register.chooseLang"/></option>
+        <option value="ua"><fmt:message key="register.ua"/></option>
+        <option value="en"><fmt:message key="register.en"/></option>
+    </select>
+    <input type="hidden" name="command" value="setLocale">
+    <input type="hidden" name="page" value="createOrder.jsp">
+</form>
+<!-- end Language switcher -->
 <c:choose>
     <c:when test="${role.getName() eq 'client'}">
         <div class="count_container">

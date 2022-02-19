@@ -5,7 +5,7 @@ import java.util.TreeMap;
 
 public class CommandContainer {
 
-    private static Map<String, Command> commands = new TreeMap<>();
+    private static final Map<String, Command> commands = new TreeMap<>();
 
     static {
         // common commands
@@ -14,6 +14,7 @@ public class CommandContainer {
         commands.put("registration", new RegistrationCommand());
         commands.put("countFare", new CountFareCommand());
         commands.put("createOrder", new CreateOrderCommand());
+        commands.put("setLocale",new SetLocaleCommand());
 
         // client commands
         commands.put("userCabinet", new UserCabinetCommand());

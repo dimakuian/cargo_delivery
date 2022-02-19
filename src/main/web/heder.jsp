@@ -8,10 +8,16 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
-<c:set var="language"
-       value="${not empty param.language ? param.language : not empty language ? language : pageContext.request.locale}"
-       scope="session"/>
-<fmt:setLocale value="${language}"/>
+<!-- Set actual locale -->
+<c:choose>
+    <c:when test="${empty locale}">
+        <fmt:setLocale value="ua" scope="session"/>
+        <c:set var="locale" value="ua" scope="session"/>
+    </c:when>
+    <c:otherwise>
+        <fmt:setLocale value="${locale}" scope="session"/>
+    </c:otherwise>
+</c:choose>
 <fmt:setBundle basename="resource"/>
 <html>
 <head>
@@ -102,15 +108,10 @@
             }
         }
     </style>
+    <title></title>
 </head>
 <body>
 <div class="topnav">
-    <form style="display:inline; float: left; margin: auto" method="post">
-        <select id="language" name="language" onchange="submit()">
-            <option value="en" ${language == 'en' ? 'selected' : ''}>EN</option>
-            <option value="ua" ${language == 'ua' ? 'selected' : ''}>UA</option>
-        </select>
-    </form>
     <a id="home_page" class="active" href="index.jsp"><fmt:message key="button.home"/></a>
     <a href="#about"><fmt:message key="button.about"/></a>
     <a href="countCost.jsp"><fmt:message key="button.count_coast"/></a>
@@ -123,14 +124,14 @@
     <div class="login-container">
         <c:choose>
             <c:when test="${empty user}">
-                <form action="/controller" method="post" style="display: inline;">
+                <form action="<c:url value="/controller"/>" method="post" style="display: inline;">
                     <input type="hidden" name="command" value="login"/>
                     <label for="log"></label>
                     <fmt:message key="input.username" var="userName"/>
-                    <input id="log" type="text" placeholder="${userName}" name="login">
+                    <input id="log" type="text" placeholder="${userName}" name="login" required>
                     <label for="psw"></label>
                     <fmt:message key="input.password" var="pass"/>
-                    <input id="psw" type="password" placeholder="${pass}" name="password">
+                    <input id="psw" type="password" placeholder="${pass}" name="password" required>
                     <button id="register_button" type="button" onclick="window.location.href='/registration.jsp'">
                         <fmt:message key="button.register"/></button>
                     <button type="submit"><fmt:message key="button.login"/></button>
@@ -145,14 +146,14 @@
     </div>
 </div>
 <script>
-    var homePage = document.getElementById("home_page");
+    const homePage = document.getElementById("home_page");
     if (window.location.href.indexOf("/index.jsp") !== -1) {
         homePage.style.display = "none";
     } else {
         homePage.style.display = "block";
     }
 
-    var register_button = document.getElementById("register_button");
+    const register_button = document.getElementById("register_button");
     if (window.location.href.indexOf("/registration.jsp") !== -1) {
         register_button.style.display = "none";
     } else {

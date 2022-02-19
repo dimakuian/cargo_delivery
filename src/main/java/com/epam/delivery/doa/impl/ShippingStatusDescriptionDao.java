@@ -5,13 +5,8 @@ import com.epam.delivery.entities.Language;
 import com.epam.delivery.entities.ShippingStatus;
 import com.epam.delivery.entities.ShippingStatusDescription;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
+import java.sql.*;
+import java.util.*;
 
 public class ShippingStatusDescriptionDao extends AbstractDao<ShippingStatusDescription, Integer> {
     private static final long serialVersionUID = 5914479348016532002L;
@@ -23,21 +18,31 @@ public class ShippingStatusDescriptionDao extends AbstractDao<ShippingStatusDesc
             "UPDATE description_locality SET city=?,street=?,street_number=? " +
                     "WHERE locality_id=? AND language_id=?";
 
-    private static final String SELECT_BY_ID =
-            "SELECT shipping_status.name,\n" +
-                    "       shipping_status_description.description,\n" +
-                    "       language.id,\n" +
-                    "       language.short_name,\n" +
-                    "       language.full_name\n" +
-                    "FROM shipping_status_description\n" +
-                    "         INNER JOIN language ON shipping_status_description.language_id = language.id\n" +
-                    "         INNER JOIN shipping_status ON shipping_status_description.shipping_status_id = shipping_status.id\n" +
-                    "WHERE shipping_status_id = ?";
+    private static final String SELECT_BY_ID = "SELECT\n" +
+            "    shipping_status.id,\n" +
+            "    shipping_status.name,\n" +
+            "    GROUP_CONCAT((SELECT shipping_status_description.description WHERE language.short_name = 'EN')) as en_description,\n" +
+            "    GROUP_CONCAT((SELECT shipping_status_description.description WHERE language.short_name = 'UA')) as ua_description\n" +
+            "FROM shipping_status_description\n" +
+            "         INNER JOIN language ON shipping_status_description.language_id = language.id\n" +
+            "         INNER JOIN shipping_status ON shipping_status_description.shipping_status_id = shipping_status.id\n" +
+            "WHERE shipping_status.id=?\n" +
+            "GROUP BY shipping_status.id\n" +
+            "ORDER BY shipping_status.id";
+
 
     private static final String EXIST = "SELECT locality_id FROM description_locality WHERE locality_id =?";
 
-    private static final String SELECT_ALL =
-            "SELECT locality_id, language_id, city, street, street_number FROM description_locality";
+    private static final String SELECT_ALL = "SELECT\n" +
+            "    shipping_status.id,\n" +
+            "    shipping_status.name,\n" +
+            "    GROUP_CONCAT((SELECT shipping_status_description.description WHERE language.short_name = 'EN')) as en_description,\n" +
+            "    GROUP_CONCAT((SELECT shipping_status_description.description WHERE language.short_name = 'UA')) as ua_description\n" +
+            "FROM shipping_status_description\n" +
+            "         INNER JOIN language ON shipping_status_description.language_id = language.id\n" +
+            "         INNER JOIN shipping_status ON shipping_status_description.shipping_status_id = shipping_status.id\n" +
+            "GROUP BY shipping_status.id\n" +
+            "ORDER BY shipping_status.id";
 
     private static final String DELETE = "DELETE FROM description_locality WHERE locality_id=?";
 
@@ -79,20 +84,9 @@ public class ShippingStatusDescriptionDao extends AbstractDao<ShippingStatusDesc
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
             stat.setInt(1, id);
             try (ResultSet rs = stat.executeQuery()) {
-                Map<Language, String> map = new HashMap<>();
-                String name = "";
-                while (rs.next()) {
-                    String shortName = rs.getString("short_name");
-                    String fullName = rs.getString("full_name");
-                    Language language = Language.createLanguage(shortName, fullName);
-                    String description = rs.getString("description");
-                    language.setId(rs.getInt("id"));
-                    map.put(language, description);
-                    name = rs.getString("name");
+                if (rs.next()) {
+                    statusDescription = getStatusDescription(rs);
                 }
-                ShippingStatus shippingStatus = ShippingStatus.createShippingStatus(name);
-                shippingStatus.setId(id);
-                statusDescription = ShippingStatusDescription.create(shippingStatus, map);
             }
         } catch (SQLException exception) {
             //add logger and work with exception
@@ -108,7 +102,19 @@ public class ShippingStatusDescriptionDao extends AbstractDao<ShippingStatusDesc
 
     @Override
     public Iterable<ShippingStatusDescription> findAll() {
-        return null;
+        List<ShippingStatusDescription> list = new ArrayList<>();
+        try (Statement stat = connection.createStatement()) {
+            try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
+                while (rs.next()) {
+                    ShippingStatusDescription description = getStatusDescription(rs);
+                    list.add(description);
+                }
+            }
+        } catch (SQLException exception) {
+            exception.printStackTrace();
+            //add logger
+        }
+        return list;
     }
 
     @Override
@@ -117,13 +123,35 @@ public class ShippingStatusDescriptionDao extends AbstractDao<ShippingStatusDesc
     }
 
     private static Language getLanguage(Map<Language, String> map, String shortName) {
-        return map.entrySet().stream().map(Map.Entry::getKey)
+        return map.keySet().stream()
                 .filter(language -> language.getShortName().equals(shortName))
                 .findFirst().get();
     }
 
+    private ShippingStatusDescription getStatusDescription(ResultSet rs) throws SQLException {
+        String name = rs.getString("name");
+        String en = rs.getString("en_description");
+        String ua = rs.getString("ua_description");
+        ShippingStatus shippingStatus = ShippingStatus.createShippingStatus(name);
+        int statusId = rs.getInt("id");
+        shippingStatus.setId(statusId);
+        LanguageDao languageDao = new LanguageDao(connection);
+        Language enLanguage = languageDao.findById(1).orElse(null);
+        Language uaLanguage = languageDao.findById(2).orElse(null);
+        Map<Language, String> map = new HashMap<>();
+        map.put(enLanguage, en);
+        map.put(uaLanguage, ua);
+        return ShippingStatusDescription.create(shippingStatus, map);
+    }
+
     public static void main(String[] args) {
         ShippingStatusDescriptionDao dao = new ShippingStatusDescriptionDao(SimpleConnection.getConnection());
-        System.out.println(dao.findById(1).get());
+        ShippingStatusDescription description = dao.findById(7).get();
+        System.out.println(description.getUaDescription());
+        System.out.println(description.getEnDescription());
+        System.out.println(description);
+        for (ShippingStatusDescription d:dao.findAll()) {
+            System.out.println(d);
+        }
     }
 }

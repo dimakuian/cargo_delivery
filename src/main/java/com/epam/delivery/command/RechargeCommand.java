@@ -27,8 +27,8 @@ public class RechargeCommand extends Command {
         String forward = "error_page.jsp";
         HttpSession session = request.getSession();
         Client client = (Client) session.getAttribute("client");
-        Double plusBalance = Double.parseDouble(request.getParameter("balance"));
-        if (client != null && plusBalance != null) {
+        double plusBalance = Double.parseDouble(request.getParameter("balance"));
+        if (client != null) {
             Connection connection = ConnectionPool.getConnection();
             ClientDao clientDao = new ClientDao(connection);
 

@@ -47,6 +47,17 @@ public class ShippingStatusDescription implements Serializable {
                 '}';
     }
 
+
+    public  String getEnDescription(){
+        return description.entrySet().stream().filter(entry->entry.getKey().getShortName().equals("EN"))
+                .map(entry -> entry.getValue()).findFirst().get();
+    }
+
+    public  String getUaDescription(){
+        return description.entrySet().stream().filter(entry->entry.getKey().getShortName().equals("UA"))
+                .map(entry -> entry.getValue()).findFirst().get();
+    }
+
     public static void main(String[] args) {
         LanguageDao languageDao = new LanguageDao(SimpleConnection.getConnection());
         Language en = languageDao.findById(1).get();

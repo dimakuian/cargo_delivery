@@ -84,7 +84,7 @@ public class OrderDao extends AbstractDao<Order, Integer> {
         stat.setDouble(11, entity.getWeight());
         stat.setDouble(12, entity.getVolume());
         stat.setDouble(13, entity.getFare());
-        stat.setInt(14, entity.getShippingStatus().getId());
+        stat.setInt(14, entity.getStatus().getShippingStatus().getId());
         if (entity.getDeliveryDate() != null) {
             stat.setTimestamp(15, entity.getDeliveryDate());
         }
@@ -153,7 +153,10 @@ public class OrderDao extends AbstractDao<Order, Integer> {
         int shippingStatusId = rs.getInt("shipping_status_id");
         ShippingStatusDao shippingStatusDao = new ShippingStatusDao(connection);
         ShippingStatus shippingStatus = shippingStatusDao.findById(shippingStatusId).orElse(null);//replace to throw!!!
-        builder.withShippingStatus(shippingStatus);
+
+        ShippingStatusDescriptionDao descriptionDao = new ShippingStatusDescriptionDao(connection);
+        ShippingStatusDescription statusDescription = descriptionDao.findById(shippingStatus.getId()).orElse(null);//replace to throw!!!
+        builder.withShippingStatus(statusDescription);
 
         return builder.build();
     }

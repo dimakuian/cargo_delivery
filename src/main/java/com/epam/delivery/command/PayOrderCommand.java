@@ -4,9 +4,11 @@ import com.epam.delivery.doa.ConnectionPool;
 import com.epam.delivery.doa.impl.ClientDao;
 import com.epam.delivery.doa.impl.OrderDao;
 import com.epam.delivery.doa.impl.ShippingStatusDao;
+import com.epam.delivery.doa.impl.ShippingStatusDescriptionDao;
 import com.epam.delivery.entities.Client;
 import com.epam.delivery.entities.Order;
 import com.epam.delivery.entities.ShippingStatus;
+import com.epam.delivery.entities.ShippingStatusDescription;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -44,7 +46,9 @@ public class PayOrderCommand extends Command {
 
                 ShippingStatusDao shippingStatusDao = new ShippingStatusDao(connection);
                 ShippingStatus paid = shippingStatusDao.findById(2).orElse(null);
-                order.setShippingStatus(paid);
+                ShippingStatusDescriptionDao descriptionDao = new ShippingStatusDescriptionDao(connection);
+                ShippingStatusDescription description = descriptionDao.findById(paid.getId()).orElse(null);
+                order.setStatus(description);
                 if (!orderDao.update(order)) return forward; //replace test variant
 
                 request.getServletContext().setAttribute("message", "successful");
