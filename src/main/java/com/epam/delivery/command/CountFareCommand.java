@@ -9,8 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class CountFareCommand extends Command {
-    private static final long serialVersionUID = 438065897383166022L;
+public class CountFareCommand implements Command {
 
     /**
      * Execution method for command.
@@ -46,7 +45,7 @@ public class CountFareCommand extends Command {
                 total = distance / 500 * (30 + usedWeight * 3);
             }
             request.getServletContext().setAttribute("total", Math.round(total));
-            forward = "/countCost.jsp";
+            forward = "/controller?command=enterCountFare";
         }
         System.out.println("Command finished");
         return forward;

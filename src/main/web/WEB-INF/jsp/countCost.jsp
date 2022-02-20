@@ -96,7 +96,7 @@
         <option value="en"><fmt:message key="register.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="countCost.jsp">
+    <input type="hidden" name="page" value="/controller?command=enterCountFare">
 </form>
 <!-- end Language switcher --><div class="count_container">
     <form action="/controller" method="post"
@@ -139,7 +139,7 @@
     </form>
     <c:if test="${not empty total}">
         <fmt:message key="countCost.total_to_pay"/><c:out value=" ${total} "/><fmt:message key="currency"/> <br>
-        <button type="button" onclick="location.href='countCost.jsp'"><fmt:message key="button.cancel"/></button>
+        <button type="button" onclick="location.href='/controller?command=enterCountFare'"><fmt:message key="button.cancel"/></button>
         <c:remove var="total"/>
     </c:if>
 </div>

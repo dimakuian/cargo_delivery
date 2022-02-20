@@ -11,8 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.sql.Connection;
 
 
-public class EditUserCommand extends Command {
-    private static final long serialVersionUID = 7945859424826275174L;
+public class EditUserCommand implements Command {
 
     /**
      * Execution method for command.

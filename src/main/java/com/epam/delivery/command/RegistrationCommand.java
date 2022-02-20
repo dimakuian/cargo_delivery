@@ -16,8 +16,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 
-public class RegistrationCommand extends Command {
-    private static final long serialVersionUID = 8678888039213770335L;
+public class RegistrationCommand implements Command {
     public static final String EMAIL_REGEX = "^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
     public static final String NAME_REGEX = "^[a-zA-Zа-яА-Я]+$";
     public static final String TEL_REGEX = "^(\\+(380){1}[0-9]{9}){1}$";
@@ -53,7 +52,7 @@ public class RegistrationCommand extends Command {
             if (userDao.existsByLogin(login)) {
                 errorMessage = String.format("This login is already taken: %s", login);
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/registration.jsp";
+                forward = "/controller?command=enterRegistrationForm";
                 return forward;
             }
 
@@ -65,7 +64,7 @@ public class RegistrationCommand extends Command {
                 System.out.println("exist mail");
                 errorMessage = String.format("This email is already taken: %s", email);
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/registration.jsp";
+                forward = "/controller?command=enterRegistrationForm";
                 return forward;
             }
 
@@ -74,7 +73,7 @@ public class RegistrationCommand extends Command {
                 System.out.println("exist tel");
                 errorMessage = String.format("This phone number is already taken: %s", tel);
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/registration.jsp";
+                forward = "/controller?command=enterRegistrationForm";
                 return forward;
             }
 
@@ -82,7 +81,7 @@ public class RegistrationCommand extends Command {
             if (!ValidateInput.isValid(password, PASSWORD_REGEX) && !password.equals(confirm_password)) {
                 errorMessage = "Passwords Don't Match";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/registration.jsp";
+                forward = "/controller?command=enterRegistrationForm";
                 return forward;
             }
 
@@ -90,7 +89,7 @@ public class RegistrationCommand extends Command {
             if (!ValidateInput.isValid(name, NAME_REGEX)) {
                 errorMessage = "Name isn't valid";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/registration.jsp";
+                forward = "/controller?command=enterRegistrationForm";
                 return forward;
             }
 
@@ -98,7 +97,7 @@ public class RegistrationCommand extends Command {
             if (!ValidateInput.isValid(surname, NAME_REGEX)) {
                 errorMessage = "Surname isn't valid";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/registration.jsp";
+                forward = "/controller?command=enterRegistrationForm";
                 return forward;
             }
 
@@ -106,7 +105,7 @@ public class RegistrationCommand extends Command {
             if (!ValidateInput.isValid(patronymic, NAME_REGEX)) {
                 errorMessage = "Patronymic isn't valid";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/registration.jsp";
+                forward = "/controller?command=enterRegistrationForm";
                 return forward;
             }
 
@@ -114,7 +113,7 @@ public class RegistrationCommand extends Command {
             if (!ValidateInput.isValid(email, EMAIL_REGEX)) {
                 errorMessage = "Email isn't valid";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/registration.jsp";
+                forward = "/controller?command=enterRegistrationForm";
                 return forward;
             }
 
@@ -122,7 +121,7 @@ public class RegistrationCommand extends Command {
             if (!ValidateInput.isValid(tel, TEL_REGEX)) {
                 errorMessage = "Phone number isn't valid";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/registration.jsp";
+                forward = "/controller?command=enterRegistrationForm";
                 return forward;
             }
 
@@ -130,7 +129,7 @@ public class RegistrationCommand extends Command {
             if (!userDao.insert(user)) {
                 errorMessage = "problem while insert user";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/registration.jsp";
+                forward = "/controller?command=enterRegistrationForm";
                 return forward;
             }
 
@@ -141,18 +140,18 @@ public class RegistrationCommand extends Command {
             if (!clientDao.insert(client)) {
                 errorMessage = "problem while insert client";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/registration.jsp";
+                forward = "/controller?command=enterRegistrationForm";
                 return forward;
             }
             HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
             session.setAttribute("role", Role.getRole(user).getName());
             request.getServletContext().setAttribute("message", "successful");
-            forward = "/index.jsp";
+            forward = "/controller?command=userCabinet";
         } else {
             errorMessage = "problem with input type";
             request.getServletContext().setAttribute("message", errorMessage);
-            forward = "/registration.jsp";
+            forward = "/controller?command=enterRegistrationForm";
         }
         System.out.println("Command finished");
         return forward;

@@ -112,12 +112,12 @@
 </head>
 <body>
 <div class="topnav">
-    <a id="home_page" class="active" href="index.jsp"><fmt:message key="button.home"/></a>
+    <a id="home_page" class="active" href="<c:url value="/index.jsp"/>"><fmt:message key="button.home"/></a>
     <a href="#about"><fmt:message key="button.about"/></a>
-    <a href="countCost.jsp"><fmt:message key="button.count_coast"/></a>
+    <a href="<c:url value="/controller?command=enterCountFare"/>"><fmt:message key="button.count_coast"/></a>
     <c:choose>
         <c:when test="${role.getName() eq 'client'}">
-            <a href="createOrder.jsp"><fmt:message key="button.create_order"/></a>
+            <a href="controller?command=enterCreateOrderForm"><fmt:message key="button.create_order"/></a>
         </c:when>
     </c:choose>
 
@@ -132,7 +132,8 @@
                     <label for="psw"></label>
                     <fmt:message key="input.password" var="pass"/>
                     <input id="psw" type="password" placeholder="${pass}" name="password" required>
-                    <button id="register_button" type="button" onclick="window.location.href='/registration.jsp'">
+                    <button id="register_button" type="button"
+                            onclick="window.location.href='/controller?command=enterRegistrationForm'">
                         <fmt:message key="button.register"/></button>
                     <button type="submit"><fmt:message key="button.login"/></button>
                 </form>

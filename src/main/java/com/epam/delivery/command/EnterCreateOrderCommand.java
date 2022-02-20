@@ -3,11 +3,9 @@ package com.epam.delivery.command;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class LogoutCommand implements Command {
-
+public class EnterCreateOrderCommand implements Command{
     /**
      * Execution method for command.
      *
@@ -18,10 +16,9 @@ public class LogoutCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         System.out.println("start command");  //replace to logger
-        HttpSession session = request.getSession(false);
-        if (session != null) session.invalidate();
-        String forward = "/index.jsp";
-        System.out.println("Command finished"); //replace to logger
+        String forward = "/WEB-INF/jsp/user/createOrder.jsp";
+
+        System.out.println("Command finished");
         return forward;
     }
 }

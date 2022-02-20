@@ -11,8 +11,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 
-public class RechargeCommand extends Command {
-    private static final long serialVersionUID = 3404503959425324620L;
+public class RechargeCommand implements Command {
 
     /**
      * Execution method for command.

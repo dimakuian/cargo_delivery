@@ -14,8 +14,7 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-public class UserCabinetCommand extends Command {
-    private static final long serialVersionUID = -6065564914771102683L;
+public class UserCabinetCommand implements Command {
 
     /**
      * Execution method for command.
@@ -44,7 +43,7 @@ public class UserCabinetCommand extends Command {
                 session.setAttribute("client", client);
 
                 session.setAttribute("clientOrders", orders);
-                forward = "/userCabinet.jsp";
+                forward = "/WEB-INF/jsp/user/userCabinet.jsp";
             } else {
                 errorMessage = "can't find this client";
                 request.getServletContext().setAttribute("message", errorMessage);

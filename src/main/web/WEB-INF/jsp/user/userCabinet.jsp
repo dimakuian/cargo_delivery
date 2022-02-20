@@ -52,7 +52,6 @@
 
         .sidebar {
             width: 20%;
-            display: inline;
         }
 
         .user_cabinet_main{
@@ -65,7 +64,7 @@
     </style>
 </head>
 <body>
-<c:import url="heder.jsp"/>
+<c:import url="../heder.jsp"/>
 <!-- Language switcher begin -->
 <form name="locales" action="/controller" method="post">
     <select name="lang" onchange="this.form.submit()">
@@ -74,7 +73,7 @@
         <option value="en"><fmt:message key="register.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="userCabinet.jsp">
+    <input type="hidden" name="page" value="/controller?command=userCabinet">
 </form>
 <!-- end Language switcher -->
 
@@ -99,7 +98,7 @@
                         <td>${order.getConsignee()}</td>
                         <td>${order.getFare()}</td>
                         <c:choose>
-                            <c:when test="${language=='en'}">
+                            <c:when test="${locale=='en'}">
                                 <td>${order.getStatus().getEnDescription()}
                                     <c:if test="${order.getStatus().getEnDescription() eq 'create'}">
                                         <form action="/controller" method="post">
@@ -111,7 +110,7 @@
                                     </c:if>
                                 </td>
                             </c:when>
-                            <c:when test="${language=='ua'}">
+                            <c:when test="${locale=='ua'}">
                                 <td>${order.getStatus().getUaDescription()}
                                     <c:if test="${order.getStatus().getUaDescription() eq 'створений'}">
                                         <form action="/controller" method="post">

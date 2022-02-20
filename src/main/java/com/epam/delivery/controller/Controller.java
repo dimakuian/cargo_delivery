@@ -4,13 +4,11 @@ import com.epam.delivery.command.Command;
 import com.epam.delivery.command.CommandContainer;
 
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-@WebServlet("/controller")
 public class Controller extends HttpServlet {
     private static final long serialVersionUID = 5248789422654095305L;
 
@@ -36,7 +34,7 @@ public class Controller extends HttpServlet {
 
         // obtain command object by its name
         Command command = CommandContainer.get(commandName);
-        System.out.println("Obtained command --> " + command); //replace to logger
+        System.out.println("Obtained command --> " + command.print()); //replace to logger
 
         // execute command and get page address
         String page = command.execute(req, resp);

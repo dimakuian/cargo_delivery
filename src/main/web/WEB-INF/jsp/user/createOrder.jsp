@@ -85,9 +85,9 @@
 <body>
 <%-- CONTENT --%>
 <c:set var="list" value="${applicationScope['localities']}"/>
-<c:import url="heder.jsp"/>
+<c:import url="../heder.jsp"/>
 <!-- Language switcher begin -->
-<form name="locales" action="/controller" method="post">
+<form name="locales" action="<c:url value="/controller"/>" method="post">
     <select name="lang" onchange="this.form.submit()">
         <option selected disabled><fmt:message
                 key="register.chooseLang"/></option>
@@ -95,13 +95,13 @@
         <option value="en"><fmt:message key="register.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="createOrder.jsp">
+    <input type="hidden" name="page" value="controller?command=enterCreateOrderForm">
 </form>
 <!-- end Language switcher -->
 <c:choose>
     <c:when test="${role.getName() eq 'client'}">
         <div class="count_container">
-            <form action="/controller" method="post"
+            <form action="<c:url value="/controller"/>" method="post"
                   oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)">
                 <input type="hidden" name="command" value="createOrder">
                 <h5><fmt:message key="rout"/></h5>

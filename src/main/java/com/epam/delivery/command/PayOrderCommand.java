@@ -17,8 +17,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Connection;
 
-public class PayOrderCommand extends Command {
-    private static final long serialVersionUID = 2980508940786252119L;
+public class PayOrderCommand implements Command {
 
     /**
      * Execution method for command.

@@ -65,14 +65,6 @@ public class Order implements Serializable {
         this.creationTime = creationTime;
     }
 
-    public Client getPerson() {
-        return client;
-    }
-
-    public void setPerson(Client client) {
-        this.client = client;
-    }
-
     public String getConsignee() {
         return consignee;
     }

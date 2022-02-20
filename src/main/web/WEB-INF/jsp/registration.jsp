@@ -103,7 +103,7 @@
 
 <body>
 <c:out value="${message}"/>
-<c:remove var="message"></c:remove>
+<c:remove var="message"/>
 <div class="header">
     <c:import url="heder.jsp"/>
     <!-- Language switcher begin -->
@@ -115,7 +115,7 @@
             <option value="en"><fmt:message key="register.en"/></option>
         </select></label>
         <input type="hidden" name="command" value="setLocale">
-        <input type="hidden" name="page" value="registration.jsp">
+        <input type="hidden" name="page" value="/controller?command=enterRegistrationForm">
     </form>
     <!-- end Language switcher -->
 </div>

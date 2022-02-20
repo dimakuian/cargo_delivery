@@ -55,7 +55,7 @@
     </style>
 </head>
 <body>
-<c:import url="heder.jsp"/>
+<c:import url="WEB-INF/jsp/heder.jsp"/>
 <!-- Language switcher begin -->
 <form name="locales" action="/controller" method="post">
     <select name="lang" onchange="this.form.submit()">

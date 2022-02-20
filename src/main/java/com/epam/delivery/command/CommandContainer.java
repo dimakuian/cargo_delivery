@@ -11,10 +11,11 @@ public class CommandContainer {
         // common commands
         commands.put("login", new LoginCommand());
         commands.put("logout", new LogoutCommand());
+        commands.put("enterRegistrationForm", new EnterRegistrationCommand());
         commands.put("registration", new RegistrationCommand());
         commands.put("countFare", new CountFareCommand());
-        commands.put("createOrder", new CreateOrderCommand());
-        commands.put("setLocale",new SetLocaleCommand());
+        commands.put("enterCountFare", new EnterCountFareCommand());
+        commands.put("setLocale", new SetLocaleCommand());
 
         // client commands
         commands.put("userCabinet", new UserCabinetCommand());
@@ -22,6 +23,8 @@ public class CommandContainer {
         commands.put("recharge", new RechargeCommand());
         commands.put("payOrder", new PayOrderCommand());
         commands.put("editOrder", new EditOrderCommand());
+        commands.put("createOrder", new CreateOrderCommand());
+        commands.put("enterCreateOrderForm", new EnterCreateOrderCommand());
 
         // admin commands
     }

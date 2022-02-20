@@ -6,8 +6,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class SetLocaleCommand extends Command{
-    private static final long serialVersionUID = -8860652860963643059L;
+public class SetLocaleCommand implements Command{
 
     /**
      * Execution method for command.

@@ -15,8 +15,7 @@ import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.Timestamp;
 
-public class CreateOrderCommand extends Command {
-    private static final long serialVersionUID = -2788646492452779455L;
+public class CreateOrderCommand implements Command {
 
     /**
      * Execution method for command.
@@ -95,7 +94,7 @@ public class CreateOrderCommand extends Command {
 
             OrderDao orderDao = new OrderDao(connection);
             if (orderDao.insert(order)) {
-                forward = "index.jsp";
+                forward = "controller?command=userCabinet";
                 request.getServletContext().setAttribute("message", "successful"); //edit later
             } else {
                 forward = "error_page.jsp";

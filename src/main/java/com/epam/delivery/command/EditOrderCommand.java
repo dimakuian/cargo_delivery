@@ -10,8 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
 
-public class EditOrderCommand extends Command {
-    private static final long serialVersionUID = 1529379987912814962L;
+public class EditOrderCommand implements Command {
 
     /**
      * Execution method for command.
