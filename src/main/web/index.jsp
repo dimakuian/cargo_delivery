@@ -5,9 +5,8 @@
   Time: 22:37
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" %>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
 <!-- Set actual locale -->
 <c:choose>
     <c:when test="${empty locale}">
@@ -20,42 +19,10 @@
 </c:choose>
 <fmt:setBundle basename="resource"/>
 <html>
-<head>
-    <title>Title</title>
-    <style>
-        .tariff_table table {
-            width: 70%;
-            border: 1px solid #dddddd;
-            border-collapse: collapse;
-            margin: auto;
-            font-family: Raleway, serif;
-        }
-
-        .tariff_table table th {
-            color: white;
-            font-weight: bold;
-            padding: 5px;
-            background: #555;
-            border: 1px solid #dddddd;
-        }
-
-        .tariff_table table td {
-            border: 1px solid #dddddd;
-            padding: 5px;
-        }
-
-        .tariff_table h1 {
-            margin-left: 15%;
-            font-family: Raleway, serif;
-        }
-
-        .tariff_table tr:hover {
-            background-color: #C3C3C2;
-        }
-    </style>
-</head>
+<c:set var="title" value="Home" scope="page" />
+<%@include file="/WEB-INF/jspf/head.jspf"%>
 <body>
-<c:import url="WEB-INF/jsp/heder.jsp"/>
+<%@include file="WEB-INF/jspf/header.jspf"%>
 <!-- Language switcher begin -->
 <form name="locales" action="/controller" method="post">
     <select name="lang" onchange="this.form.submit()">

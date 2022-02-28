@@ -1,5 +1,12 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%--
+  Created by IntelliJ IDEA.
+  User: dimakuian
+  Date: 06.02.2022
+  Time: 21:29
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
 <!-- Set actual locale -->
 <c:choose>
     <c:when test="${empty locale}">
@@ -11,81 +18,14 @@
     </c:otherwise>
 </c:choose>
 <fmt:setBundle basename="resource"/>
-<%--
-  Created by IntelliJ IDEA.
-  User: dimakuian
-  Date: 06.02.2022
-  Time: 21:29
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
-<head>
-    <title>count cost</title>
-    <style>
-        .count_container {
-            width: 50%;
-            *padding: 20px;
-            font-family: Raleway;
-            margin: auto;
-        }
-
-        .count_container select {
-            width: 30%;
-            font-size: 17px;
-            border: none;
-            font-family: Raleway;
-            padding: 12px;
-            margin-bottom: 20px;
-            background-color: white;
-        }
-
-        .count_container input[type=submit], .count_container button[type=button] {
-            background-color: #555;
-            color: white;
-            font-size: 17px;
-            border: none;
-            cursor: pointer;
-            font-family: Raleway;
-        }
-
-        .count_container input, .count_container button {
-            width: 30%;
-            padding: 12px;
-            border: 1px solid #ccc;
-            box-sizing: border-box;
-            margin-top: 6px;
-            margin-bottom: 16px;
-            margin-right: 10px;
-            font-size: 17px;
-            font-family: Raleway;
-        }
-
-
-        body {
-            background-color: #f1f1f1;
-        }
-
-        .param {
-            width: 15%;
-            display: inline-block;
-        }
-
-        .count_container input[type=number], .count_container input[type=text] {
-            width: 15%;
-        }
-
-        .count_container .address {
-            width: 45%;
-            display: inline-block;
-        }
-
-    </style>
-</head>
+<c:set var="title" value="create order" scope="page"/>
+<%@include file="/WEB-INF/jspf/head.jspf" %>
 <body>
 <%-- CONTENT --%>
 <c:set var="list" value="${applicationScope['localities']}"/>
-<c:import url="../heder.jsp"/>
+<%@include file="/WEB-INF/jspf/header.jspf" %>
+
 <!-- Language switcher begin -->
 <form name="locales" action="<c:url value="/controller"/>" method="post">
     <select name="lang" onchange="this.form.submit()">
@@ -137,10 +77,12 @@
                 <label class="param" for="weight"><fmt:message key="countCost.weight_kg"/></label>
                 <input id="weight" name="weight" type="number" required min="0.1" max="100" step="any" value="1"/><br>
                 <fmt:message key="placeholder.consignee" var="consignee_placeholder"/>
-                <input style="width: 48%" type="text" name="consignee" required
-                       placeholder="${consignee_placeholder}"><br>
+                <label><input style="width: 48%" type="text" name="consignee" required
+                              placeholder="${consignee_placeholder}"></label><br>
                 <fmt:message key="placeholder.description" var="description_placeholder"/>
-                <input style="width: 48%" type="text" name="description" required placeholder="${description_placeholder}"><br>
+                <label><input style="width: 48%" type="text" name="description" required
+                              placeholder="${description_placeholder}">
+                </label><br>
                 <fmt:message key="input.create_order" var="creteOrder"/>
                 <input type="submit" value="${creteOrder}"/>
             </form>
@@ -150,7 +92,6 @@
         <p><fmt:message key="message.login_before"/></p>
     </c:otherwise>
 </c:choose>
-
 <%-- CONTENT --%>
 </body>
 </html>

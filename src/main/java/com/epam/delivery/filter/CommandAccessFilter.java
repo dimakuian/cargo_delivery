@@ -78,7 +78,7 @@ public class CommandAccessFilter implements Filter {
         if (session == null)
             return false;
 
-        Role userRole = (Role)session.getAttribute("userRole");
+        Role userRole = (Role)session.getAttribute("role");
         if (userRole == null)
             return false;
 

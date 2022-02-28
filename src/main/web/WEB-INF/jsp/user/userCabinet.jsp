@@ -1,5 +1,13 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%--
+  Created by IntelliJ IDEA.
+  User: dimakuian
+  Date: 15.02.2022
+  Time: 18:27
+  To change this template use File | Settings | File Templates.
+--%>
+
+<%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
+<%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
 <!-- Set actual locale -->
 <c:choose>
     <c:when test="${empty locale}">
@@ -11,60 +19,13 @@
     </c:otherwise>
 </c:choose>
 <fmt:setBundle basename="resource"/>
-<%--
-  Created by IntelliJ IDEA.
-  User: dimakuian
-  Date: 15.02.2022
-  Time: 18:27
-  To change this template use File | Settings | File Templates.
---%>
-<%@ page contentType="text/html;charset=UTF-8" %>
 <html>
-<head>
-    <fmt:message key="userCabinet.title" var="user_cabinet_title"/>
-    <title>${user_cabinet_title}</title>
-    <style>
-        table {
-            width: 100%;
-            border: 1px solid #dddddd;
-            border-collapse: collapse;
-            margin: auto;
-            font-family: Raleway, serif;
-        }
+<fmt:message key="userCabinet.title" var="user_cabinet_title"/>
+<c:set var="title" value="${user_cabinet_title}" scope="page"/>
+<%@include file="/WEB-INF/jspf/head.jspf" %>
 
-        table th {
-            color: white;
-            font-weight: bold;
-            padding: 5px;
-            background: #555;
-            border: 1px solid #dddddd;
-        }
-
-        table td {
-            border: 1px solid #dddddd;
-            padding: 5px;
-        }
-
-        .sidebar input[type=text] {
-            border: none;
-            border-bottom: 2px solid #555;
-        }
-
-        .sidebar {
-            width: 20%;
-        }
-
-        .user_cabinet_main{
-            display: flex;
-            flex-direction: row-reverse;
-
-            width: 1200px;
-            margin: 0 auto;
-        }
-    </style>
-</head>
 <body>
-<c:import url="../heder.jsp"/>
+<%@include file="/WEB-INF/jspf/header.jspf"%>
 <!-- Language switcher begin -->
 <form name="locales" action="/controller" method="post">
     <select name="lang" onchange="this.form.submit()">
@@ -97,44 +58,25 @@
                         <td>${order.getCreationTime()}</td>
                         <td>${order.getConsignee()}</td>
                         <td>${order.getFare()}</td>
-                        <c:choose>
+                        <td><c:choose>
                             <c:when test="${locale=='en'}">
-                                <td>${order.getStatus().getEnDescription()}
-                                    <c:if test="${order.getStatus().getEnDescription() eq 'create'}">
-                                        <form action="/controller" method="post">
-                                            <input type="hidden" name="command" value="payOrder">
-                                            <input type="hidden" name="order" value="${order.getId()}">
-                                            <fmt:message key="userCabinet.button.pay" var="button_pay"/>
-                                            <input type="submit" value="${button_pay}">
-                                        </form>
-                                    </c:if>
-                                </td>
+                                ${order.getStatus().getEnDescription()}
                             </c:when>
                             <c:when test="${locale=='ua'}">
-                                <td>${order.getStatus().getUaDescription()}
-                                    <c:if test="${order.getStatus().getUaDescription() eq 'створений'}">
-                                        <form action="/controller" method="post">
-                                            <input type="hidden" name="command" value="payOrder">
-                                            <input type="hidden" name="order" value="${order.getId()}">
-                                            <fmt:message key="userCabinet.button.pay" var="button_pay"/>
-                                            <input type="submit" value="${button_pay}">
-                                        </form>
-                                    </c:if>
-                                </td>
+                                ${order.getStatus().getUaDescription()}
                             </c:when>
                             <c:otherwise>
-                                <td>${order.getStatus().getEnDescription()}
-                                    <c:if test="${order.getStatus().getEnDescription() eq 'not paid'}">
-                                        <form action="/controller" method="post">
-                                            <input type="hidden" name="command" value="payOrder">
-                                            <input type="hidden" name="order" value="${order.getId()}">
-                                            <fmt:message key="userCabinet.button.pay" var="button_pay"/>
-                                            <input type="submit" value="${button_pay}">
-                                        </form>
-                                    </c:if>
-                                </td>
+                                ${order.getStatus().getEnDescription()}
                             </c:otherwise>
                         </c:choose>
+                        <c:if test="${order.getStatus().getShippingStatus().getId() == 1}">
+                            <form action="/controller" method="post">
+                                <input type="hidden" name="command" value="payOrder">
+                                <input type="hidden" name="order" value="${order.getId()}">
+                                <fmt:message key="userCabinet.button.pay" var="button_pay"/>
+                                <input type="submit" value="${button_pay}">
+                            </form>
+                        </c:if>
                         </td>
                         <td>
                             <form action="/controller" method="post">

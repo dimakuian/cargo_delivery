@@ -6,6 +6,8 @@
         <entry key="file://$PROJECT_DIR$/src/main/web/WEB-INF/jsp/createOrder.jsp" value="file://$PROJECT_DIR$/src/main/web/WEB-INF/jsp" />
         <entry key="file://$PROJECT_DIR$/src/main/web/WEB-INF/jsp/heder.jsp" value="file://$PROJECT_DIR$/src/main/web/WEB-INF/jsp" />
         <entry key="file://$PROJECT_DIR$/src/main/web/WEB-INF/jsp/registration.jsp" value="file://$PROJECT_DIR$/src/main/web/WEB-INF/jsp" />
+        <entry key="file://$PROJECT_DIR$/src/main/web/WEB-INF/jsp/user/createOrder.jsp" value="file://$PROJECT_DIR$/src/main/web/WEB-INF/jsp/user" />
+        <entry key="file://$PROJECT_DIR$/src/main/web/WEB-INF/jspf/header.jspf" value="file://$PROJECT_DIR$/src/main/web/WEB-INF/jspf" />
         <entry key="file://$PROJECT_DIR$/src/main/web/countCost.jsp" value="file://$PROJECT_DIR$/src/main/web" />
         <entry key="file://$PROJECT_DIR$/src/main/web/heder.jsp" value="file://$PROJECT_DIR$/src/main/web" />
         <entry key="file://$PROJECT_DIR$/src/main/web/index.jsp" value="file://$PROJECT_DIR$/src/main/web" />
