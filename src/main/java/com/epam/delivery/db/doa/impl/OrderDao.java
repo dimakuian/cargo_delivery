@@ -1,14 +1,16 @@
 package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.doa.AbstractDao;
-import com.epam.delivery.entities.*;
+import com.epam.delivery.db.doa.EntityMapper;
+import com.epam.delivery.entities.Order;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class OrderDao extends AbstractDao<Order, Integer> {
+public class OrderDao extends AbstractDao<Order, Long> {
+    private static final long serialVersionUID = 7139334124441683412L;
 
     private static final String INSERT = "INSERT INTO `order` (id, shipping_address, delivery_address, " +
             "creation_time, client_id, consignee, description, distance, length, height, width, weight, volume, " +
@@ -49,7 +51,7 @@ public class OrderDao extends AbstractDao<Order, Integer> {
                 if (stat.executeUpdate() > 0) {
                     try (ResultSet rs = stat.getGeneratedKeys()) {
                         if (rs.next()) {
-                            int genId = rs.getInt(1);
+                            long genId = rs.getLong(1);
                             entity.setId(genId);
                         }
                     }
@@ -59,11 +61,7 @@ public class OrderDao extends AbstractDao<Order, Integer> {
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
+            rollbackAndClose();
             e.printStackTrace();
         } finally {
             closeConnection();
@@ -71,106 +69,50 @@ public class OrderDao extends AbstractDao<Order, Integer> {
         return result;
     }
 
-    private void putDataToStatement(Order entity, PreparedStatement stat) throws SQLException {
-        stat.setInt(1, entity.getShippingAddress().getId());
-        stat.setInt(2, entity.getDeliveryAddress().getId());
-        stat.setTimestamp(3, entity.getCreationTime());
-        stat.setInt(4, entity.getClient().getId());
-        stat.setString(5, entity.getConsignee());
-        stat.setString(6, entity.getDescription());
-        stat.setDouble(7, entity.getDistance());
-        stat.setDouble(8, entity.getLength());
-        stat.setDouble(9, entity.getHeight());
-        stat.setDouble(10, entity.getWidth());
-        stat.setDouble(11, entity.getWeight());
-        stat.setDouble(12, entity.getVolume());
-        stat.setDouble(13, entity.getFare());
-        stat.setInt(14, entity.getStatus().getShippingStatus().getId());
-        if (entity.getDeliveryDate() != null) {
-            stat.setTimestamp(15, entity.getDeliveryDate());
-        }
-        stat.setNull(15, 0);
-    }
-
     @Override
     public boolean update(Order entity) {
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             putDataToStatement(entity, stat);
-            stat.setInt(16, entity.getId());
+            stat.setLong(16, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
     }
 
     @Override
-    public Optional<Order> findById(Integer id) {
+    public Optional<Order> findById(Long id) {
         Order order = Order.createOrder();
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
-            stat.setInt(1, id);
+            stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
-                while (rs.next()) {
-                    Order.Builder builder = order.new Builder(order);
-                    order = getOrder(rs, builder);
+                if (rs.next()) {
+                    OrderMapper mapper = new OrderMapper();
+                    order = mapper.mapRow(rs);
                 }
             }
         } catch (SQLException exception) {
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
-
         return Optional.ofNullable(order);
     }
 
-    private Order getOrder(ResultSet rs, Order.Builder builder) throws SQLException {
-        builder.withID(rs.getInt("id"))
-                .withCreationTimestamp(rs.getTimestamp("creation_time"))
-                .withConsignee(rs.getString("consignee"))
-                .withLength(rs.getDouble("length"))
-                .withHeight(rs.getDouble("height"))
-                .withWidth(rs.getDouble("width"))
-                .withWeight(rs.getDouble("weight"))
-                .withVolume(rs.getDouble("volume"))
-                .withDeliveryDate(rs.getTimestamp("delivery_date"))
-                .withDescription(rs.getString("description"))
-                .withDistance(rs.getDouble("distance"))
-                .withFare(rs.getDouble("fare"));
-
-        int clientId = rs.getInt("client_id");
-        ClientDao clientDao = new ClientDao(connection);
-        Client client = clientDao.findById(clientId).orElse(null);//replace to throw!!!
-
-        builder.withClient(client);
-
-        int shippingAddressId = rs.getInt("shipping_address");
-        LocalityDao localityDao = new LocalityDao(connection);
-        Locality shippingAddress = localityDao.findById(shippingAddressId).orElse(null);//replace to throw!!!
-        builder.withShippingAddress(shippingAddress);
-
-        int deliveryAddressId = rs.getInt("delivery_address");
-        Locality deliveryAddress = localityDao.findById(deliveryAddressId).orElse(null);//replace to throw!!!
-        builder.withDeliveryAddress(deliveryAddress);
-
-        int shippingStatusId = rs.getInt("shipping_status_id");
-        ShippingStatusDao shippingStatusDao = new ShippingStatusDao(connection);
-        ShippingStatus shippingStatus = shippingStatusDao.findById(shippingStatusId).orElse(null);//replace to throw!!!
-
-        ShippingStatusDescriptionDao descriptionDao = new ShippingStatusDescriptionDao(connection);
-        ShippingStatusDescription statusDescription = descriptionDao.findById(shippingStatus.getId()).orElse(null);//replace to throw!!!
-        builder.withShippingStatus(statusDescription);
-
-        return builder.build();
-    }
-
     @Override
-    public boolean existsById(Integer id) {
+    public boolean existsById(Long id) {
         try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
-            stat.setInt(1, id);
+            stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
     }
@@ -181,44 +123,111 @@ public class OrderDao extends AbstractDao<Order, Integer> {
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
                 while (rs.next()) {
-                    Order order = Order.createOrder();
-                    Order.Builder builder = order.new Builder(order);
-                    order = getOrder(rs, builder);
+                    OrderMapper mapper = new OrderMapper();
+                    Order order = mapper.mapRow(rs);
                     list.add(order);
                 }
             }
         } catch (SQLException exception) {
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return list;
     }
 
     @Override
-    public boolean deleteById(Integer id) {
+    public boolean deleteById(Long id) {
         try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
-            stat.setInt(1, id);
+            stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
     }
 
-    public Iterable<Order> findAllByUserID(Integer id) {
+    public Iterable<Order> findAllByUserID(Long id) {
         List<Order> list = new ArrayList<>();
         try (PreparedStatement stat = connection.prepareStatement(SELECT_ALL_FOR_CLIENT)) {
-            stat.setInt(1, id);
+            stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 while (rs.next()) {
-                    Order order = Order.createOrder();
-                    Order.Builder builder = order.new Builder(order);
-                    order = getOrder(rs, builder);
+                    OrderMapper mapper = new OrderMapper();
+                    Order order = mapper.mapRow(rs);
                     list.add(order);
                 }
             }
         } catch (SQLException exception) {
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return list;
+    }
+
+    private void putDataToStatement(Order entity, PreparedStatement stat) throws SQLException {
+        stat.setLong(1, entity.getShippingAddressID());
+        stat.setLong(2, entity.getDeliveryAddressID());
+        stat.setTimestamp(3, entity.getCreationTime());
+        stat.setLong(4, entity.getClientID());
+        stat.setString(5, entity.getConsignee());
+        stat.setString(6, entity.getDescription());
+        stat.setDouble(7, entity.getDistance());
+        stat.setDouble(8, entity.getLength());
+        stat.setDouble(9, entity.getHeight());
+        stat.setDouble(10, entity.getWidth());
+        stat.setDouble(11, entity.getWeight());
+        stat.setDouble(12, entity.getVolume());
+        stat.setDouble(13, entity.getFare());
+        stat.setLong(14, entity.getStatusID());
+        if (entity.getDeliveryDate() != null) {
+            stat.setTimestamp(15, entity.getDeliveryDate());
+        }
+        stat.setNull(15, 0);
+    }
+
+    /**
+     * Extracts an order from the result set row.
+     */
+    private static class OrderMapper implements EntityMapper<Order> {
+
+        @Override
+        public Order mapRow(ResultSet rs) {
+            try {
+                Order order = Order.createOrder();
+                Order.Builder builder = order.new Builder(order);
+                builder.withID(rs.getLong("id"))
+                        .withCreationTimestamp(rs.getTimestamp("creation_time"))
+                        .withConsignee(rs.getString("consignee"))
+                        .withLength(rs.getDouble("length"))
+                        .withHeight(rs.getDouble("height"))
+                        .withWidth(rs.getDouble("width"))
+                        .withWeight(rs.getDouble("weight"))
+                        .withVolume(rs.getDouble("volume"))
+                        .withDeliveryDate(rs.getTimestamp("delivery_date"))
+                        .withDescription(rs.getString("description"))
+                        .withDistance(rs.getDouble("distance"))
+                        .withFare(rs.getDouble("fare"));
+
+                long clientId = rs.getLong("client_id");
+                builder.withClient(clientId);
+
+                long shippingAddressId = rs.getLong("shipping_address");
+                builder.withShippingAddress(shippingAddressId);
+
+                long deliveryAddressId = rs.getLong("delivery_address");
+                builder.withDeliveryAddress(deliveryAddressId);
+
+                long statusId = rs.getLong("shipping_status_id");
+                builder.withShippingStatus(statusId);
+
+                return builder.build();
+            } catch (SQLException e) {
+                throw new IllegalStateException(e);
+            }
+        }
     }
 }

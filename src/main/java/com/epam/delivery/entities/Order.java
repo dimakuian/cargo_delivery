@@ -8,7 +8,6 @@ import java.sql.Timestamp;
 public class Order extends Entity {
     private static final long serialVersionUID = 1255434001425151410L;
 
-    private int id;
     private long shippingAddressID;
     private long deliveryAddressID;
     private Timestamp creationTime;
@@ -26,10 +25,6 @@ public class Order extends Entity {
     private Timestamp deliveryDate;
 
     private Order() {
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public long getShippingAddressID() {
@@ -159,7 +154,6 @@ public class Order extends Entity {
     @Override
     public String toString() {
         return "Order{" +
-                "id=" + id +
                 ", shippingAddressID=" + shippingAddressID +
                 ", deliveryAddressID=" + deliveryAddressID +
                 ", creationTime=" + creationTime +
@@ -186,8 +180,8 @@ public class Order extends Entity {
             this.order = order;
         }
 
-        public Builder withID(Integer id) {
-            order.id = id;
+        public Builder withID(Long id) {
+            order.setId(id);
             return this;
         }
 

@@ -39,4 +39,14 @@ public abstract class AbstractDao<T, ID> implements Serializable {
         connection = null;
     }
 
+    protected void rollbackAndClose() {
+        try {
+            connection.rollback();
+            connection.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    }
+
+
 }
