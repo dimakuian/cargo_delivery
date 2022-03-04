@@ -1,22 +1,16 @@
 package com.epam.delivery.entities;
 
-import java.io.Serializable;
+import java.util.Objects;
 
-public class ShippingStatus implements Serializable {
-    private static final long serialVersionUID = 8181521910693065637L;
-    private int id;
+/**
+ * ShippingStatus entity.
+ */
+public class ShippingStatus extends Entity {
+    private static final long serialVersionUID = 6121382337924563974L;
     private String name;
 
     private ShippingStatus(String name) {
         this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -31,12 +25,23 @@ public class ShippingStatus implements Serializable {
         return new ShippingStatus(name);
     }
 
-
     @Override
     public String toString() {
         return "ShippingStatus{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
+                "name='" + name + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ShippingStatus that = (ShippingStatus) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }

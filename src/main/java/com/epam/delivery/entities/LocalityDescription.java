@@ -2,8 +2,12 @@ package com.epam.delivery.entities;
 
 import java.io.Serializable;
 
-public class LocalityDescription implements Serializable {
-    private static final long serialVersionUID = 1806149083009772391L;
+/**
+ * LocalityDescription entity.
+ */
+public class LocalityDescription extends Entity {
+    private static final long serialVersionUID = -650387365460106049L;
+
     private int localityID;
     private int languageID;
     private String city;

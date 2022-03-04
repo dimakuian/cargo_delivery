@@ -1,7 +1,8 @@
-package com.epam.delivery.doa.impl;
+package com.epam.delivery.db.doa.impl;
 
+import com.epam.delivery.db.doa.AbstractDao;
+import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.entities.Client;
-import com.epam.delivery.entities.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -10,7 +11,8 @@ import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class ClientDao extends AbstractDao<Client, Integer> {
+public class ClientDao extends AbstractDao<Client, Long> {
+    private static final long serialVersionUID = 5751739494497157799L;
 
     private static final String INSERT = "INSERT INTO client (id, user_id, name, surname, patronymic, email, phone, " +
             "balance) VALUES (DEFAULT,?,?,?,?,?,?,?)";
@@ -42,17 +44,17 @@ public class ClientDao extends AbstractDao<Client, Integer> {
     @Override
     public boolean insert(Client entity) {
         try (PreparedStatement stat = connection.prepareStatement(INSERT, RETURN_GENERATED_KEYS)) {
-            stat.setInt(1, entity.getUser().getId());
+            stat.setLong(1, entity.getUserID());
             stat.setString(2, entity.getName());
             stat.setString(3, entity.getSurname());
             stat.setString(4, entity.getPatronymic());
             stat.setString(5, entity.getEmail());
             stat.setString(6, entity.getPhone());
-            stat.setDouble(7,entity.getBalance());
+            stat.setDouble(7, entity.getBalance());
             if (stat.executeUpdate() > 0) {
                 try (ResultSet rs = stat.getGeneratedKeys()) {
                     if (rs.next()) {
-                        int genID = rs.getInt(1);
+                        long genID = rs.getLong(1);
                         entity.setId(genID);
                         return true;
                     }
@@ -61,6 +63,8 @@ public class ClientDao extends AbstractDao<Client, Integer> {
         } catch (SQLException exception) {
             System.err.println("SQLException while insert client " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
     }
@@ -68,40 +72,40 @@ public class ClientDao extends AbstractDao<Client, Integer> {
     @Override
     public boolean update(Client entity) {
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
-            stat.setInt(1, entity.getUser().getId());
+            stat.setLong(1, entity.getUserID());
             stat.setString(2, entity.getName());
             stat.setString(3, entity.getSurname());
             stat.setString(4, entity.getPatronymic());
             stat.setString(5, entity.getEmail());
             stat.setString(6, entity.getPhone());
-            stat.setDouble(7,entity.getBalance());
-            stat.setInt(8, entity.getId());
+            stat.setDouble(7, entity.getBalance());
+            stat.setLong(8, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
             System.err.println("SQLException while update client " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
     }
 
 
-    public Optional<Client> findById(Integer id) {
+    public Optional<Client> findById(Long id) {
         Client client = null;
         UserDao userDao = new UserDao(super.connection);
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
-            stat.setInt(1, id);
+            stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
-                    int userID = rs.getInt("user_id");
-                    User user = userDao.findById(userID).orElseThrow(() ->
-                            new SQLException("Can't find User for client while client findAll"));
+                    long userID = rs.getLong("user_id");
                     String name = rs.getString("name");
                     String surname = rs.getString("surname");
                     String patronymic = rs.getString("patronymic");
                     String email = rs.getString("email");
                     String phone = rs.getString("phone");
                     double balance = rs.getDouble("balance");
-                    client = Client.createClient(user, name, surname);
+                    client = Client.createClient(userID, name, surname);
                     client.setId(id);
                     client.setPatronymic(patronymic);
                     client.setEmail(email);
@@ -112,20 +116,24 @@ public class ClientDao extends AbstractDao<Client, Integer> {
         } catch (SQLException exception) {
             System.err.println("SQLException while findAll client " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return Optional.ofNullable(client);
     }
 
     @Override
-    public boolean existsById(Integer id) {
+    public boolean existsById(Long id) {
         try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
-            stat.setInt(1, id);
+            stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
             System.err.println("SQLException while exist client " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
     }
@@ -133,75 +141,52 @@ public class ClientDao extends AbstractDao<Client, Integer> {
     @Override
     public Iterable<Client> findAll() {
         List<Client> clientList = new ArrayList<>();
-        UserDao userDao = new UserDao(super.connection);
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
                 while (rs.next()) {
-                    int id = rs.getInt("id");
-                    int userID = rs.getInt("user_id");
-                    User user = userDao.findById(userID).orElseThrow(() ->
-                            new SQLException("Can't find User for client while client findAll"));
-                    String name = rs.getString("name");
-                    String surname = rs.getString("surname");
-                    String patronymic = rs.getString("patronymic");
-                    String email = rs.getString("email");
-                    String phone = rs.getString("phone");
-                    double balance = rs.getDouble("balance");
-                    Client client = Client.createClient(user, name, surname);
-                    client.setId(id);
-                    client.setPatronymic(patronymic);
-                    client.setEmail(email);
-                    client.setPhone(phone);
-                    client.setBalance(balance);
+                    ClientMapper mapper = new ClientMapper();
+                    Client client = mapper.mapRow(rs);
                     clientList.add(client);
                 }
             }
         } catch (SQLException exception) {
             System.err.println("SQLException while findAll client " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return clientList;
     }
 
     @Override
-    public boolean deleteById(Integer id) {
+    public boolean deleteById(Long id) {
         try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
-            stat.setInt(1, id);
+            stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
             System.err.println("SQLException while deleteById client " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
     }
 
-    public Optional<Client> getByUserId(Integer userID) {
+    public Optional<Client> getByUserId(Long userID) {
         Client client = null;
-        UserDao userDao = new UserDao(super.connection);
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_USER_ID)) {
-            stat.setInt(1, userID);
+            stat.setLong(1, userID);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
-                    int clientID = rs.getInt("id");
-                    User user = userDao.findById(userID).orElseThrow(() ->
-                            new SQLException("Can't find User for client while client findAll"));
-                    String name = rs.getString("name");
-                    String surname = rs.getString("surname");
-                    String patronymic = rs.getString("patronymic");
-                    String email = rs.getString("email");
-                    String phone = rs.getString("phone");
-                    double balance = rs.getDouble("balance");
-                    client = Client.createClient(user, name, surname);
-                    client.setId(clientID);
-                    client.setPatronymic(patronymic);
-                    client.setEmail(email);
-                    client.setPhone(phone);
-                    client.setBalance(balance);
+                    ClientMapper mapper = new ClientMapper();
+                    client = mapper.mapRow(rs);
                 }
             }
         } catch (SQLException exception) {
             System.err.println("SQLException while findAll client " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return Optional.ofNullable(client);
     }
@@ -215,6 +200,8 @@ public class ClientDao extends AbstractDao<Client, Integer> {
         } catch (SQLException exception) {
             System.err.println("SQLException while exist client " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
     }
@@ -228,7 +215,39 @@ public class ClientDao extends AbstractDao<Client, Integer> {
         } catch (SQLException exception) {
             System.err.println("SQLException while exist client " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
     }
+
+    /**
+     * Extracts a client from the result set row.
+     */
+    private static class ClientMapper implements EntityMapper<Client> {
+        @Override
+        public Client mapRow(ResultSet rs) {
+            try {
+                long id = rs.getLong("id");
+                long userID = rs.getLong("user_id");
+                String name = rs.getString("name");
+                String surname = rs.getString("surname");
+                String patronymic = rs.getString("patronymic");
+                String email = rs.getString("email");
+                String phone = rs.getString("phone");
+                double balance = rs.getDouble("balance");
+                Client client = Client.createClient(userID, name, surname);
+                client.setId(id);
+                client.setPatronymic(patronymic);
+                client.setEmail(email);
+                client.setPhone(phone);
+                client.setBalance(balance);
+                return client;
+            } catch (SQLException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+
+    }
+
 }

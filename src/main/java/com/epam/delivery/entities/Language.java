@@ -1,25 +1,18 @@
 package com.epam.delivery.entities;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Language implements Serializable {
+/**
+ * Language entity.
+ */
+public class Language extends Entity {
     private static final long serialVersionUID = -7304907511028603803L;
-    private int id;
     private String shortName;
     private String fullName;
 
     private Language(String shortName, String fullName) {
         this.shortName = shortName;
         this.fullName = fullName;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getShortName() {
@@ -45,8 +38,7 @@ public class Language implements Serializable {
     @Override
     public String toString() {
         return "Language{" +
-                "id=" + id +
-                ", shortName='" + shortName + '\'' +
+                "shortName='" + shortName + '\'' +
                 ", fullName='" + fullName + '\'' +
                 '}';
     }
@@ -56,11 +48,11 @@ public class Language implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Language language = (Language) o;
-        return id == language.id && Objects.equals(shortName, language.shortName) && Objects.equals(fullName, language.fullName);
+        return Objects.equals(shortName, language.shortName) && Objects.equals(fullName, language.fullName);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, shortName, fullName);
+        return Objects.hash(shortName, fullName);
     }
 }

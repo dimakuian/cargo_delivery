@@ -1,7 +1,7 @@
 package com.epam.delivery.filter;
 
-import com.epam.delivery.doa.ConnectionPool;
-import com.epam.delivery.doa.impl.LocalityDao;
+import com.epam.delivery.db.doa.ConnectionPool;
+import com.epam.delivery.db.doa.impl.LocalityDao;
 import com.epam.delivery.entities.Locality;
 
 import javax.servlet.ServletContextEvent;

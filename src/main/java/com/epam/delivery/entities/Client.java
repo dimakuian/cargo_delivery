@@ -1,11 +1,11 @@
 package com.epam.delivery.entities;
 
-import java.io.Serializable;
-
-public class Client implements Serializable {
-    private static final long serialVersionUID = -4550748709679018382L;
-    private int id;
-    private User user;
+/**
+ * Client entity.
+ */
+public class Client extends Entity{
+    private static final long serialVersionUID = 2099303903362589994L;
+    private long userID;
     private String name;
     private String surname;
     private String patronymic;
@@ -13,26 +13,18 @@ public class Client implements Serializable {
     private String phone;
     private double balance;
 
-    private Client(User user, String name, String surname) {
-        this.user = user;
+    private Client(long userID, String name, String surname) {
+        this.userID = userID;
         this.name = name;
         this.surname = surname;
     }
 
-    public int getId() {
-        return id;
+    public long getUserID() {
+        return userID;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserID(long userID) {
+        this.userID = userID;
     }
 
     public String getName() {
@@ -83,15 +75,14 @@ public class Client implements Serializable {
         this.balance = balance;
     }
 
-    public static Client createClient(User user, String name, String surname) {
-        return new Client(user, name, surname);
+    public static Client createClient(long userID, String name, String surname) {
+        return new Client(userID, name, surname);
     }
 
     @Override
     public String toString() {
         return "Client{" +
-                "id=" + id +
-                ", user=" + user +
+                ", user=" + userID +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 ", patronymic='" + patronymic + '\'' +

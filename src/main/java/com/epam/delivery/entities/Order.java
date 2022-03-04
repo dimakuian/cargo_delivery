@@ -1,15 +1,18 @@
 package com.epam.delivery.entities;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 
-public class Order implements Serializable {
-    private static final long serialVersionUID = -2667467651139601650L;
+/**
+ * Order entity.
+ */
+public class Order extends Entity {
+    private static final long serialVersionUID = 1255434001425151410L;
+
     private int id;
-    private Locality shippingAddress;
-    private Locality deliveryAddress;
+    private long shippingAddressID;
+    private long deliveryAddressID;
     private Timestamp creationTime;
-    private Client client;
+    private long clientID;
     private String consignee;
     private String description;
     private double distance;
@@ -19,42 +22,38 @@ public class Order implements Serializable {
     private double weight;
     private double volume;
     private double fare;
-    private ShippingStatusDescription status;
+    private long statusID;
     private Timestamp deliveryDate;
 
     private Order() {
-    }
-
-    public int getId() {
-        return id;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public Locality getShippingAddress() {
-        return shippingAddress;
+    public long getShippingAddressID() {
+        return shippingAddressID;
     }
 
-    public void setShippingAddress(Locality shippingAddress) {
-        this.shippingAddress = shippingAddress;
+    public void setShippingAddressID(long shippingAddressID) {
+        this.shippingAddressID = shippingAddressID;
     }
 
-    public Locality getDeliveryAddress() {
-        return deliveryAddress;
+    public long getDeliveryAddressID() {
+        return deliveryAddressID;
     }
 
-    public void setDeliveryAddress(Locality deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
+    public void setDeliveryAddressID(long deliveryAddressID) {
+        this.deliveryAddressID = deliveryAddressID;
     }
 
-    public Client getClient() {
-        return client;
+    public long getClientID() {
+        return clientID;
     }
 
-    public void setClient(Client client) {
-        this.client = client;
+    public void setClientID(long clientID) {
+        this.clientID = clientID;
     }
 
     public Timestamp getCreationTime() {
@@ -137,12 +136,12 @@ public class Order implements Serializable {
         this.fare = fare;
     }
 
-    public ShippingStatusDescription getStatus() {
-        return status;
+    public long getStatusID() {
+        return statusID;
     }
 
-    public void setStatus(ShippingStatusDescription status) {
-        this.status = status;
+    public void setStatusID(long statusID) {
+        this.statusID = statusID;
     }
 
     public Timestamp getDeliveryDate() {
@@ -161,10 +160,10 @@ public class Order implements Serializable {
     public String toString() {
         return "Order{" +
                 "id=" + id +
-                ", shippingAddress=" + shippingAddress +
-                ", deliveryAddress=" + deliveryAddress +
+                ", shippingAddressID=" + shippingAddressID +
+                ", deliveryAddressID=" + deliveryAddressID +
                 ", creationTime=" + creationTime +
-                ", client=" + client +
+                ", clientID=" + clientID +
                 ", consignee='" + consignee + '\'' +
                 ", description='" + description + '\'' +
                 ", distance=" + distance +
@@ -174,7 +173,7 @@ public class Order implements Serializable {
                 ", weight=" + weight +
                 ", volume=" + volume +
                 ", fare=" + fare +
-                ", status=" + status +
+                ", statusID=" + statusID +
                 ", deliveryDate=" + deliveryDate +
                 '}';
     }
@@ -192,13 +191,13 @@ public class Order implements Serializable {
             return this;
         }
 
-        public Builder withShippingAddress(Locality val) {
-            order.shippingAddress = val;
+        public Builder withShippingAddress(long val) {
+            order.shippingAddressID = val;
             return this;
         }
 
-        public Builder withDeliveryAddress(Locality val) {
-            order.deliveryAddress = val;
+        public Builder withDeliveryAddress(long val) {
+            order.deliveryAddressID = val;
             return this;
         }
 
@@ -212,8 +211,8 @@ public class Order implements Serializable {
             return this;
         }
 
-        public Builder withClient(Client val) {
-            order.client = val;
+        public Builder withClient(long val) {
+            order.clientID = val;
             return this;
         }
 
@@ -257,8 +256,8 @@ public class Order implements Serializable {
             return this;
         }
 
-        public Builder withShippingStatus(ShippingStatusDescription val) {
-            order.status = val;
+        public Builder withShippingStatus(long val) {
+            order.statusID = val;
             return this;
         }
 

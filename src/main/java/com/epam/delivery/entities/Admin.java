@@ -1,34 +1,26 @@
 package com.epam.delivery.entities;
 
-import java.io.Serializable;
-
-public class Admin implements Serializable {
-    private static final long serialVersionUID = 8470261035583724747L;
-    private int id;
-    private User user;
+/**
+ * Admin entity.
+ */
+public class Admin  extends Entity{
+    private static final long serialVersionUID = -5882593516555785328L;
+    private long userID;
     private String name;
     private String surname;
 
-    private Admin(User user, String name, String surname) {
-        this.user = user;
+    private Admin(long userID, String name, String surname) {
+        this.userID = userID;
         this.name = name;
         this.surname = surname;
     }
 
-    public int getId() {
-        return id;
+    public long getUserID() {
+        return userID;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+    public void setUserID(long userID) {
+        this.userID = userID;
     }
 
     public String getName() {
@@ -47,15 +39,14 @@ public class Admin implements Serializable {
         this.surname = surname;
     }
 
-    public static Admin createManager(User user, String name, String surname) {
-        return new Admin(user, name, surname);
+    public static Admin createManager(long userID, String name, String surname) {
+        return new Admin(userID, name, surname);
     }
 
     @Override
     public String toString() {
-        return "Manager{" +
-                "id=" + id +
-                ", user=" + user +
+        return "Admin{" +
+                "userID=" + userID +
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 '}';

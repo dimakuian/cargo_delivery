@@ -1,5 +1,6 @@
-package com.epam.delivery.doa.impl;
+package com.epam.delivery.db.doa.impl;
 
+import com.epam.delivery.db.doa.AbstractDao;
 import com.epam.delivery.entities.*;
 
 import java.sql.*;

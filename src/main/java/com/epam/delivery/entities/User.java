@@ -1,11 +1,10 @@
 package com.epam.delivery.entities;
 
-
-import java.io.Serializable;
-
-public class User implements Serializable {
-    private static final long serialVersionUID = -284361597729519633L;
-    private int id;
+/**
+ * User entity.
+ */
+public class User extends Entity{
+    private static final long serialVersionUID = 1647335406566429410L;
     private final String login;
     private String password;
     private int roleID;
@@ -18,14 +17,6 @@ public class User implements Serializable {
         this.login = login;
         this.password = password;
         this.roleID = roleID;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getLogin() {
@@ -55,8 +46,7 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" +
-                "id=" + id +
-                ", login='" + login + '\'' +
+                "login='" + login + '\'' +
                 ", roleID=" + roleID +
                 '}';
     }

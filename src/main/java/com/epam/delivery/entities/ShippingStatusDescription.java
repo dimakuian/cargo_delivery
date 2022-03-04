@@ -1,85 +1,60 @@
 package com.epam.delivery.entities;
 
-import com.epam.delivery.doa.SimpleConnection;
-import com.epam.delivery.doa.impl.LanguageDao;
-import com.epam.delivery.doa.impl.ShippingStatusDao;
-
-import java.io.Serializable;
-import java.util.HashMap;
+/**
+ * ShippingStatusDescription entity.
+ */
 import java.util.Map;
+import java.util.Objects;
 
-public class ShippingStatusDescription implements Serializable {
-    private static final long serialVersionUID = -9102794775682737593L;
+public class ShippingStatusDescription extends Entity {
+    private static final long serialVersionUID = -8529106795406463735L;
 
-    private ShippingStatus shippingStatus;
-    private Map<Language, String> description;
+    private long statusID;
+    private Map<String, String> description;
 
-    private ShippingStatusDescription(ShippingStatus shippingStatus, Map<Language, String> description) {
-        this.shippingStatus = shippingStatus;
+    private ShippingStatusDescription(long statusID, Map<String, String> description) {
+        this.statusID = statusID;
         this.description = description;
     }
 
-    public ShippingStatus getShippingStatus() {
-        return shippingStatus;
+    public long getStatusID() {
+        return statusID;
     }
 
-    public void setShippingStatus(ShippingStatus shippingStatus) {
-        this.shippingStatus = shippingStatus;
+    public void setStatusID(long statusID) {
+        this.statusID = statusID;
     }
 
-    public Map<Language, String> getDescription() {
+    public Map<String, String> getDescription() {
         return description;
     }
 
-    public void setDescription(Map<Language, String> description) {
+    public void setDescription(Map<String, String> description) {
         this.description = description;
     }
 
-    public static ShippingStatusDescription create(ShippingStatus shippingStatus, Map<Language, String> description) {
-        return new ShippingStatusDescription(shippingStatus, description);
+    public static ShippingStatusDescription create(long statusID, Map<String, String> description) {
+        return new ShippingStatusDescription(statusID, description);
     }
 
     @Override
     public String toString() {
         return "ShippingStatusDescription{" +
-                "shippingStatus=" + shippingStatus +
+                "statusID=" + statusID +
                 ", description=" + description +
                 '}';
     }
 
-
-    public  String getEnDescription(){
-        return description.entrySet().stream().filter(entry->entry.getKey().getShortName().equals("EN"))
-                .map(entry -> entry.getValue()).findFirst().get();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ShippingStatusDescription that = (ShippingStatusDescription) o;
+        return statusID == that.statusID && Objects.equals(description, that.description);
     }
 
-    public  String getUaDescription(){
-        return description.entrySet().stream().filter(entry->entry.getKey().getShortName().equals("UA"))
-                .map(entry -> entry.getValue()).findFirst().get();
-    }
-
-    public static void main(String[] args) {
-        LanguageDao languageDao = new LanguageDao(SimpleConnection.getConnection());
-        Language en = languageDao.findById(1).get();
-        Language ua = languageDao.findById(2).get();
-
-        ShippingStatusDao shippingStatusDao = new ShippingStatusDao(SimpleConnection.getConnection());
-        ShippingStatus shippingStatus = shippingStatusDao.findById(1).get();
-
-        System.out.println(ua + " " + en + " " + shippingStatus);
-        Map<Language, String> map = new HashMap<>();
-        map.put(en, shippingStatus.getName());
-        map.put(ua, "створений");
-        System.out.println(map);
-        Language en1 = getLanguageId(map, "EN");
-        System.out.println(en1);
-        System.out.println(map.get(en1));
-    }
-
-    private static Language getLanguageId(Map<Language, String> map, String shortName) {
-        Language lang = map.entrySet().stream().map(Map.Entry::getKey)
-                .filter(language -> language.getShortName().equals(shortName))
-                .findFirst().get();
-        return lang;
+    @Override
+    public int hashCode() {
+        return Objects.hash(statusID, description);
     }
 }

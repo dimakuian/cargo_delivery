@@ -1,11 +1,12 @@
 package com.epam.delivery.entities;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Locality implements Serializable {
-    private static final long serialVersionUID = 5251214702136648L;
-    private int id;
+/**
+ * Locality entity.
+ */
+public class Locality extends Entity {
+    private static final long serialVersionUID = 5912926141331183042L;
     private String name;
     private double latitude;
     private double longitude;
@@ -14,14 +15,6 @@ public class Locality implements Serializable {
         this.name = name;
         this.latitude = latitude;
         this.longitude = longitude;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public String getName() {
@@ -66,11 +59,11 @@ public class Locality implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Locality locality = (Locality) o;
-        return id == locality.id && Double.compare(locality.latitude, latitude) == 0 && Double.compare(locality.longitude, longitude) == 0 && Objects.equals(name, locality.name);
+        return Double.compare(locality.latitude, latitude) == 0 && Double.compare(locality.longitude, longitude) == 0 && Objects.equals(name, locality.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, latitude, longitude);
+        return Objects.hash(name, latitude, longitude);
     }
 }

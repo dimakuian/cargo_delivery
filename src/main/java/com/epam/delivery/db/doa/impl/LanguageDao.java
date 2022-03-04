@@ -1,5 +1,7 @@
-package com.epam.delivery.doa.impl;
+package com.epam.delivery.db.doa.impl;
 
+import com.epam.delivery.db.doa.AbstractDao;
+import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.entities.Language;
 
 import java.sql.*;
@@ -9,7 +11,8 @@ import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class LanguageDao extends AbstractDao<Language, Integer> {
+public class LanguageDao extends AbstractDao<Language, Long> {
+    private static final long serialVersionUID = 475113985684365786L;
 
     private static final String INSERT = "INSERT INTO language (id, short_name, full_name) VALUES (DEFAULT,?,?)";
 
@@ -23,6 +26,7 @@ public class LanguageDao extends AbstractDao<Language, Integer> {
 
     private static final String DELETE = "DELETE FROM language WHERE id=?";
 
+
     public LanguageDao(Connection connection) {
         super(connection);
     }
@@ -35,7 +39,7 @@ public class LanguageDao extends AbstractDao<Language, Integer> {
             if (stat.executeUpdate() > 0) {
                 try (ResultSet rs = stat.getGeneratedKeys()) {
                     while (rs.next()) {
-                        int genID = rs.getInt(1);
+                        long genID = rs.getLong(1);
                         entity.setId(genID);
                     }
                 }
@@ -44,6 +48,8 @@ public class LanguageDao extends AbstractDao<Language, Integer> {
         } catch (SQLException exception) {
             System.err.println("SQLException while insert language " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
     }
@@ -53,44 +59,48 @@ public class LanguageDao extends AbstractDao<Language, Integer> {
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             stat.setString(1, entity.getShortName());
             stat.setString(2, entity.getFullName());
-            stat.setInt(3, entity.getId());
+            stat.setLong(3, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
             System.err.println("SQLException while update language " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
     }
 
-    public Optional<Language> findById(Integer id) {
+    public Optional<Language> findById(Long id) {
         Language language = null;
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
-            stat.setInt(1, id);
+            stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
-                while (rs.next()) {
-                    String shortName = rs.getString("short_name");
-                    String fullName = rs.getString("full_name");
-                    language = Language.createLanguage(shortName, fullName);
-                    language.setId(id);
+                if (rs.next()) {
+                    LanguageMapper mapper = new LanguageMapper();
+                    language = mapper.mapRow(rs);
                 }
             }
         } catch (SQLException exception) {
             System.err.println("SQLException while getById language " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return Optional.ofNullable(language);
     }
 
     @Override
-    public boolean existsById(Integer id) {
+    public boolean existsById(Long id) {
         try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
-            stat.setInt(1, id);
+            stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
             System.err.println("SQLException while exist language " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
     }
@@ -101,30 +111,52 @@ public class LanguageDao extends AbstractDao<Language, Integer> {
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
                 while (rs.next()) {
-                    int id = rs.getInt("id");
-                    String shortName = rs.getString("short_name");
-                    String fullName = rs.getString("full_name");
-                    Language language = Language.createLanguage(shortName, fullName);
-                    language.setId(id);
+                    LanguageMapper mapper = new LanguageMapper();
+                    Language language = mapper.mapRow(rs);
                     languageList.add(language);
                 }
             }
         } catch (SQLException exception) {
             System.err.println("SQLException while findAll language " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return languageList;
     }
 
     @Override
-   public boolean deleteById(Integer id) {
+    public boolean deleteById(Long id) {
         try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
-            stat.setInt(1, id);
+            stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
             System.err.println("SQLException while deleteById language " + exception.getMessage());
             exception.printStackTrace();
+        } finally {
+            closeConnection();
         }
         return false;
+    }
+
+    /**
+     * Extracts a language from the result set row.
+     */
+    private static class LanguageMapper implements EntityMapper<Language> {
+
+        @Override
+        public Language mapRow(ResultSet rs) {
+            try {
+                long id = rs.getLong("id");
+                String shortName = rs.getString("short_name");
+                String fullName = rs.getString("full_name");
+                Language language = Language.createLanguage(shortName, fullName);
+                language.setId(id);
+                return language;
+            } catch (SQLException e) {
+                throw new IllegalStateException(e);
+            }
+        }
+
     }
 }
