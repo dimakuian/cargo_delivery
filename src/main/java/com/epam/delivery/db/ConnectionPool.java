@@ -26,6 +26,7 @@ public class ConnectionPool implements ConnectionBuilder{
             e.printStackTrace();
             Thread.currentThread().interrupt();
         }
+
     }
 
     public Connection getConnection() {

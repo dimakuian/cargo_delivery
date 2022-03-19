@@ -5,8 +5,8 @@
   Time: 22:37
   To change this template use File | Settings | File Templates.
 --%>
-<%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
-<%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
+<%@ include file="WEB-INF/jspf/directive/page.jspf" %>
+<%@ include file="WEB-INF/jspf/directive/taglib.jspf" %>
 <!-- Set actual locale -->
 <c:choose>
     <c:when test="${empty locale}">
@@ -20,17 +20,19 @@
 <fmt:setBundle basename="resource"/>
 <html>
 <c:set var="title" value="Home" scope="page" />
-<%@include file="/WEB-INF/jspf/head.jspf"%>
+<%@include file="WEB-INF/jspf/head.jspf"%>
 <body>
 <%@include file="WEB-INF/jspf/header.jspf"%>
 <!-- Language switcher begin -->
 <form name="locales" action="/controller" method="post">
-    <select name="lang" onchange="this.form.submit()">
-        <option selected disabled><fmt:message
-                key="register.chooseLang"/></option>
-        <option value="ua"><fmt:message key="register.ua"/></option>
-        <option value="en"><fmt:message key="register.en"/></option>
-    </select>
+    <label>
+        <select name="lang" onchange="this.form.submit()">
+            <option selected disabled><fmt:message
+                    key="register.chooseLang"/></option>
+            <option value="ua"><fmt:message key="register.ua"/></option>
+            <option value="en"><fmt:message key="register.en"/></option>
+        </select>
+    </label>
     <input type="hidden" name="command" value="setLocale">
     <input type="hidden" name="page" value="index.jsp">
 </form>

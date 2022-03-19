@@ -2,7 +2,6 @@ package com.epam.delivery.command;
 
 import com.epam.delivery.Path;
 import com.epam.delivery.db.ConnectionPool;
-import com.epam.delivery.db.DBManager;
 import com.epam.delivery.db.doa.impl.UserDao;
 import com.epam.delivery.entities.Role;
 import com.epam.delivery.entities.User;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Connection;
 
 public class LoginCommand implements Command {
 
@@ -44,7 +42,6 @@ public class LoginCommand implements Command {
             System.out.println("errorMessage --> " + errorMessage); //replace to logger
             return forward;
         }
-        Connection connection = DBManager.getInstance().getConnection();
         User user = new UserDao(new ConnectionPool()).getByLogin(login).orElse(null);
 
         if (user == null || !PasswordEncoder.getHash(password).equals(user.getPassword())) {
