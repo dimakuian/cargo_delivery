@@ -1,7 +1,8 @@
 package com.epam.delivery.command;
 
-import com.epam.delivery.doa.ConnectionPool;
-import com.epam.delivery.doa.impl.LocalityDao;
+import com.epam.delivery.Path;
+import com.epam.delivery.db.ConnectionPool;
+import com.epam.delivery.db.doa.impl.LocalityDao;
 import com.epam.delivery.entities.Locality;
 
 import javax.servlet.ServletException;
@@ -9,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class CountFareCommand implements Command {
+public class CalculateCoastCommand implements Command {
 
     /**
      * Execution method for command.
@@ -21,11 +22,10 @@ public class CountFareCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         System.out.println("start command");  //replace to logger
-        String forward = "/error_page.jsp";
-        Integer shipAddressID = Integer.parseInt(request.getParameter("shipping_address"));
-        Integer delAddressId = Integer.parseInt(request.getParameter("delivery_address"));
-
-        LocalityDao localityDao = new LocalityDao(ConnectionPool.getConnection());
+        String forward = Path.PAGE__ERROR_PAGE;
+        long shipAddressID = Long.parseLong(request.getParameter("shipping_address"));
+        long delAddressId = Long.parseLong(request.getParameter("delivery_address"));
+        LocalityDao localityDao = new LocalityDao(new ConnectionPool());
         Locality shippingAddress = localityDao.findById(shipAddressID).orElse(null);
         Locality deliveryAddress = localityDao.findById(delAddressId).orElse(null);
         Double distance = localityDao.calcDistanceBetweenTwoLocality(shippingAddress, deliveryAddress).orElse(null);
@@ -45,7 +45,7 @@ public class CountFareCommand implements Command {
                 total = distance / 500 * (30 + usedWeight * 3);
             }
             request.getServletContext().setAttribute("total", Math.round(total));
-            forward = "/controller?command=enterCountFare";
+            forward = Path.COMMAND__VIEW_CALCULATE_COAST;
         }
         System.out.println("Command finished");
         return forward;

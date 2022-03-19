@@ -52,7 +52,7 @@
             </init-param>
             <init-param>
                 <param-name>client</param-name>
-                <param-value>userCabinet editUser recharge payOrder editOrder createOrder enterCreateOrderForm</param-value>
+                <param-value>userCabinet editUser recharge payOrder editOrder createOrder viewCreateOrderPage</param-value>
             </init-param>
             <init-param>
                 <param-name>common</param-name>
@@ -60,7 +60,7 @@
             </init-param>
             <init-param>
                 <param-name>out-of-control</param-name>
-                <param-value>login enterRegistrationForm registration countFare enterCountFare setLocale</param-value>
+                <param-value>login viewRegistrationPіage registration calculateCost viewCalculateCost setLocale</param-value>
             </init-param>
         </filter>
 

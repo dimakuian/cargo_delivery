@@ -1,14 +1,14 @@
 package com.epam.delivery.command;
 
-import com.epam.delivery.doa.ConnectionPool;
-import com.epam.delivery.doa.impl.OrderDao;
+import com.epam.delivery.Path;
+import com.epam.delivery.db.ConnectionPool;
+import com.epam.delivery.db.doa.impl.OrderDao;
 import com.epam.delivery.entities.Order;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.sql.Connection;
 
 public class EditOrderCommand implements Command {
 
@@ -22,14 +22,13 @@ public class EditOrderCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         System.out.println("start command");  //replace to logger
-        String forward = "error_page.jsp";
-        int orderID = Integer.parseInt(request.getParameter("order"));
-        Connection connection = ConnectionPool.getConnection();
-        OrderDao orderDao = new OrderDao(connection);
+        String forward = Path.PAGE__ERROR_PAGE;
+        long orderID = Long.parseLong(request.getParameter("order"));
+        OrderDao orderDao = new OrderDao(new ConnectionPool());
         Order order = orderDao.findById(orderID).orElse(null);
         if (order != null) {
             request.getServletContext().setAttribute("showOrder", order);
-            forward = "/editOrder.jsp";
+            forward = Path.PAGE__EDIT_ORDER;
         } else {
             request.getServletContext().setAttribute("errorMessage", "problem with order");
         }

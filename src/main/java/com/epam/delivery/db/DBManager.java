@@ -37,16 +37,16 @@ public class DBManager {
      *
      * @return A DB connection.
      */
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection(){
         Connection con = null;
         try {
             Context initContext = new InitialContext();
-            Context envContext = (Context) initContext.lookup("java:/comp/env");
+            Context envContext = (Context) initContext.lookup("java:comp/env");
 
             // ST4DB - the name of data source
             DataSource ds = (DataSource) envContext.lookup("jdbc/delivery");
             con = ds.getConnection();
-        } catch (NamingException ex) {
+        } catch (NamingException | SQLException ex) {
             System.out.println("Cannot obtain a connection from the pool");
         }
         return con;
@@ -60,7 +60,7 @@ public class DBManager {
     // //////////////////////////////////////////////////////////
 
     /**
-     * Returns a DB connection. This method is just for a example how to use the
+     * Returns a DB connection. This method is just for an example how to use the
      * DriverManager to obtain a DB connection. It does not use a pool
      * connections and not used in this project. It is preferable to use
      * {@link #getConnection()} method instead.

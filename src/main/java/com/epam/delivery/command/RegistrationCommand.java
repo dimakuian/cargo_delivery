@@ -1,8 +1,10 @@
 package com.epam.delivery.command;
 
-import com.epam.delivery.doa.ConnectionPool;
-import com.epam.delivery.doa.impl.ClientDao;
-import com.epam.delivery.doa.impl.UserDao;
+import com.epam.delivery.Path;
+import com.epam.delivery.db.ConnectionBuilder;
+import com.epam.delivery.db.ConnectionPool;
+import com.epam.delivery.db.doa.impl.ClientDao;
+import com.epam.delivery.db.doa.impl.UserDao;
 import com.epam.delivery.entities.Client;
 import com.epam.delivery.entities.Role;
 import com.epam.delivery.entities.User;
@@ -14,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Connection;
 
 public class RegistrationCommand implements Command {
     public static final String EMAIL_REGEX = "^[\\w\\-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
@@ -32,7 +33,7 @@ public class RegistrationCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         System.out.println("start command");  //replace to logger
-        Connection con = ConnectionPool.getConnection();
+        ConnectionBuilder connectionBuilder = new ConnectionPool();
         String login = request.getParameter("login");
         String password = request.getParameter("password");
         String confirm_password = request.getParameter("confirm_password");
@@ -42,29 +43,29 @@ public class RegistrationCommand implements Command {
         String email = request.getParameter("email");
         String tel = request.getParameter("tel");
         String errorMessage;
-        String forward = "/WEB-INF/jsp/error_page.jsp";
+        String forward = Path.PAGE__ERROR_PAGE;
 
         if (login != null && password != null && confirm_password != null && name != null &&
                 surname != null && patronymic != null && email != null && tel != null) {
 
             //check if exist login
-            UserDao userDao = new UserDao(con);
+            UserDao userDao = new UserDao(connectionBuilder);
             if (userDao.existsByLogin(login)) {
                 errorMessage = String.format("This login is already taken: %s", login);
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/controller?command=enterRegistrationForm";
+                forward = Path.COMMAND__VIEW_REGISTRATION_PAGE;
                 return forward;
             }
 
 
-            ClientDao clientDao = new ClientDao(ConnectionPool.getConnection());
+            ClientDao clientDao = new ClientDao(connectionBuilder);
 
             //check if exist email
             if (clientDao.existsEmail(email)) {
                 System.out.println("exist mail");
                 errorMessage = String.format("This email is already taken: %s", email);
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/controller?command=enterRegistrationForm";
+                forward = Path.COMMAND__VIEW_REGISTRATION_PAGE;
                 return forward;
             }
 
@@ -73,7 +74,7 @@ public class RegistrationCommand implements Command {
                 System.out.println("exist tel");
                 errorMessage = String.format("This phone number is already taken: %s", tel);
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/controller?command=enterRegistrationForm";
+                forward = Path.COMMAND__VIEW_REGISTRATION_PAGE;
                 return forward;
             }
 
@@ -81,7 +82,7 @@ public class RegistrationCommand implements Command {
             if (!ValidateInput.isValid(password, PASSWORD_REGEX) && !password.equals(confirm_password)) {
                 errorMessage = "Passwords Don't Match";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/controller?command=enterRegistrationForm";
+                forward = Path.COMMAND__VIEW_REGISTRATION_PAGE;
                 return forward;
             }
 
@@ -89,7 +90,7 @@ public class RegistrationCommand implements Command {
             if (!ValidateInput.isValid(name, NAME_REGEX)) {
                 errorMessage = "Name isn't valid";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/controller?command=enterRegistrationForm";
+                forward = Path.COMMAND__VIEW_REGISTRATION_PAGE;
                 return forward;
             }
 
@@ -97,7 +98,7 @@ public class RegistrationCommand implements Command {
             if (!ValidateInput.isValid(surname, NAME_REGEX)) {
                 errorMessage = "Surname isn't valid";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/controller?command=enterRegistrationForm";
+                forward = Path.COMMAND__VIEW_REGISTRATION_PAGE;
                 return forward;
             }
 
@@ -105,7 +106,7 @@ public class RegistrationCommand implements Command {
             if (!ValidateInput.isValid(patronymic, NAME_REGEX)) {
                 errorMessage = "Patronymic isn't valid";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/controller?command=enterRegistrationForm";
+                forward = Path.COMMAND__VIEW_REGISTRATION_PAGE;
                 return forward;
             }
 
@@ -113,7 +114,7 @@ public class RegistrationCommand implements Command {
             if (!ValidateInput.isValid(email, EMAIL_REGEX)) {
                 errorMessage = "Email isn't valid";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/controller?command=enterRegistrationForm";
+                forward = Path.COMMAND__VIEW_REGISTRATION_PAGE;
                 return forward;
             }
 
@@ -121,7 +122,7 @@ public class RegistrationCommand implements Command {
             if (!ValidateInput.isValid(tel, TEL_REGEX)) {
                 errorMessage = "Phone number isn't valid";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/controller?command=enterRegistrationForm";
+                forward = Path.COMMAND__VIEW_REGISTRATION_PAGE;
                 return forward;
             }
 
@@ -129,29 +130,29 @@ public class RegistrationCommand implements Command {
             if (!userDao.insert(user)) {
                 errorMessage = "problem while insert user";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/controller?command=enterRegistrationForm";
+                forward = Path.COMMAND__VIEW_REGISTRATION_PAGE;
                 return forward;
             }
 
-            Client client = Client.createClient(user, name, surname);
+            Client client = Client.createClient(user.getId(), name, surname);
             client.setPatronymic(patronymic);
             client.setEmail(email);
             client.setPhone(tel);
             if (!clientDao.insert(client)) {
                 errorMessage = "problem while insert client";
                 request.getServletContext().setAttribute("message", errorMessage);
-                forward = "/controller?command=enterRegistrationForm";
+                forward = Path.COMMAND__VIEW_REGISTRATION_PAGE;
                 return forward;
             }
             HttpSession session = request.getSession(true);
             session.setAttribute("user", user);
             session.setAttribute("role", Role.getRole(user).getName());
             request.getServletContext().setAttribute("message", "successful");
-            forward = "/controller?command=userCabinet";
+            forward = Path.COMMAND__USER_CABINET;
         } else {
             errorMessage = "problem with input type";
             request.getServletContext().setAttribute("message", errorMessage);
-            forward = "/controller?command=enterRegistrationForm";
+            forward = Path.COMMAND__VIEW_REGISTRATION_PAGE;
         }
         System.out.println("Command finished");
         return forward;

@@ -1,4 +1,6 @@
-package com.epam.delivery.doa.impl;
+package com.epam.delivery.db.doa.impl;
+
+import com.epam.delivery.db.ConnectionBuilder;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -9,10 +11,10 @@ public abstract class AbstractDao<T, ID> implements Serializable {
 
     private static final long serialVersionUID = -1589363087043147391L;
 
-    protected Connection connection;
+    protected ConnectionBuilder builder;
 
-    public AbstractDao(Connection connection) {
-        this.connection = connection;
+    public AbstractDao(ConnectionBuilder builder) {
+        this.builder = builder;
     }
 
     public abstract boolean insert(T entity);
@@ -27,7 +29,7 @@ public abstract class AbstractDao<T, ID> implements Serializable {
 
     public abstract boolean deleteById(ID id);
 
-    protected void closeConnection() {
+    protected void closeConnection(Connection connection) {
         if (connection != null) {
             try {
                 if (!connection.isClosed()) connection.close();
@@ -36,7 +38,6 @@ public abstract class AbstractDao<T, ID> implements Serializable {
                 e.printStackTrace();
             }
         }
-        connection = null;
     }
 
 }

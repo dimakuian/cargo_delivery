@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Maven: com.h2database:h2:2.0.206">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/h2database/h2/2.0.206/h2-2.0.206.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/Downloads/h2-2.0.206-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/h2database/h2/2.0.206/h2-2.0.206-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/Downloads/h2-2.0.206-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/com/h2database/h2/2.0.206/h2-2.0.206-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

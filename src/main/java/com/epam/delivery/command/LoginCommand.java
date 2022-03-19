@@ -1,7 +1,9 @@
 package com.epam.delivery.command;
 
-import com.epam.delivery.doa.ConnectionPool;
-import com.epam.delivery.doa.impl.UserDao;
+import com.epam.delivery.Path;
+import com.epam.delivery.db.ConnectionPool;
+import com.epam.delivery.db.DBManager;
+import com.epam.delivery.db.doa.impl.UserDao;
 import com.epam.delivery.entities.Role;
 import com.epam.delivery.entities.User;
 import com.epam.delivery.service.PasswordEncoder;
@@ -11,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.sql.Connection;
 
 public class LoginCommand implements Command {
 
@@ -33,7 +36,7 @@ public class LoginCommand implements Command {
         String password = request.getParameter("password");
         // error handler
         String errorMessage;
-        String forward = "error_page.jsp";
+        String forward = Path.PAGE__ERROR_PAGE;
 
         if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
             errorMessage = "Login/password cannot be empty";
@@ -41,7 +44,8 @@ public class LoginCommand implements Command {
             System.out.println("errorMessage --> " + errorMessage); //replace to logger
             return forward;
         }
-        User user = new UserDao(ConnectionPool.getConnection()).getByLogin(login).orElse(null);
+        Connection connection = DBManager.getInstance().getConnection();
+        User user = new UserDao(new ConnectionPool()).getByLogin(login).orElse(null);
 
         if (user == null || !PasswordEncoder.getHash(password).equals(user.getPassword())) {
             errorMessage = "Cannot find user with such login/password";
@@ -59,7 +63,7 @@ public class LoginCommand implements Command {
                 forward = "/index.jsp";//replace to command
 
             if (role == Role.CLIENT)
-                forward = "/controller?command=userCabinet";
+                forward = Path.COMMAND__USER_CABINET;
 
             session.setAttribute("user", user);
             System.out.println("Set the session attribute: user --> " + user); //replace to logger

@@ -1,14 +1,14 @@
 package com.epam.delivery.command;
 
-import com.epam.delivery.doa.ConnectionPool;
-import com.epam.delivery.doa.impl.ClientDao;
+import com.epam.delivery.Path;
+import com.epam.delivery.db.ConnectionPool;
+import com.epam.delivery.db.doa.impl.ClientDao;
 import com.epam.delivery.entities.Client;
 import com.epam.delivery.entities.User;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.sql.Connection;
 
 
 public class EditUserCommand implements Command {
@@ -22,7 +22,7 @@ public class EditUserCommand implements Command {
      */
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
-        String forward = "error_page.jsp";
+        String forward = Path.PAGE__EDIT_ORDER;
         String name = request.getParameter("name");
         String surname = request.getParameter("surname");
         String patronymic = request.getParameter("patronymic");
@@ -36,8 +36,7 @@ public class EditUserCommand implements Command {
         if (name != null && surname != null && patronymic != null && email != null && phone != null &&
                 user != null && client != null) {
 
-            Connection connection = ConnectionPool.getConnection();
-            ClientDao clientDao = new ClientDao(connection);
+            ClientDao clientDao = new ClientDao(new ConnectionPool());
             if (!client.getName().equals(name)) client.setName(name);
             if (!client.getSurname().equals(surname)) client.setSurname(surname);
             if (!client.getPatronymic().equals(patronymic)) client.setPatronymic(patronymic);
@@ -48,7 +47,7 @@ public class EditUserCommand implements Command {
                 session.setAttribute("client", client);
                 request.getServletContext().setAttribute("message", "successful");
             }
-            forward = "/controller?command=userCabinet";
+            forward = Path.COMMAND__USER_CABINET;
         } else {
             String errorMessage = "can't find this user";
             request.getServletContext().setAttribute("message", errorMessage);

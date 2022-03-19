@@ -1,6 +1,6 @@
 package com.epam.delivery.db.doa.impl;
 
-import com.epam.delivery.db.doa.AbstractDao;
+import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.entities.Language;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class LanguageDao extends AbstractDao<Language, Long> {
+public class LanguageDao extends AbstractDao <Language,Long> {
     private static final long serialVersionUID = 475113985684365786L;
 
     private static final String INSERT = "INSERT INTO language (id, short_name, full_name) VALUES (DEFAULT,?,?)";
@@ -26,13 +26,13 @@ public class LanguageDao extends AbstractDao<Language, Long> {
 
     private static final String DELETE = "DELETE FROM language WHERE id=?";
 
-
-    public LanguageDao(Connection connection) {
-        super(connection);
+    public LanguageDao(ConnectionBuilder builder) {
+        super(builder);
     }
 
     @Override
     public boolean insert(Language entity) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(INSERT, RETURN_GENERATED_KEYS)) {
             stat.setString(1, entity.getShortName());
             stat.setString(2, entity.getFullName());
@@ -49,13 +49,14 @@ public class LanguageDao extends AbstractDao<Language, Long> {
             System.err.println("SQLException while insert language " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
 
     @Override
     public boolean update(Language entity) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             stat.setString(1, entity.getShortName());
             stat.setString(2, entity.getFullName());
@@ -65,13 +66,14 @@ public class LanguageDao extends AbstractDao<Language, Long> {
             System.err.println("SQLException while update language " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
 
     public Optional<Language> findById(Long id) {
         Language language = null;
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -84,13 +86,14 @@ public class LanguageDao extends AbstractDao<Language, Long> {
             System.err.println("SQLException while getById language " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return Optional.ofNullable(language);
     }
 
     @Override
     public boolean existsById(Long id) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -100,7 +103,7 @@ public class LanguageDao extends AbstractDao<Language, Long> {
             System.err.println("SQLException while exist language " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
@@ -108,6 +111,7 @@ public class LanguageDao extends AbstractDao<Language, Long> {
     @Override
     public Iterable<Language> findAll() {
         List<Language> languageList = new ArrayList<>();
+        Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
                 while (rs.next()) {
@@ -120,13 +124,14 @@ public class LanguageDao extends AbstractDao<Language, Long> {
             System.err.println("SQLException while findAll language " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return languageList;
     }
 
     @Override
     public boolean deleteById(Long id) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
@@ -134,7 +139,7 @@ public class LanguageDao extends AbstractDao<Language, Long> {
             System.err.println("SQLException while deleteById language " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }

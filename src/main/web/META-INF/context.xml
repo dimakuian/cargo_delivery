@@ -25,8 +25,11 @@
     <!-- url: The JDBC connection url for connecting to your MySQL database.
          -->
 
-    <Resource name="jdbc/delivery" auth="Container" type="javax.sql.DataSource"
+    <Resource name="jdbc/delivery"
+              auth="Container"
+              type="javax.sql.DataSource"
               maxTotal="100" maxIdle="30" maxWaitMillis="10000"
-              username="root" password="root" driverClassName="com.mysql.jdbc.Driver"
+              username="root" password="root"
+              driverClassName="com.mysql.jdbc.Driver"
               url="jdbc:mysql://127.0.0.1:3306/delivery"/>
 </Context>

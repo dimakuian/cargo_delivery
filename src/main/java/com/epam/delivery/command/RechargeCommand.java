@@ -1,7 +1,8 @@
 package com.epam.delivery.command;
 
-import com.epam.delivery.doa.ConnectionPool;
-import com.epam.delivery.doa.impl.ClientDao;
+import com.epam.delivery.Path;
+import com.epam.delivery.db.ConnectionPool;
+import com.epam.delivery.db.doa.impl.ClientDao;
 import com.epam.delivery.entities.Client;
 
 import javax.servlet.ServletException;
@@ -9,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
-import java.sql.Connection;
 
 public class RechargeCommand implements Command {
 
@@ -23,19 +23,18 @@ public class RechargeCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         System.out.println("start command");  //replace to logger
-        String forward = "error_page.jsp";
+        String forward = Path.PAGE__ERROR_PAGE;
         HttpSession session = request.getSession();
         Client client = (Client) session.getAttribute("client");
         double plusBalance = Double.parseDouble(request.getParameter("balance"));
         if (client != null) {
-            Connection connection = ConnectionPool.getConnection();
-            ClientDao clientDao = new ClientDao(connection);
+            ClientDao clientDao = new ClientDao(new ConnectionPool());
 
             double newBalance = plusBalance + client.getBalance();
             client.setBalance(newBalance);
 
             if (clientDao.update(client)) {
-                forward = "controller?command=userCabinet";
+                forward = Path.COMMAND__USER_CABINET;
                 request.getServletContext().setAttribute("message", "successful");
             } else {
                 request.getServletContext().setAttribute("errorMessage", "problem with account balance");

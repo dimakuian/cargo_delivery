@@ -1,11 +1,13 @@
 package com.epam.delivery.entities;
 
+import java.util.Objects;
+
 /**
  * User entity.
  */
 public class User extends Entity{
     private static final long serialVersionUID = 1647335406566429410L;
-    private final String login;
+    private String login;
     private String password;
     private int roleID;
 
@@ -21,6 +23,10 @@ public class User extends Entity{
 
     public String getLogin() {
         return login;
+    }
+
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getPassword() {
@@ -49,5 +55,18 @@ public class User extends Entity{
                 "login='" + login + '\'' +
                 ", roleID=" + roleID +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return roleID == user.roleID && Objects.equals(login, user.login) && Objects.equals(password, user.password);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(login, password, roleID);
     }
 }

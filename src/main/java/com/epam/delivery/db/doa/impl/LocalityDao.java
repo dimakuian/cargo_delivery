@@ -1,6 +1,6 @@
 package com.epam.delivery.db.doa.impl;
 
-import com.epam.delivery.db.doa.AbstractDao;
+import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.entities.Locality;
 
@@ -38,12 +38,13 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
             "WHERE a.id = ?\n" +
             "  AND b.id = ?";
 
-    public LocalityDao(Connection connection) {
-        super(connection);
+    public LocalityDao(ConnectionBuilder builder) {
+        super(builder);
     }
 
     @Override
     public boolean insert(Locality entity) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             stat.setString(1, entity.getName());
             if (stat.executeUpdate() > 0) {
@@ -59,13 +60,14 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
             System.err.println("SQLException while insert Locality " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
 
     @Override
     public boolean update(Locality entity) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             stat.setString(1, entity.getName());
             stat.setDouble(2, entity.getLatitude());
@@ -76,7 +78,7 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
             System.err.println("SQLException while update Locality " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
@@ -84,6 +86,7 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
     @Override
     public Optional<Locality> findById(Long id) {
         Locality locality = null;
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -96,13 +99,14 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
             System.err.println("SQLException while findById Locality " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return Optional.ofNullable(locality);
     }
 
     @Override
     public boolean existsById(Long id) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -112,7 +116,7 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
             System.err.println("SQLException while existsById Locality " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
@@ -120,6 +124,7 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
     @Override
     public Iterable<Locality> findAll() {
         List<Locality> list = new ArrayList<>();
+        Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
                 while (rs.next()) {
@@ -132,13 +137,14 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
             System.err.println("SQLException while existsById Locality " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return list;
     }
 
     @Override
     public boolean deleteById(Long id) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
@@ -146,13 +152,14 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
             System.err.println("SQLException while deleteById Locality " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
 
     public Optional<Double> calcDistanceBetweenTwoLocality(Locality from, Locality to) {
         Double distance_in_km = null;
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(CALC_DISTANCE)) {
             stat.setLong(1, from.getId());
             stat.setLong(2, to.getId());
@@ -165,7 +172,7 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
             System.err.println("SQLException while calcDistanceBetweenTwoLocality Locality " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return Optional.ofNullable(distance_in_km);
     }

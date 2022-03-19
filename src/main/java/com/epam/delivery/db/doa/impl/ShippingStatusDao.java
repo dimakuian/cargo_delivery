@@ -1,13 +1,12 @@
 package com.epam.delivery.db.doa.impl;
 
-import com.epam.delivery.db.doa.AbstractDao;
+import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.entities.ShippingStatus;
+import com.epam.delivery.entities.ShippingStatusDescription;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
     private static final long serialVersionUID = 5803902748264449477L;
@@ -24,12 +23,16 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
 
     private static final String DELETE = "DELETE FROM shipping_status WHERE id=?";
 
-    public ShippingStatusDao(Connection connection) {
-        super(connection);
+    private static final String SELECT_TRANSLATE_BY_STATUS_ID = "SELECT description FROM shipping_status_description " +
+            "WHERE shipping_status_id = ? AND language_id=?";
+
+    public ShippingStatusDao(ConnectionBuilder builder) {
+        super(builder);
     }
 
     @Override
     public boolean insert(ShippingStatus entity) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             stat.setString(1, entity.getName());
             if (stat.executeUpdate() > 0) {
@@ -45,13 +48,14 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
             System.err.println("SQLException while insert ShippingStatus " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
 
     @Override
     public boolean update(ShippingStatus entity) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             stat.setString(1, entity.getName());
             stat.setLong(2, entity.getId());
@@ -60,13 +64,14 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
             System.err.println("SQLException while update ShippingStatus " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
 
     public Optional<ShippingStatus> findById(Long id) {
         ShippingStatus status = null;
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -79,13 +84,14 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
             System.err.println("SQLException while getById ShippingStatus " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return Optional.ofNullable(status);
     }
 
     @Override
     public boolean existsById(Long id) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -95,7 +101,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
             System.err.println("SQLException while existsById ShippingStatus " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
@@ -103,6 +109,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
     @Override
     public Iterable<ShippingStatus> findAll() {
         List<ShippingStatus> statusList = new ArrayList<>();
+        Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
                 while (rs.next()) {
@@ -115,13 +122,14 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
             System.err.println("SQLException while findAll ShippingStatus " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return statusList;
     }
 
     @Override
     public boolean deleteById(Long id) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
@@ -129,9 +137,39 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
             System.err.println("SQLException while deleteById ShippingStatus " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
+    }
+
+    public Optional<ShippingStatusDescription> findTranslateByStatusId(Long id) {
+        ShippingStatusDescription description = null;
+        Map<String, String> map = new HashMap<>();
+        String en = getTranslateByStatusIdAndLangId(id, 1L);
+        map.put("en", en);
+        String ua = getTranslateByStatusIdAndLangId(id, 2L);
+        map.put("ua", ua);
+        description = ShippingStatusDescription.create(id, map);
+        return Optional.ofNullable(description);
+    }
+
+    private String getTranslateByStatusIdAndLangId(Long statusID, Long langID) {
+        Connection connection = builder.getConnection();
+        try (PreparedStatement stat = connection.prepareStatement(SELECT_TRANSLATE_BY_STATUS_ID)) {
+            stat.setLong(1, statusID);
+            stat.setLong(2, langID);
+            try (ResultSet rs = stat.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getString("description");
+                }
+            }
+        } catch (SQLException exception) {
+            System.err.println("SQLException while getEnTranslateByStatusId ShippingStatus " + exception.getMessage());
+            exception.printStackTrace();
+        }finally {
+            closeConnection(connection);
+        }
+        return null;
     }
 
     /**

@@ -53,23 +53,23 @@
                 </tr>
                 <c:forEach var="order" items="${clientOrders}">
                     <tr>
-                        <td>${order.getShippingAddress().getName()}</td>
-                        <td>${order.getDeliveryAddress().getName()}</td>
+                        <td>${order.getShippingAddressID()}</td>
+                        <td>${order.getDeliveryAddressID()}</td>
                         <td>${order.getCreationTime()}</td>
                         <td>${order.getConsignee()}</td>
                         <td>${order.getFare()}</td>
                         <td><c:choose>
                             <c:when test="${locale=='en'}">
-                                ${order.getStatus().getEnDescription()}
+                                ${order.getStatusID()}
                             </c:when>
                             <c:when test="${locale=='ua'}">
-                                ${order.getStatus().getUaDescription()}
+                                ${order.getStatusID()}
                             </c:when>
                             <c:otherwise>
-                                ${order.getStatus().getEnDescription()}
+                                ${order.getStatusID()}
                             </c:otherwise>
                         </c:choose>
-                        <c:if test="${order.getStatus().getShippingStatus().getId() == 1}">
+                        <c:if test="${order.getStatusID() == 1}">
                             <form action="/controller" method="post">
                                 <input type="hidden" name="command" value="payOrder">
                                 <input type="hidden" name="order" value="${order.getId()}">

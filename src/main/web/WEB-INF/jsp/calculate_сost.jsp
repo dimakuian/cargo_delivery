@@ -38,19 +38,19 @@
         <option value="en"><fmt:message key="register.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="/controller?command=enterCountFare">
+    <input type="hidden" name="page" value="/controller?command=viewCalculateCost">
 </form>
 <!-- end Language switcher -->
 <div class="count_container">
     <form action="/controller" method="post"
           oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)">
-        <input type="hidden" name="command" value="countFare">
+        <input type="hidden" name="command" value="calculateCost">
         <h5><fmt:message key="rout"/></h5>
         <label>
             <label>
                 <select id="ship" class="address" list="shipping" name="shipping_address" required>
                     <c:forEach items="${list}" var="loc">
-                        <option value="${loc.id}">${loc.name}</option>
+                        <option value="${loc.getId()}">${loc.getName()}</option>
                     </c:forEach>
                 </select>
             </label>
@@ -58,7 +58,7 @@
             <label>
                 <select id="deliv" class="address" list="delivery" name="delivery_address" required>
                     <c:forEach items="${list}" var="loc">
-                        <option value="${loc.id}">${loc.name}</option>
+                        <option value="${loc.getId()}">${loc.getName()}</option>
                     </c:forEach>
                 </select>
             </label>
@@ -82,7 +82,7 @@
     </form>
     <c:if test="${not empty total}">
         <fmt:message key="countCost.total_to_pay"/><c:out value=" ${total} "/><fmt:message key="currency"/> <br>
-        <button type="button" onclick="location.href='/controller?command=enterCountFare'"><fmt:message
+        <button type="button" onclick="location.href='/controller?command=viewCalculateCost'"><fmt:message
                 key="button.cancel"/></button>
         <c:remove var="total"/>
     </c:if>

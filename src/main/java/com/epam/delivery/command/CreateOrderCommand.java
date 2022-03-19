@@ -1,10 +1,12 @@
 package com.epam.delivery.command;
 
-import com.epam.delivery.doa.ConnectionPool;
-import com.epam.delivery.doa.impl.ClientDao;
-import com.epam.delivery.doa.impl.LocalityDao;
-import com.epam.delivery.doa.impl.OrderDao;
-import com.epam.delivery.doa.impl.ShippingStatusDescriptionDao;
+import com.epam.delivery.Path;
+import com.epam.delivery.db.ConnectionBuilder;
+import com.epam.delivery.db.ConnectionPool;
+import com.epam.delivery.db.doa.impl.ClientDao;
+import com.epam.delivery.db.doa.impl.LocalityDao;
+import com.epam.delivery.db.doa.impl.OrderDao;
+import com.epam.delivery.db.doa.impl.ShippingStatusDao;
 import com.epam.delivery.entities.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.sql.Connection;
 import java.sql.Timestamp;
 
 public class CreateOrderCommand implements Command {
@@ -27,13 +28,13 @@ public class CreateOrderCommand implements Command {
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) {
         System.out.println("start command");  //replace to logger
-        Connection connection = ConnectionPool.getConnection();
 
-        String forward = "/error_page.jsp";
-        Integer shipAddressID = Integer.parseInt(request.getParameter("shipping_address"));
-        Integer delAddressId = Integer.parseInt(request.getParameter("delivery_address"));
+        String forward = Path.PAGE__ERROR_PAGE;
+        Long shipAddressID = Long.parseLong(request.getParameter("shipping_address"));
+        Long delAddressId = Long.parseLong(request.getParameter("delivery_address"));
 
-        LocalityDao localityDao = new LocalityDao(connection);
+        ConnectionBuilder connectionBuilder = new ConnectionPool();
+        LocalityDao localityDao = new LocalityDao(connectionBuilder);
         Locality shippingAddress = localityDao.findById(shipAddressID).orElse(null);
         Locality deliveryAddress = localityDao.findById(delAddressId).orElse(null);
         assert shippingAddress != null;
@@ -52,7 +53,7 @@ public class CreateOrderCommand implements Command {
         User user = (User) session.getAttribute("user");
         if (user == null) return forward;
 
-        ClientDao clientDao = new ClientDao(connection);
+        ClientDao clientDao = new ClientDao(connectionBuilder);
         Client client = clientDao.findById(user.getId()).orElse(null);
 
         if (distance != null && consignee != null && description != null && client != null) {
@@ -71,10 +72,10 @@ public class CreateOrderCommand implements Command {
 
             Order order = Order.createOrder();
             Order.Builder builder = order.new Builder(order);
-            builder.withShippingAddress(shippingAddress)
-                    .withDeliveryAddress(deliveryAddress)
+            builder.withShippingAddress(shippingAddress.getId())
+                    .withDeliveryAddress(deliveryAddress.getId())
                     .withCreationTimestamp(new Timestamp(System.currentTimeMillis()))
-                    .withClient(client)
+                    .withClient(client.getId())
                     .withConsignee(consignee)
                     .withDescription(description)
                     .withDistance(distance)
@@ -85,19 +86,19 @@ public class CreateOrderCommand implements Command {
                     .withVolume(volume)
                     .withFare(total);
 
-            ShippingStatusDescriptionDao shippingStatusDao = new ShippingStatusDescriptionDao(connection);
-            ShippingStatusDescription shippingStatus = shippingStatusDao.findById(1).orElse(null); //crate method in dao
+            ShippingStatusDao statusDao = new ShippingStatusDao(connectionBuilder);
+            ShippingStatusDescription shippingStatus = statusDao.findTranslateByStatusId(1L).orElse(null); //crate method in dao
 
-            builder.withShippingStatus(shippingStatus);
+            builder.withShippingStatus(shippingStatus.getStatusID());
 
             order = builder.build();
 
-            OrderDao orderDao = new OrderDao(connection);
+            OrderDao orderDao = new OrderDao(connectionBuilder);
             if (orderDao.insert(order)) {
-                forward = "controller?command=userCabinet";
+                forward=Path.COMMAND__USER_CABINET;
                 request.getServletContext().setAttribute("message", "successful"); //edit later
             } else {
-                forward = "error_page.jsp";
+                forward = Path.PAGE__ERROR_PAGE;
                 request.getServletContext().setAttribute("message", "some problem"); //edit later
             }
         }

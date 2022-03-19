@@ -1,6 +1,6 @@
 package com.epam.delivery.db.doa.impl;
 
-import com.epam.delivery.db.doa.AbstractDao;
+import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.entities.Order;
 
@@ -37,13 +37,14 @@ public class OrderDao extends AbstractDao<Order, Long> {
 
     private static final String DELETE = "DELETE FROM `order` WHERE id=?";
 
-    public OrderDao(Connection connection) {
-        super(connection);
+    public OrderDao(ConnectionBuilder builder) {
+        super(builder);
     }
 
     @Override
     public boolean insert(Order entity) {
         boolean result = false;
+        Connection connection = builder.getConnection();
         try {
             connection.setAutoCommit(false);
             try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
@@ -61,16 +62,22 @@ public class OrderDao extends AbstractDao<Order, Long> {
             connection.commit();
             connection.setAutoCommit(true);
         } catch (SQLException e) {
-            rollbackAndClose();
+//            rollbackAndClose();
+            try {
+                connection.rollback();
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
             e.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return result;
     }
 
     @Override
     public boolean update(Order entity) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             putDataToStatement(entity, stat);
             stat.setLong(16, entity.getId());
@@ -78,7 +85,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
         } catch (SQLException exception) {
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
@@ -86,6 +93,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     @Override
     public Optional<Order> findById(Long id) {
         Order order = Order.createOrder();
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -97,13 +105,14 @@ public class OrderDao extends AbstractDao<Order, Long> {
         } catch (SQLException exception) {
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return Optional.ofNullable(order);
     }
 
     @Override
     public boolean existsById(Long id) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -112,7 +121,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
         } catch (SQLException exception) {
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
@@ -120,6 +129,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     @Override
     public Iterable<Order> findAll() {
         List<Order> list = new ArrayList<>();
+        Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
                 while (rs.next()) {
@@ -131,26 +141,28 @@ public class OrderDao extends AbstractDao<Order, Long> {
         } catch (SQLException exception) {
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return list;
     }
 
     @Override
     public boolean deleteById(Long id) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
 
     public Iterable<Order> findAllByUserID(Long id) {
         List<Order> list = new ArrayList<>();
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(SELECT_ALL_FOR_CLIENT)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -163,7 +175,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
         } catch (SQLException exception) {
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return list;
     }
@@ -188,6 +200,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
         }
         stat.setNull(15, 0);
     }
+
 
     /**
      * Extracts an order from the result set row.

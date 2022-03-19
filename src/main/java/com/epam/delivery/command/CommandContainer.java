@@ -1,5 +1,7 @@
 package com.epam.delivery.command;
 
+import com.epam.delivery.Path;
+
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -11,10 +13,10 @@ public class CommandContainer {
         // common commands
         commands.put("login", new LoginCommand());
         commands.put("logout", new LogoutCommand());
-        commands.put("enterRegistrationForm", new EnterRegistrationCommand());
+        commands.put("viewRegistrationPage", new ViewRegistrationPageCommand());
         commands.put("registration", new RegistrationCommand());
-        commands.put("countFare", new CountFareCommand());
-        commands.put("enterCountFare", new EnterCountFareCommand());
+        commands.put("calculateCost", new CalculateCoastCommand());
+        commands.put("viewCalculateCost", new ViewCalculateCostPageCommand());
         commands.put("setLocale", new SetLocaleCommand());
 
         // client commands
@@ -24,7 +26,7 @@ public class CommandContainer {
         commands.put("payOrder", new PayOrderCommand());
         commands.put("editOrder", new EditOrderCommand());
         commands.put("createOrder", new CreateOrderCommand());
-        commands.put("enterCreateOrderForm", new EnterCreateOrderCommand());
+        commands.put("viewCreateOrderPage", new ViewCreateOrderPageCommand());
 
         // admin commands
     }

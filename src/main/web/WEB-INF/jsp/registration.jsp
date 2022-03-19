@@ -35,7 +35,7 @@
             <option value="en"><fmt:message key="register.en"/></option>
         </select></label>
         <input type="hidden" name="command" value="setLocale">
-        <input type="hidden" name="page" value="/controller?command=enterRegistrationForm">
+        <input type="hidden" name="page" value="/controller?command=viewRegistrationPage">
     </form>
     <!-- end Language switcher -->
 </div>

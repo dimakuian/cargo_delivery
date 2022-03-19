@@ -1,13 +1,13 @@
 package com.epam.delivery.filter;
 
-import com.epam.delivery.db.doa.ConnectionPool;
+import com.epam.delivery.db.ConnectionBuilder;
+import com.epam.delivery.db.ConnectionPool;
 import com.epam.delivery.db.doa.impl.LocalityDao;
 import com.epam.delivery.entities.Locality;
 
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import java.sql.Connection;
 import java.util.ArrayList;
 
 
@@ -15,9 +15,8 @@ import java.util.ArrayList;
 public class Listener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        Connection con = ConnectionPool.getConnection();
-        System.out.println("connection ==> " + con);
-        LocalityDao dao = new LocalityDao(con);
+        ConnectionBuilder connectionBuilder = new ConnectionPool();
+        LocalityDao dao = new LocalityDao(connectionBuilder);
         Iterable<Locality> localities = dao.findAll();
         ArrayList <Locality> loc = new ArrayList<>();
         localities.forEach(loc::add);

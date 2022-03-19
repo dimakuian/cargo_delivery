@@ -1,6 +1,6 @@
 package com.epam.delivery.db.doa.impl;
 
-import com.epam.delivery.db.doa.AbstractDao;
+import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.entities.Client;
 
@@ -11,7 +11,7 @@ import java.util.Optional;
 
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class ClientDao extends AbstractDao<Client, Long> {
+public class ClientDao extends AbstractDao<Client,Long> {
     private static final long serialVersionUID = 5751739494497157799L;
 
     private static final String INSERT = "INSERT INTO client (id, user_id, name, surname, patronymic, email, phone, " +
@@ -37,12 +37,13 @@ public class ClientDao extends AbstractDao<Client, Long> {
 
     private static final String DELETE = "DELETE FROM client WHERE id=?";
 
-    public ClientDao(Connection connection) {
-        super(connection);
+    public ClientDao(ConnectionBuilder builder) {
+        super(builder);
     }
 
     @Override
     public boolean insert(Client entity) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(INSERT, RETURN_GENERATED_KEYS)) {
             stat.setLong(1, entity.getUserID());
             stat.setString(2, entity.getName());
@@ -64,13 +65,14 @@ public class ClientDao extends AbstractDao<Client, Long> {
             System.err.println("SQLException while insert client " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
 
     @Override
     public boolean update(Client entity) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
             stat.setLong(1, entity.getUserID());
             stat.setString(2, entity.getName());
@@ -85,7 +87,7 @@ public class ClientDao extends AbstractDao<Client, Long> {
             System.err.println("SQLException while update client " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
@@ -93,7 +95,7 @@ public class ClientDao extends AbstractDao<Client, Long> {
 
     public Optional<Client> findById(Long id) {
         Client client = null;
-        UserDao userDao = new UserDao(super.connection);
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -117,13 +119,14 @@ public class ClientDao extends AbstractDao<Client, Long> {
             System.err.println("SQLException while findAll client " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return Optional.ofNullable(client);
     }
 
     @Override
     public boolean existsById(Long id) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
@@ -133,7 +136,7 @@ public class ClientDao extends AbstractDao<Client, Long> {
             System.err.println("SQLException while exist client " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
@@ -141,6 +144,7 @@ public class ClientDao extends AbstractDao<Client, Long> {
     @Override
     public Iterable<Client> findAll() {
         List<Client> clientList = new ArrayList<>();
+        Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
                 while (rs.next()) {
@@ -153,13 +157,14 @@ public class ClientDao extends AbstractDao<Client, Long> {
             System.err.println("SQLException while findAll client " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return clientList;
     }
 
     @Override
     public boolean deleteById(Long id) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
@@ -167,13 +172,14 @@ public class ClientDao extends AbstractDao<Client, Long> {
             System.err.println("SQLException while deleteById client " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
 
     public Optional<Client> getByUserId(Long userID) {
         Client client = null;
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_USER_ID)) {
             stat.setLong(1, userID);
             try (ResultSet rs = stat.executeQuery()) {
@@ -186,12 +192,13 @@ public class ClientDao extends AbstractDao<Client, Long> {
             System.err.println("SQLException while findAll client " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return Optional.ofNullable(client);
     }
 
     public boolean existsEmail(String email) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(EXIST_EMAIL)) {
             stat.setString(1, email);
             try (ResultSet rs = stat.executeQuery()) {
@@ -201,12 +208,13 @@ public class ClientDao extends AbstractDao<Client, Long> {
             System.err.println("SQLException while exist client " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }
 
     public boolean existsPhone(String tel) {
+        Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(EXIST_PHONE)) {
             stat.setString(1, tel);
             try (ResultSet rs = stat.executeQuery()) {
@@ -216,7 +224,7 @@ public class ClientDao extends AbstractDao<Client, Long> {
             System.err.println("SQLException while exist client " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection();
+            closeConnection(connection);
         }
         return false;
     }

@@ -35,7 +35,7 @@
         <option value="en"><fmt:message key="register.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="controller?command=enterCreateOrderForm">
+    <input type="hidden" name="page" value="controller?command=viewCreateOrderPage">
 </form>
 <!-- end Language switcher -->
 <c:choose>

@@ -1,11 +1,13 @@
 package com.epam.delivery.command;
 
+import com.epam.delivery.Path;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class EnterRegistrationCommand implements Command{
+public class ViewRegistrationPageCommand implements Command{
     /**
      * Execution method for command.
      *
@@ -16,7 +18,7 @@ public class EnterRegistrationCommand implements Command{
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         System.out.println("start command");  //replace to logger
-        String forward = "/WEB-INF/jsp/registration.jsp";
+        String forward = Path.PAGE__REGISTRATION;
 
         System.out.println("Command finished");
         return forward;
