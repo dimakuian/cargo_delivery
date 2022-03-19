@@ -14,28 +14,28 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 public class ClientDao extends AbstractDao<Client,Long> {
     private static final long serialVersionUID = 5751739494497157799L;
 
-    private static final String INSERT = "INSERT INTO client (id, user_id, name, surname, patronymic, email, phone, " +
+    private static final String INSERT = "INSERT INTO delivery.`client` (id, user_id, name, surname, patronymic, email, phone, " +
             "balance) VALUES (DEFAULT,?,?,?,?,?,?,?)";
 
-    private static final String UPDATE = "UPDATE client SET user_id=?,name=?,surname=?,patronymic=?,email=?,phone=?," +
+    private static final String UPDATE = "UPDATE delivery.`client` SET user_id=?,name=?,surname=?,patronymic=?,email=?,phone=?," +
             "balance=? WHERE id=?";
 
     private static final String SELECT_BY_ID = "SELECT id, user_id, name, surname, patronymic, email, phone, balance "
-            + "FROM client WHERE id=?";
+            + "FROM delivery.`client` WHERE id=?";
 
     private static final String SELECT_BY_USER_ID = "SELECT id, user_id, name, surname, patronymic, email, phone, balance "
-            + "FROM client WHERE user_id=?";
+            + "FROM delivery.`client` WHERE user_id=?";
 
-    private static final String EXIST = "SELECT id FROM client WHERE id=?";
+    private static final String EXIST = "SELECT id FROM delivery.`client` WHERE id=?";
 
-    private static final String EXIST_EMAIL = "SELECT email FROM client WHERE email=?";
+    private static final String EXIST_EMAIL = "SELECT email FROM delivery.`client` WHERE email=?";
 
-    private static final String EXIST_PHONE = "SELECT phone FROM client WHERE phone=?";
+    private static final String EXIST_PHONE = "SELECT phone FROM delivery.`client` WHERE phone=?";
 
     private static final String SELECT_ALL = "SELECT id, user_id, name, surname, patronymic, email, phone, balance "
-            + "FROM client";
+            + "FROM delivery.`client`";
 
-    private static final String DELETE = "DELETE FROM client WHERE id=?";
+    private static final String DELETE = "DELETE FROM delivery.`client` WHERE id=?";
 
     public ClientDao(ConnectionBuilder builder) {
         super(builder);

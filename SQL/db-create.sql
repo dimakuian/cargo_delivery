@@ -149,14 +149,21 @@ VALUES (1, 'client');
 
 
 INSERT INTO `user` (id, login, password, role_id)
-VALUES (DEFAULT, 'dimakuian', '32250170a0dca92d53ec9624f336ca24', 1),
-       (DEFAULT, 'admin', '32250170a0dca92d53ec9624f336ca24', 0);
+VALUES (DEFAULT, 'user1', '24c9e15e52afc47c225b757e7bee1f9d', 1),
+       (DEFAULT, 'user2', '7e58d63b60197ceb55a1c487989a3720', 1),
+       (DEFAULT, 'user3', '92877af70a45fd6a2ed7fe81e1236b78', 1),
+       (DEFAULT, 'user4', '3f02ebe3d7929b091e3d8ccfde2f3bc6', 1),
+       (DEFAULT, 'admin1', 'e00cf25ad42683b3df678c61f42c6bda', 0),
+       (DEFAULT, 'admin2', 'c84258e9c39059a89ab77d846ddab909', 0),
+       (DEFAULT, 'admin3', '32cacb2f994f6b42183a1300d9a3e8d6', 0);
 
 INSERT INTO `admin` (id, user_id, name, surname)
 VALUES (DEFAULT, 2, 'John', 'Jonson');
 
 INSERT INTO `client` (id, user_id, name, surname, patronymic, email, phone)
-VALUES (DEFAULT, 1, 'Dmytro', 'Kuian', 'Bogdanovich', 'mail@example.com', '+380671111111');
+VALUES (DEFAULT, 1, 'Borys','Horbenko','Stefanovych', 'mail1@example.com', '+380671111111'),
+       (DEFAULT, 3, 'Marta','Semenova','Artemivna', 'mail3_wagner@example.com.ua', '+380671111113'),
+       (DEFAULT, 4, 'Zoya','Bozhko','Havrylivna', 'mail4@gmail.com', '+380671111114');
 
 INSERT INTO `language` (id, short_name, full_name)
 VALUES (DEFAULT, 'EN', 'English');

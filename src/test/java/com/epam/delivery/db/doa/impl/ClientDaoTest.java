@@ -2,10 +2,13 @@ package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionWithDriverManager;
-import com.epam.delivery.entities.User;
+import com.epam.delivery.entities.Client;
 import org.junit.jupiter.api.*;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -15,7 +18,7 @@ import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserDaoTest {
+class ClientDaoTest {
 
     private static final String URL_CONNECTION = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1";
     private static String userDefinedAppContent;
@@ -35,7 +38,7 @@ class UserDaoTest {
 
     private static ConnectionBuilder builder;
 
-    private static UserDao dao;
+    private static ClientDao dao;
 
     @BeforeAll
     static void globalSetUp() throws IOException {
@@ -47,21 +50,20 @@ class UserDaoTest {
         OutputStream output = new FileOutputStream(APP_PROPS_FILE);
         properties.setProperty("connection.url", URL_CONNECTION);
         properties.store(output, null);
-
     }
 
     @AfterAll
     static void globalTearDown() throws IOException {
         Properties properties = new Properties();
         OutputStream output = new FileOutputStream(APP_PROPS_FILE);
-        properties.setProperty("connection.url",userDefinedAppContent);
+        properties.setProperty("connection.url", userDefinedAppContent);
         properties.store(output, null);
     }
 
     @BeforeEach
     void setUp() {
         builder = new ConnectionWithDriverManager();
-        dao = new UserDao(builder);
+        dao = new ClientDao(builder);
         ConnectionWithDriverManager.createDataBase();
     }
 
@@ -70,63 +72,84 @@ class UserDaoTest {
         builder.getConnection().createStatement().executeUpdate(DROP_TABLE);
     }
 
-
     @Test
     void insert() {
-        User user = User.createUser("test1", "pass123", 0);
-        assertTrue(dao.insert(user));
-        assertEquals(8, user.getId());
+        Client client = Client.createClient(2, "Name", "Surname");
+        client.setPatronymic("Patronymic");
+        client.setPhone("+380666666666");
+        client.setEmail("mail1@example.com.ua");
+        assertTrue(dao.insert(client));
+        assertEquals(4, client.getId());
     }
 
     @Test
     void update() {
-        User user = dao.findById(1L).orElse(null);
-        user.setLogin("test");
-        assertTrue(dao.update(user));
-        User userAfterUpdate = dao.findById(1L).orElse(null);
-        assertEquals("test", userAfterUpdate.getLogin());
+        Client client = dao.findById(1L).orElse(null);
+        client.setName("Test");
+        client.setSurname("Surname");
+        assertTrue(dao.update(client));
+        Client client2 = dao.findById(1L).orElse(null);
+        assertEquals("Test", client2.getName());
+        assertEquals("Surname", client2.getSurname());
     }
 
     @Test
     void findById() {
-        User user = dao.findById(1L).orElse(null);
-        assertNotNull(user);
-        assertEquals("user1", user.getLogin());
+        Client client = dao.findById(3L).orElse(null);
+        assertNotNull(client);
+        assertEquals("Zoya", client.getName());
+        assertEquals("Bozhko", client.getSurname());
+        assertEquals("Havrylivna", client.getPatronymic());
+        assertEquals("mail4@gmail.com", client.getEmail());
+        assertEquals("+380671111114", client.getPhone());
+        Client client2 = dao.findById(11L).orElse(null);
+        assertNull(client2);
     }
 
     @Test
     void existsById() {
         assertTrue(dao.existsById(1L));
-        assertFalse(dao.existsById(133L));
+        assertFalse(dao.existsById(6L));
     }
 
     @Test
     void findAll() {
-        ArrayList<User> users = (ArrayList<User>) dao.findAll();
-        assertFalse(users.isEmpty());
-        assertEquals(7, users.size());
-        assertEquals("user1", users.get(0).getLogin());
-        assertEquals(1, users.get(0).getId());
+        ArrayList<Client> clients = (ArrayList<Client>) dao.findAll();
+        assertFalse(clients.isEmpty());
+        assertEquals(3, clients.size());
+        assertEquals("Marta", clients.get(1).getName());
     }
 
     @Test
     void deleteById() {
-        ArrayList<User> users = (ArrayList<User>) dao.findAll();
+        ArrayList<Client> clients = (ArrayList<Client>) dao.findAll();
         assertTrue(dao.deleteById(2L));
-        ArrayList<User> afterDelete = (ArrayList<User>) dao.findAll();
-        assertEquals(Arrays.asList(users.get(0),users.get(2),users.get(3),users.get(4),users.get(5),users.get(6)), afterDelete);
+        ArrayList<Client> afterDelete = (ArrayList<Client>) dao.findAll();
+        assertEquals(Arrays.asList(clients.get(0), clients.get(2)), afterDelete);
     }
 
     @Test
-    void getByLogin() {
-        User user = dao.getByLogin("admin1").orElse(null);
-        assertNotNull(user);
-        assertEquals(5,user.getId());
+    void getByUserId() {
+        Client client = dao.getByUserId(1L).orElse(null);
+        assertNotNull(client);
+        assertEquals("Borys", client.getName());
+        assertEquals("Horbenko", client.getSurname());
+        assertEquals("Stefanovych", client.getPatronymic());
+        assertEquals("mail1@example.com", client.getEmail());
+        assertEquals("+380671111111", client.getPhone());
+        Client client2 = dao.getByUserId(2L).orElse(null);
+        assertNull(client2);
     }
 
     @Test
-    void existsByLogin() {
-        assertTrue(dao.existsByLogin("admin1"));
-        assertFalse(dao.existsByLogin("test"));
+    void existsEmail() {
+        assertTrue(dao.existsEmail("mail1@example.com"));
+        assertFalse(dao.existsEmail("mail@gmail.com.ua"));
+    }
+
+    @Test
+    void existsPhone() {
+        assertTrue(dao.existsPhone("+380671111113"));
+        assertFalse(dao.existsPhone("+380661111113"));
     }
 }

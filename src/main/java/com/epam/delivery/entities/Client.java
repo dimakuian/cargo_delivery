@@ -1,5 +1,7 @@
 package com.epam.delivery.entities;
 
+import java.util.Objects;
+
 /**
  * Client entity.
  */
@@ -90,6 +92,22 @@ public class Client extends Entity{
                 ", phone='" + phone + '\'' +
                 ", balance=" + balance +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return userID == client.userID && Double.compare(client.balance, balance) == 0
+                && Objects.equals(name, client.name) && Objects.equals(surname, client.surname)
+                && Objects.equals(patronymic, client.patronymic) && Objects.equals(email, client.email)
+                && Objects.equals(phone, client.phone);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userID, name, surname, patronymic, email, phone, balance);
     }
 }
 
