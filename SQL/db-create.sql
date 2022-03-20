@@ -63,7 +63,7 @@ CREATE TABLE IF NOT EXISTS `client`
     `phone`      VARCHAR(45) DEFAULT NULL,
     `balance`    DOUBLE      DEFAULT 0,
     CONSTRAINT `fk_client_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-        ON DELETE CASCADE,
+        ON DELETE CASCADE ON UPDATE RESTRICT,
     PRIMARY KEY (`id`)
 );
 
@@ -72,7 +72,7 @@ DROP TABLE IF EXISTS `shipping_status`;
 CREATE TABLE IF NOT EXISTS `shipping_status`
 (
     `id`   INT         NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(45) NOT NULL,
+    `name` VARCHAR(45) NOT NULL UNIQUE,
     PRIMARY KEY (`id`)
 );
 
@@ -84,8 +84,9 @@ CREATE TABLE IF NOT EXISTS `shipping_status_description`
     `language_id`        INT         NOT NULL,
     `description`        VARCHAR(45) NOT NULL,
     CONSTRAINT `fk_shipping_status_description_id` FOREIGN KEY (`shipping_status_id`)
-        REFERENCES `shipping_status` (`id`) ON DELETE CASCADE,
-    CONSTRAINT `fk_shipping_status_language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`) ON DELETE CASCADE
+        REFERENCES `shipping_status` (`id`) ON DELETE CASCADE ON UPDATE RESTRICT,
+    CONSTRAINT `fk_shipping_status_language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`)
+        ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 
@@ -95,7 +96,7 @@ DROP TABLE IF EXISTS `locality`;
 CREATE TABLE IF NOT EXISTS `locality`
 (
     `id`   INT         NOT NULL AUTO_INCREMENT,
-    `name` VARCHAR(45) NOT NULL,
+    `name` VARCHAR(45) NOT NULL UNIQUE,
     `lat`  DECIMAL(10, 8),
     `lng`  DECIMAL(11, 8),
     PRIMARY KEY (`id`)
@@ -110,8 +111,10 @@ CREATE TABLE IF NOT EXISTS `description_locality`
     `city`          VARCHAR(45) NOT NULL,
     `street`        VARCHAR(45) NOT NULL,
     `street_number` VARCHAR(45) NOT NULL,
-    CONSTRAINT `fk_locality_id` FOREIGN KEY (`locality_id`) REFERENCES `locality` (`id`),
+    CONSTRAINT `fk_locality_id` FOREIGN KEY (`locality_id`) REFERENCES `locality` (`id`)
+        ON DELETE CASCADE ON UPDATE RESTRICT,
     CONSTRAINT `fk_language_id` FOREIGN KEY (`language_id`) REFERENCES `language` (`id`)
+        ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 DROP TABLE IF EXISTS `order`;
@@ -135,10 +138,14 @@ CREATE TABLE IF NOT EXISTS `order`
     `shipping_status_id` INT           NOT NULL,
     `delivery_date`      TIMESTAMP              DEFAULT NULL,
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_shipping_address` FOREIGN KEY (`shipping_address`) REFERENCES `locality` (id),
-    CONSTRAINT `fk_delivery_address` FOREIGN KEY (`delivery_address`) REFERENCES `locality` (id),
-    CONSTRAINT `fk_shipping_status_id` FOREIGN KEY (`shipping_status_id`) REFERENCES `shipping_status` (`id`),
+    CONSTRAINT `fk_shipping_address` FOREIGN KEY (`shipping_address`) REFERENCES `locality` (id)
+        ON DELETE CASCADE ON UPDATE RESTRICT,
+    CONSTRAINT `fk_delivery_address` FOREIGN KEY (`delivery_address`) REFERENCES `locality` (id)
+        ON DELETE CASCADE ON UPDATE RESTRICT,
+    CONSTRAINT `fk_shipping_status_id` FOREIGN KEY (`shipping_status_id`) REFERENCES `shipping_status` (`id`)
+        ON DELETE CASCADE ON UPDATE RESTRICT,
     CONSTRAINT `fk_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (`id`)
+        ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
 INSERT INTO `role` (id, name)
@@ -158,12 +165,13 @@ VALUES (DEFAULT, 'user1', '24c9e15e52afc47c225b757e7bee1f9d', 1),
        (DEFAULT, 'admin3', '32cacb2f994f6b42183a1300d9a3e8d6', 0);
 
 INSERT INTO `admin` (id, user_id, name, surname)
-VALUES (DEFAULT, 2, 'John', 'Jonson');
+VALUES (DEFAULT, 6, 'John', 'Jonson'),
+       (DEFAULT, 7, 'Anatolij', 'Sych');
 
 INSERT INTO `client` (id, user_id, name, surname, patronymic, email, phone)
-VALUES (DEFAULT, 1, 'Borys','Horbenko','Stefanovych', 'mail1@example.com', '+380671111111'),
-       (DEFAULT, 3, 'Marta','Semenova','Artemivna', 'mail3_wagner@example.com.ua', '+380671111113'),
-       (DEFAULT, 4, 'Zoya','Bozhko','Havrylivna', 'mail4@gmail.com', '+380671111114');
+VALUES (DEFAULT, 1, 'Borys', 'Horbenko', 'Stefanovych', 'mail1@example.com', '+380671111111'),
+       (DEFAULT, 3, 'Marta', 'Semenova', 'Artemivna', 'mail3_wagner@example.com.ua', '+380671111113'),
+       (DEFAULT, 4, 'Zoya', 'Bozhko', 'Havrylivna', 'mail4@gmail.com', '+380671111114');
 
 INSERT INTO `language` (id, short_name, full_name)
 VALUES (DEFAULT, 'EN', 'English');
@@ -175,7 +183,18 @@ VALUES (DEFAULT, 'Kiev department №2', 50.430152159229465, 30.400358449390378)
        (DEFAULT, 'Lviv department №1', 49.85580301226521, 24.019571021514157),
        (DEFAULT, 'Odesa department №3', 46.47743026963285, 30.700937087405833),
        (DEFAULT, 'Ternopil department №4', 49.551989782699984, 25.57133777998255),
-       (DEFAULT, 'Rivne department №5', 50.612594968969354, 26.246152539988664);
+       (DEFAULT, 'Rivne department №5', 50.612594968969354, 26.246152539988664),
+       (DEFAULT, 'Lutsk department №6', 50.73078011016832, 25.29546575120349),
+       (DEFAULT, 'Kovel department №7', 51.19893769525515, 24.678678351324603),
+       (DEFAULT, 'Chernivtsi department №8', 48.26790354152539, 25.928226407906312),
+       (DEFAULT, 'Khmelnytskyi department №9', 49.42123992709202, 26.989182060186323),
+       (DEFAULT, 'Vinnytsia department №10', 49.227985950780884, 28.45126010263941),
+       (DEFAULT, 'Zhytomyr department №11', 50.24725716515697, 28.680031580973704),
+       (DEFAULT, 'Dnipro department №12', 48.46696886348005, 34.97749206319865),
+       (DEFAULT, 'Zaporizhzhya department №13', 47.83373266474125, 35.15006225982181),
+       (DEFAULT, 'Mykolaiv department №14', 46.95604226441692, 32.032779749536004),
+       (DEFAULT, 'Ivano-Frankivsk department №15', 48.91735027526064, 24.7003315862229),
+       (DEFAULT, 'Mukachevo department №16', 48.444585453958084, 22.724035901090634);
 
 INSERT INTO `shipping_status` (id, name)
 VALUES (DEFAULT, 'created'),
@@ -201,6 +220,11 @@ VALUES (1, 1, 'created'),
        (6, 2, 'доставлений'),
        (7, 1, 'canceled'),
        (7, 2, 'скасований');
+
+INSERT INTO `order` (id, shipping_address, delivery_address, creation_time, client_id, consignee, description, distance,
+                     length, height, width, weight, volume, fare, shipping_status_id, delivery_date)
+VALUES (DEFAULT, 1, 2, DEFAULT, 1, 'Test', 'Description', 300, 2, 2, 2, 3, 8, 30, 1, DEFAULT);
+
 
 
 

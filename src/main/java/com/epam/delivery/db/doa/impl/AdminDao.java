@@ -13,13 +13,13 @@ import java.util.Optional;
 public class AdminDao extends AbstractDao <Admin,Long> {
     private static final long serialVersionUID = 3048949702578419905L;
 
-    private static final String INSERT = "INSERT INTO manager (id, user_id, name, surname) VALUES (DEFAULT,?,?,?)";
-    private static final String UPDATE = "UPDATE manager SET user_id = ?, name = ?, surname = ? WHERE id = ?";
-    private static final String SELECT_BY_ID = "SELECT id, user_id, name, surname FROM manager WHERE id = ?";
-    private static final String SELECT_BY_USER_ID = "SELECT id, user_id, name, surname FROM manager WHERE user_id = ?";
-    private static final String EXIST = "SELECT id FROM manager WHERE id=?";
-    private static final String SELECT_ALL = "SELECT id, user_id, name, surname FROM manager";
-    private static final String DELETE = "DELETE FROM manager WHERE id=?";
+    private static final String INSERT = "INSERT INTO delivery.`admin` (id, user_id, name, surname) VALUES (DEFAULT,?,?,?)";
+    private static final String UPDATE = "UPDATE delivery.`admin` SET user_id = ?, name = ?, surname = ? WHERE id = ?";
+    private static final String SELECT_BY_ID = "SELECT id, user_id, name, surname FROM delivery.`admin` WHERE id = ?";
+    private static final String SELECT_BY_USER_ID = "SELECT id, user_id, name, surname FROM delivery.`admin` WHERE user_id = ?";
+    private static final String EXIST = "SELECT id FROM delivery.`admin` WHERE id=?";
+    private static final String SELECT_ALL = "SELECT id, user_id, name, surname FROM delivery.`admin`";
+    private static final String DELETE = "DELETE FROM delivery.`admin` WHERE id=?";
 
     public AdminDao(ConnectionBuilder builder) {
         super(builder);
@@ -31,7 +31,7 @@ public class AdminDao extends AbstractDao <Admin,Long> {
         boolean result = false;
         Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
-            stat.setLong(1, entity.getId());
+            stat.setLong(1, entity.getUserID());
             stat.setString(2, entity.getName());
             stat.setString(3, entity.getSurname());
             if (stat.executeUpdate() > 0) {
@@ -156,7 +156,7 @@ public class AdminDao extends AbstractDao <Admin,Long> {
                     long id = rs.getLong("id");
                     String name = rs.getString("name");
                     String surname = rs.getString("surname");
-                    admin = Admin.createManager(userID, name, surname);
+                    admin = Admin.createAdmin(userID, name, surname);
                     admin.setId(id);
                 }
             }
@@ -181,7 +181,7 @@ public class AdminDao extends AbstractDao <Admin,Long> {
                 long userID = rs.getLong("user_id");
                 String name = rs.getString("name");
                 String surname = rs.getString("surname");
-                Admin admin = Admin.createManager(userID, name, surname);
+                Admin admin = Admin.createAdmin(userID, name, surname);
                 admin.setId(id);
                 return admin;
             } catch (SQLException e) {

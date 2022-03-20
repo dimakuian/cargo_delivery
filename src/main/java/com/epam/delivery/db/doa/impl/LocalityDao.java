@@ -12,17 +12,17 @@ import java.util.Optional;
 public class LocalityDao extends AbstractDao<Locality, Long> {
     private static final long serialVersionUID = -5714557877277572823L;
 
-    private static final String INSERT = "INSERT INTO lINSERT INTO locality VALUES (DEFAULT,?,?,?)";
+    private static final String INSERT = "INSERT INTO delivery.`locality` VALUES (DEFAULT,?,?,?)";
 
-    private static final String UPDATE = "UPDATE locality SET name=?,lat=?,lng=? WHERE id=?";
+    private static final String UPDATE = "UPDATE delivery.`locality` SET name=?,lat=?,lng=? WHERE id=?";
 
-    private static final String SELECT_BY_ID = "SELECT id, name, lat, lng FROM locality WHERE id =?";
+    private static final String SELECT_BY_ID = "SELECT id, name, lat, lng FROM delivery.`locality` WHERE id =?";
 
-    private static final String EXIST = "SELECT id FROM locality WHERE id =?";
+    private static final String EXIST = "SELECT id FROM delivery.`locality` WHERE id =?";
 
-    private static final String SELECT_ALL = "SELECT id, name, lat, lng FROM locality";
+    private static final String SELECT_ALL = "SELECT id, name, lat, lng FROM delivery.`locality`";
 
-    private static final String DELETE = "DELETE FROM locality WHERE id=?";
+    private static final String DELETE = "DELETE FROM delivery.`locality` WHERE id=?";
 
     public static final String CALC_DISTANCE = "SELECT a.name AS from_city,\n" +
             "       b.name AS to_city,\n" +
@@ -33,8 +33,8 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
             "                   * COS(RADIANS(a.lng - b.lng))\n" +
             "                   + SIN(RADIANS(a.lat))\n" +
             "                   * SIN(RADIANS(b.lat)))))) + 40 AS distance_in_km\n" +
-            "FROM locality AS a\n" +
-            "         JOIN locality AS b ON a.id <> b.id\n" +
+            "FROM delivery.`locality` AS a\n" +
+            "         JOIN delivery.`locality` AS b ON a.id <> b.id\n" +
             "WHERE a.id = ?\n" +
             "  AND b.id = ?";
 
@@ -47,6 +47,8 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
         Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
             stat.setString(1, entity.getName());
+            stat.setDouble(2,entity.getLatitude());
+            stat.setDouble(3,entity.getLongitude());
             if (stat.executeUpdate() > 0) {
                 try (ResultSet rs = stat.getGeneratedKeys()) {
                     if (rs.next()) {

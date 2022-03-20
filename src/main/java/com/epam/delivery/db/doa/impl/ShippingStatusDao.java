@@ -11,19 +11,19 @@ import java.util.*;
 public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
     private static final long serialVersionUID = 5803902748264449477L;
 
-    private static final String INSERT = "INSERT INTO shipping_status (id, name) VALUES (DEFAULT,?)";
+    private static final String INSERT = "INSERT INTO delivery.`shipping_status` (id, name) VALUES (DEFAULT,?)";
 
-    private static final String UPDATE = "UPDATE shipping_status SET name=? WHERE id=?";
+    private static final String UPDATE = "UPDATE delivery.`shipping_status` SET name=? WHERE id=?";
 
-    private static final String SELECT_BY_ID = "SELECT id, name from shipping_status WHERE id=?";
+    private static final String SELECT_BY_ID = "SELECT id, name from delivery.`shipping_status` WHERE id=?";
 
-    private static final String EXIST = "SELECT id FROM shipping_status WHERE id=?";
+    private static final String EXIST = "SELECT id FROM delivery.`shipping_status` WHERE id=?";
 
-    private static final String SELECT_ALL = "select id, name from shipping_status";
+    private static final String SELECT_ALL = "select id, name from delivery.`shipping_status`";
 
-    private static final String DELETE = "DELETE FROM shipping_status WHERE id=?";
+    private static final String DELETE = "DELETE FROM delivery.`shipping_status` WHERE id=?";
 
-    private static final String SELECT_TRANSLATE_BY_STATUS_ID = "SELECT description FROM shipping_status_description " +
+    private static final String SELECT_TRANSLATE_BY_STATUS_ID = "SELECT description FROM delivery.`shipping_status_description` " +
             "WHERE shipping_status_id = ? AND language_id=?";
 
     public ShippingStatusDao(ConnectionBuilder builder) {
@@ -144,12 +144,14 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
 
     public Optional<ShippingStatusDescription> findTranslateByStatusId(Long id) {
         ShippingStatusDescription description = null;
-        Map<String, String> map = new HashMap<>();
         String en = getTranslateByStatusIdAndLangId(id, 1L);
-        map.put("en", en);
         String ua = getTranslateByStatusIdAndLangId(id, 2L);
-        map.put("ua", ua);
-        description = ShippingStatusDescription.create(id, map);
+        if (en != null && ua != null) {
+            Map<String, String> map = new HashMap<>();
+            map.put("en", en);
+            map.put("ua", ua);
+            description = ShippingStatusDescription.create(id, map);
+        }
         return Optional.ofNullable(description);
     }
 
@@ -166,7 +168,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
         } catch (SQLException exception) {
             System.err.println("SQLException while getEnTranslateByStatusId ShippingStatus " + exception.getMessage());
             exception.printStackTrace();
-        }finally {
+        } finally {
             closeConnection(connection);
         }
         return null;

@@ -1,5 +1,7 @@
 package com.epam.delivery.entities;
 
+import java.util.Objects;
+
 /**
  * Admin entity.
  */
@@ -39,7 +41,7 @@ public class Admin  extends Entity{
         this.surname = surname;
     }
 
-    public static Admin createManager(long userID, String name, String surname) {
+    public static Admin createAdmin(long userID, String name, String surname) {
         return new Admin(userID, name, surname);
     }
 
@@ -50,5 +52,18 @@ public class Admin  extends Entity{
                 ", name='" + name + '\'' +
                 ", surname='" + surname + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Admin admin = (Admin) o;
+        return userID == admin.userID && Objects.equals(name, admin.name) && Objects.equals(surname, admin.surname);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(userID, name, surname);
     }
 }

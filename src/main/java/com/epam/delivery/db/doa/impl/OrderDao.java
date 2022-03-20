@@ -12,30 +12,30 @@ import java.util.Optional;
 public class OrderDao extends AbstractDao<Order, Long> {
     private static final long serialVersionUID = 7139334124441683412L;
 
-    private static final String INSERT = "INSERT INTO `order` (id, shipping_address, delivery_address, " +
+    private static final String INSERT = "INSERT INTO delivery.`order` (id, shipping_address, delivery_address, " +
             "creation_time, client_id, consignee, description, distance, length, height, width, weight, volume, " +
             "fare, shipping_status_id, delivery_date) \n" +
             "VALUES (DEFAULT,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
 
-    private static final String UPDATE = "UPDATE `order` SET shipping_address=?,delivery_address=?,creation_time=?," +
+    private static final String UPDATE = "UPDATE delivery.`order` SET shipping_address=?,delivery_address=?,creation_time=?," +
             "client_id=?,consignee=?,description=?,distance=?,length=?,width=?,height=?,weight=?,volume=?,fare=?," +
             "shipping_status_id=?,delivery_date=? WHERE id=?";
 
     private static final String SELECT_BY_ID = "SELECT id, shipping_address, delivery_address, creation_time, client_id," +
             " consignee, description, distance, length, height, width, weight, volume, fare, shipping_status_id, " +
-            " delivery_date FROM `order` WHERE id=?";
+            " delivery_date FROM delivery.`order` WHERE id=?";
 
-    private static final String EXIST = "SELECT id FROM `order` WHERE id =?";
+    private static final String EXIST = "SELECT id FROM delivery.`order` WHERE id =?";
 
     private static final String SELECT_ALL = "SELECT id, shipping_address, delivery_address, creation_time, client_id, " +
             "consignee, description, distance, length, height, width, weight, volume, fare, shipping_status_id, " +
-            "delivery_date FROM `order`";
+            "delivery_date FROM delivery.`order`";
 
     private static final String SELECT_ALL_FOR_CLIENT = "SELECT id, shipping_address, delivery_address, creation_time, client_id, " +
             "consignee, description, distance, length, height, width, weight, volume, fare, shipping_status_id, " +
-            " delivery_date FROM `order`WHERE client_id=?";
+            " delivery_date FROM delivery.`order`WHERE client_id=?";
 
-    private static final String DELETE = "DELETE FROM `order` WHERE id=?";
+    private static final String DELETE = "DELETE FROM delivery.`order` WHERE id=?";
 
     public OrderDao(ConnectionBuilder builder) {
         super(builder);
@@ -92,7 +92,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
 
     @Override
     public Optional<Order> findById(Long id) {
-        Order order = Order.createOrder();
+        Order order = null;
         Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
             stat.setLong(1, id);

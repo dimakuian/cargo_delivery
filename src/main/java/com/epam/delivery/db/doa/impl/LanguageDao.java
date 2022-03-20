@@ -14,17 +14,17 @@ import static java.sql.Statement.RETURN_GENERATED_KEYS;
 public class LanguageDao extends AbstractDao <Language,Long> {
     private static final long serialVersionUID = 475113985684365786L;
 
-    private static final String INSERT = "INSERT INTO language (id, short_name, full_name) VALUES (DEFAULT,?,?)";
+    private static final String INSERT = "INSERT INTO delivery.`language` (id, short_name, full_name) VALUES (DEFAULT,?,?)";
 
-    private static final String UPDATE = "UPDATE language SET short_name = ?, full_name = ? WHERE id = ?";
+    private static final String UPDATE = "UPDATE delivery.`language` SET short_name = ?, full_name = ? WHERE id = ?";
 
-    private static final String SELECT_BY_ID = "SELECT id, short_name, full_name FROM language WHERE id = ?";
+    private static final String SELECT_BY_ID = "SELECT id, short_name, full_name FROM delivery.`language` WHERE id = ?";
 
-    private static final String EXIST = "SELECT id FROM language WHERE id=?";
+    private static final String EXIST = "SELECT id FROM delivery.`language` WHERE id=?";
 
-    private static final String SELECT_ALL = "SELECT id, short_name, full_name FROM language";
+    private static final String SELECT_ALL = "SELECT id, short_name, full_name FROM delivery.`language`";
 
-    private static final String DELETE = "DELETE FROM language WHERE id=?";
+    private static final String DELETE = "DELETE FROM delivery.`language` WHERE id=?";
 
     public LanguageDao(ConnectionBuilder builder) {
         super(builder);
