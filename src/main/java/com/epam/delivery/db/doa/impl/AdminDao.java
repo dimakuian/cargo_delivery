@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class AdminDao extends AbstractDao <Admin,Long> {
+public class AdminDao extends AbstractDao<Admin, Long> {
     private static final long serialVersionUID = 3048949702578419905L;
 
     private static final String INSERT = "INSERT INTO delivery.`admin` (id, user_id, name, surname) VALUES (DEFAULT,?,?,?)";
@@ -73,6 +73,7 @@ public class AdminDao extends AbstractDao <Admin,Long> {
 
 
     public Optional<Admin> findById(Long id) {
+        logger.info("id=" + id);
         Admin admin = null;
         Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {

@@ -1,5 +1,8 @@
 package com.epam.delivery;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public final class Path {
 
     /*
@@ -32,6 +35,4 @@ public final class Path {
     public static final String COMMAND__EDIT_ORDER = "/controller?command=editOrder";
     public static final String COMMAND__CREATE_ORDER = "/controller?command=createOrder";
     public static final String COMMAND__VIEW_CREATE_ORDER_PAGE = "/controller?command=viewCreateOrderPage";
-
-
 }

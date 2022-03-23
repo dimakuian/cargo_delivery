@@ -35,7 +35,7 @@ public class ConnectionWithDriverManager implements ConnectionBuilder {
     public static void createDataBase() {
         byte[] bytes = null;
         try {
-            bytes = Files.readAllBytes(Paths.get("sql/db-create.sql"));
+            bytes = Files.readAllBytes(Paths.get("sql/test_db-create.sql"));
         } catch (IOException exception) {
             exception.printStackTrace();
         }

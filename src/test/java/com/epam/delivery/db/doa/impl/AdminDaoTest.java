@@ -3,6 +3,8 @@ package com.epam.delivery.db.doa.impl;
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionWithDriverManager;
 import com.epam.delivery.entities.Admin;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.*;
 
 import java.io.FileOutputStream;
@@ -19,6 +21,7 @@ import java.util.Properties;
 import static org.junit.jupiter.api.Assertions.*;
 
 class AdminDaoTest {
+    static final Logger logger = LogManager.getLogger();
     private static final String URL_CONNECTION = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1";
     private static String userDefinedAppContent;
     private static final String APP_PROPS_FILE = "app.properties";
@@ -122,15 +125,15 @@ class AdminDaoTest {
         assertTrue(dao.deleteById(2L));
         ArrayList<Admin> afterDelete = (ArrayList<Admin>) dao.findAll();
         assertEquals(1, afterDelete.size());
-        assertEquals(Collections.singletonList(admins.get(0)),afterDelete);
+        assertEquals(Collections.singletonList(admins.get(0)), afterDelete);
     }
 
     @Test
     void getByUserId() {
         Admin admin = dao.getByUserId(6L).orElse(null);
         assertNotNull(admin);
-        assertEquals(1,admin.getId());
-        assertEquals("John",admin.getName());
+        assertEquals(1, admin.getId());
+        assertEquals("John", admin.getName());
         Admin admin1 = dao.getByUserId(5L).orElse(null);
         assertNull(admin1);
     }
