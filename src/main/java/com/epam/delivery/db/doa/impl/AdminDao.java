@@ -44,10 +44,9 @@ public class AdminDao extends AbstractDao<Admin, Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while insert manager " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Admin insert. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return result;
     }
@@ -63,10 +62,9 @@ public class AdminDao extends AbstractDao<Admin, Long> {
             stat.setLong(4, entity.getId());
             if (stat.executeUpdate() > 0) result = true;
         } catch (SQLException exception) {
-            System.err.println("SQLException while update manager " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Admin update. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return result;
     }
@@ -85,10 +83,9 @@ public class AdminDao extends AbstractDao<Admin, Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while getById manager " + exception.getMessage());
-            exception.printStackTrace();
+            System.err.println("SQLException while Admin findById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return Optional.ofNullable(admin);
     }
@@ -102,10 +99,9 @@ public class AdminDao extends AbstractDao<Admin, Long> {
             ResultSet rs = stat.executeQuery();
             if (rs.next()) result = true;
         } catch (SQLException exception) {
-            System.err.println("SQLException while existsById manager " + exception.getMessage());
-            exception.printStackTrace();
+            System.err.println("SQLException while Admin existsById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return result;
     }
@@ -123,10 +119,9 @@ public class AdminDao extends AbstractDao<Admin, Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while findAll manager " + exception.getMessage());
-            exception.printStackTrace();
+            System.err.println("SQLException while Admin findAll. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return admins;
     }
@@ -139,10 +134,9 @@ public class AdminDao extends AbstractDao<Admin, Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) result = true;
         } catch (SQLException exception) {
-            System.err.println("SQLException while deleteById manager " + exception.getMessage());
-            exception.printStackTrace();
+            System.err.println("SQLException while Admin deleteById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return result;
     }
@@ -162,10 +156,9 @@ public class AdminDao extends AbstractDao<Admin, Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while getById manager " + exception.getMessage());
-            exception.printStackTrace();
+            System.err.println("SQLException while Admin getById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return Optional.ofNullable(admin);
     }
@@ -185,8 +178,9 @@ public class AdminDao extends AbstractDao<Admin, Long> {
                 Admin admin = Admin.createAdmin(userID, name, surname);
                 admin.setId(id);
                 return admin;
-            } catch (SQLException e) {
-                throw new IllegalStateException(e);
+            } catch (SQLException exception) {
+                logger.error("SQLException while Admin mapRow." + exception.getMessage());
+                throw new IllegalStateException(exception);
             }
         }
 

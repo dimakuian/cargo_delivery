@@ -45,10 +45,9 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
                 return true;
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while insert ShippingStatus " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while ShippingStatus insert. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -61,10 +60,9 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
             stat.setLong(2, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
-            System.err.println("SQLException while update ShippingStatus " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while ShippingStatus update. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -81,10 +79,9 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while getById ShippingStatus " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while ShippingStatus findById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return Optional.ofNullable(status);
     }
@@ -98,10 +95,9 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while existsById ShippingStatus " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while ShippingStatus existById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -119,10 +115,9 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while findAll ShippingStatus " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while ShippingStatus findAll. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return statusList;
     }
@@ -134,10 +129,9 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
-            System.err.println("SQLException while deleteById ShippingStatus " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while ShippingStatus deleteById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -166,10 +160,9 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while getEnTranslateByStatusId ShippingStatus " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while ShippingStatus getTranslateByStatusIdAndLangId. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return null;
     }
@@ -187,8 +180,9 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
                 ShippingStatus status = ShippingStatus.createShippingStatus(name);
                 status.setId(statusID);
                 return status;
-            } catch (SQLException e) {
-                throw new IllegalStateException(e);
+            } catch (SQLException exception) {
+                logger.error("SQLException while ShippingStatus mapRow. " + exception.getMessage());
+                throw new IllegalStateException(exception);
             }
         }
     }

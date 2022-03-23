@@ -33,15 +33,4 @@ public abstract class AbstractDao<T, ID> implements Serializable {
 
     public abstract boolean deleteById(ID id);
 
-    protected void closeConnection(Connection connection) {
-        if (connection != null) {
-            try {
-                if (!connection.isClosed()) connection.close();
-            } catch (SQLException e) {
-                System.out.println("some problem with close connection ==> " + e.getMessage());
-                e.printStackTrace();
-            }
-        }
-    }
-
 }

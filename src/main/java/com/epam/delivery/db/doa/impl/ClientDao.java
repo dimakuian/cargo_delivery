@@ -62,10 +62,9 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while insert client " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Client insert. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -84,10 +83,9 @@ public class ClientDao extends AbstractDao<Client,Long> {
             stat.setLong(8, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
-            System.err.println("SQLException while update client " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Client update. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -116,10 +114,9 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while findAll client " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Client findById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return Optional.ofNullable(client);
     }
@@ -133,10 +130,9 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while exist client " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Client existsById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -154,10 +150,9 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while findAll client " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Client findAll. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return clientList;
     }
@@ -169,10 +164,9 @@ public class ClientDao extends AbstractDao<Client,Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
-            System.err.println("SQLException while deleteById client " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Client deleteById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -189,10 +183,9 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while findAll client " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Client getByUserId. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return Optional.ofNullable(client);
     }
@@ -205,10 +198,9 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while exist client " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Client existsEmail. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -221,10 +213,10 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while exist client " + exception.getMessage());
+            logger.error("SQLException while Client existsPhone. " + exception.getMessage());
             exception.printStackTrace();
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -251,11 +243,11 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 client.setPhone(phone);
                 client.setBalance(balance);
                 return client;
-            } catch (SQLException e) {
-                throw new IllegalStateException(e);
+            } catch (SQLException exception) {
+                logger.error("SQLException while Client mapRow. " + exception.getMessage());
+                throw new IllegalStateException(exception);
             }
         }
-
     }
 
 }

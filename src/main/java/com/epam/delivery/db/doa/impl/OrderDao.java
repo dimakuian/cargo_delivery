@@ -61,16 +61,11 @@ public class OrderDao extends AbstractDao<Order, Long> {
             }
             connection.commit();
             connection.setAutoCommit(true);
-        } catch (SQLException e) {
-//            rollbackAndClose();
-            try {
-                connection.rollback();
-            } catch (SQLException ex) {
-                ex.printStackTrace();
-            }
-            e.printStackTrace();
+        } catch (SQLException exception) {
+            logger.error("SQLException while Order insert. " + exception.getMessage());
+            builder.rollbackAndClose(connection);
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return result;
     }
@@ -83,9 +78,9 @@ public class OrderDao extends AbstractDao<Order, Long> {
             stat.setLong(16, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            logger.error("SQLException while Order update. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -103,9 +98,9 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 }
             }
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            logger.error("SQLException while Order findById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return Optional.ofNullable(order);
     }
@@ -119,9 +114,9 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            logger.error("SQLException while Order existsById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -139,9 +134,9 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 }
             }
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            logger.error("SQLException while Order findAll. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return list;
     }
@@ -153,9 +148,9 @@ public class OrderDao extends AbstractDao<Order, Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            logger.error("SQLException while Order deleteById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -173,9 +168,9 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 }
             }
         } catch (SQLException exception) {
-            exception.printStackTrace();
+            logger.error("SQLException while Order findAllByUserId. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return list;
     }
@@ -238,8 +233,9 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 builder.withShippingStatus(statusId);
 
                 return builder.build();
-            } catch (SQLException e) {
-                throw new IllegalStateException(e);
+            } catch (SQLException exception) {
+                logger.error("SQLException while Order mapRaw. " + exception.getMessage());
+                throw new IllegalStateException(exception);
             }
         }
     }

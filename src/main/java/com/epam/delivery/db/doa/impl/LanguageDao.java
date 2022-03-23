@@ -46,10 +46,9 @@ public class LanguageDao extends AbstractDao <Language,Long> {
                 return true;
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while insert language " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Language insert. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -63,10 +62,9 @@ public class LanguageDao extends AbstractDao <Language,Long> {
             stat.setLong(3, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
-            System.err.println("SQLException while update language " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Language update. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -83,10 +81,9 @@ public class LanguageDao extends AbstractDao <Language,Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while getById language " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Language findById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return Optional.ofNullable(language);
     }
@@ -100,10 +97,9 @@ public class LanguageDao extends AbstractDao <Language,Long> {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while exist language " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Language existsById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -121,10 +117,9 @@ public class LanguageDao extends AbstractDao <Language,Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while findAll language " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while Language findAll. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return languageList;
     }
@@ -136,10 +131,11 @@ public class LanguageDao extends AbstractDao <Language,Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
-            System.err.println("SQLException while deleteById language " + exception.getMessage());
+            logger.error("SQLException while Language deleteById. " + exception.getMessage());
             exception.printStackTrace();
+
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return false;
     }
@@ -158,8 +154,9 @@ public class LanguageDao extends AbstractDao <Language,Long> {
                 Language language = Language.createLanguage(shortName, fullName);
                 language.setId(id);
                 return language;
-            } catch (SQLException e) {
-                throw new IllegalStateException(e);
+            } catch (SQLException exception) {
+                logger.error("SQLException while Language mapRaw. " + exception.getMessage());
+                throw new IllegalStateException(exception);
             }
         }
 

@@ -43,10 +43,9 @@ public class UserDao extends AbstractDao<User, Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.out.println("SQLException while insert user " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while User insert. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return result;
     }
@@ -62,10 +61,9 @@ public class UserDao extends AbstractDao<User, Long> {
             stat.setLong(4, entity.getId());
             if (stat.executeUpdate() > 0) result = true;
         } catch (SQLException exception) {
-            System.err.println("SQLException while update user " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while User update. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return result;
     }
@@ -82,10 +80,9 @@ public class UserDao extends AbstractDao<User, Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while select user by id ==> " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while User findById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return Optional.ofNullable(user);
     }
@@ -100,10 +97,9 @@ public class UserDao extends AbstractDao<User, Long> {
                 if (rs.next()) result = true;
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while check if exist user by id ==> " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while User existsById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return result;
     }
@@ -121,10 +117,9 @@ public class UserDao extends AbstractDao<User, Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while find all users ==> " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while User findAll. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return users;
     }
@@ -137,10 +132,9 @@ public class UserDao extends AbstractDao<User, Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) result = true;
         } catch (SQLException exception) {
-            System.err.println("SQLException while delete all users ==> " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while User deleteById. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return result;
     }
@@ -160,10 +154,9 @@ public class UserDao extends AbstractDao<User, Long> {
                 }
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while select user by login ==> " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while User getByLogin. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return Optional.ofNullable(user);
     }
@@ -177,10 +170,9 @@ public class UserDao extends AbstractDao<User, Long> {
                 if (rs.next()) result = true;
             }
         } catch (SQLException exception) {
-            System.err.println("SQLException while check if exist user by id ==> " + exception.getMessage());
-            exception.printStackTrace();
+            logger.error("SQLException while User existsByLogin. " + exception.getMessage());
         } finally {
-            closeConnection(connection);
+            builder.closeConnection(connection);
         }
         return result;
     }
@@ -199,8 +191,9 @@ public class UserDao extends AbstractDao<User, Long> {
                 User user = User.createUser(login, password, roleID);
                 user.setId(id);
                 return user;
-            } catch (SQLException e) {
-                throw new IllegalStateException(e);
+            } catch (SQLException exception) {
+                logger.error("SQLException while User mapRow. " + exception.getMessage());
+                throw new IllegalStateException(exception);
             }
         }
     }

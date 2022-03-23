@@ -3,22 +3,33 @@
     <Properties>
         <property name="LOG_DIR">logs</property>
         <property name="ARCHIVE_LOG_DIR">${LOG_DIR}/archive</property>
-        <property name="pattern_console">%d{HH:mm:ss} %-5level %logger{-1} - %msg%n</property>
+        <property name="pattern_console">%d{HH:mm:ss} [%t] %-5level %logger{5} - %msg%n</property>
     </Properties>
     <Appenders>
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="${pattern_console}"/>
         </Console>
-        <File name="File1" fileName="${LOG_DIR}/text.log" bufferedIO="true">
+        <File name="File" fileName="${LOG_DIR}/text.log" bufferedIO="true">
             <PatternLayout pattern="${pattern_console}"/>
         </File>
+        <RollingFile name="RollingFile"
+                     fileName="${LOG_DIR}/text_log.log"
+                     append="true"
+                     filePattern="${LOG_DIR}/${date:yyyy-MM-dd}/%d{yyyy-MM-dd_HH-mm}_%i.log"
+                     ignoreExceptions="false">
+            <PatternLayout pattern="${pattern_console}"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="15 KB" />
+            </Policies>
+            <DefaultRolloverStrategy max="10" />
+        </RollingFile>
     </Appenders>
     <Loggers>
         <Logger name="Log_File" level="trace" additivity="false">
-            <Appender-ref ref="File1"/>
+            <Appender-ref ref="File"/>
         </Logger>
         <Root level="debug">
-            <Appender-ref ref="File1"/>
+            <Appender-ref ref="RollingFile"/>
             <Appender-ref ref="Console" level="trace"/>
         </Root>
     </Loggers>
