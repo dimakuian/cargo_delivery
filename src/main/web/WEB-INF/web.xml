@@ -60,7 +60,7 @@
             </init-param>
             <init-param>
                 <param-name>out-of-control</param-name>
-                <param-value>login viewRegistrationPіage registration calculateCost viewCalculateCost setLocale</param-value>
+                <param-value>login viewRegistrationPage registration calculateCost viewCalculateCost setLocale</param-value>
             </init-param>
         </filter>
 

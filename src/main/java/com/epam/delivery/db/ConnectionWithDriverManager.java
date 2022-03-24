@@ -1,5 +1,8 @@
 package com.epam.delivery.db;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -12,6 +15,8 @@ import java.sql.Statement;
 import java.util.Properties;
 
 public class ConnectionWithDriverManager implements ConnectionBuilder {
+
+    private static final Logger logger = LogManager.getLogger();
 
     public ConnectionWithDriverManager() {
     }
@@ -37,7 +42,7 @@ public class ConnectionWithDriverManager implements ConnectionBuilder {
         try {
             bytes = Files.readAllBytes(Paths.get("sql/test_db-create.sql"));
         } catch (IOException exception) {
-            exception.printStackTrace();
+            logger.error("Problem with read file. " + exception.getMessage());
         }
         ConnectionBuilder builder = new ConnectionWithDriverManager();
         Connection con = null;
@@ -54,8 +59,7 @@ public class ConnectionWithDriverManager implements ConnectionBuilder {
                 }
             }
         } catch (SQLException sqlException) {
-            System.out.println("some problem with creating DB: " + sqlException.getMessage());
-            sqlException.printStackTrace();
+            logger.error("some problem with creating DB: " + sqlException.getMessage());
         } finally {
             builder.closeConnection(con);
         }
