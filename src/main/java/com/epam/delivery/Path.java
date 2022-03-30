@@ -18,6 +18,8 @@ public final class Path {
     public static final String PAGE__COUNT_COAST = "/WEB-INF/jsp/calculate_сost.jsp";
     public static final String PAGE__REGISTRATION = "/WEB-INF/jsp/registration.jsp";
     public static final String PAGE__EDIT_ORDER = "/edit_order.jsp";
+    public static final String PAGE__ADMIN_CABINET = "/WEB-INF/jsp/admin/admin_cabinet.jsp";
+
 
     // commands
     public static final String COMMAND__LOGIN = "/controller?command=login";
@@ -35,4 +37,7 @@ public final class Path {
     public static final String COMMAND__EDIT_ORDER = "/controller?command=editOrder";
     public static final String COMMAND__CREATE_ORDER = "/controller?command=createOrder";
     public static final String COMMAND__VIEW_CREATE_ORDER_PAGE = "/controller?command=viewCreateOrderPage";
+
+    public static final String COMMAND__ADMIN_CABINET = "/controller?command=adminCabinet";
+
 }

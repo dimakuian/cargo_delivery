@@ -1,0 +1,53 @@
+package com.epam.delivery.web.command;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.io.IOException;
+
+public class SetLocaleCommand implements Command{
+
+    private static final Logger logger = LogManager.getLogger();
+
+    /**
+     * Execution method for command.
+     *
+     * @param request
+     * @param response
+     * @return Address to go once the command is executed.
+     */
+    @Override
+    public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        logger.debug("start command");
+
+        String redirection = request.getParameter("page");
+        logger.trace("Get request parameter: page --> " + redirection);
+
+        if (redirection == null) redirection = "index.jsp";
+
+        // login logic here
+        String lang = request.getParameter("lang");
+        logger.trace("Get request parameter: logging --> " + redirection);
+        HttpSession session = request.getSession(true);
+        session.removeAttribute("locale");
+        if (lang!=null) {
+            switch (lang) {
+                case "ua" : session.setAttribute("locale", "ua");
+                    logger.trace("Set the session attribute: locale --> " + "ua");
+                break;
+                case "en" : session.setAttribute("locale", "en");
+                    logger.trace("Set the session attribute: locale --> " + "en");
+                    break;
+                default : session.setAttribute("locale", "");
+                    logger.trace("Set the session attribute: locale --> " + "");
+                break;
+            }
+        }
+        logger.debug("Command finished");
+        return redirection;
+    }
+}

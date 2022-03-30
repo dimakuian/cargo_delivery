@@ -2,8 +2,8 @@ package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.doa.EntityMapper;
-import com.epam.delivery.entities.ShippingStatus;
-import com.epam.delivery.entities.ShippingStatusDescription;
+import com.epam.delivery.db.entities.ShippingStatus;
+import com.epam.delivery.db.entities.bean.StatusDescriptionBean;
 
 import java.sql.*;
 import java.util.*;
@@ -103,7 +103,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
     }
 
     @Override
-    public Iterable<ShippingStatus> findAll() {
+    public List<ShippingStatus> findAll() {
         List<ShippingStatus> statusList = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
@@ -136,17 +136,19 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
         return false;
     }
 
-    public Optional<ShippingStatusDescription> findTranslateByStatusId(Long id) {
-        ShippingStatusDescription description = null;
+    public Optional<StatusDescriptionBean> findTranslateByStatusId(Long id) {
+        StatusDescriptionBean descriptionBean = null;
         String en = getTranslateByStatusIdAndLangId(id, 1L);
         String ua = getTranslateByStatusIdAndLangId(id, 2L);
         if (en != null && ua != null) {
+            descriptionBean = new StatusDescriptionBean();
             Map<String, String> map = new HashMap<>();
             map.put("en", en);
             map.put("ua", ua);
-            description = ShippingStatusDescription.create(id, map);
+            descriptionBean.setStatusID(id);
+            descriptionBean.setDescription(map);
         }
-        return Optional.ofNullable(description);
+        return Optional.ofNullable(descriptionBean);
     }
 
     private String getTranslateByStatusIdAndLangId(Long statusID, Long langID) {
@@ -165,6 +167,18 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
             builder.closeConnection(connection);
         }
         return null;
+    }
+
+
+    public List<StatusDescriptionBean> getAllTranslate() {
+        List<StatusDescriptionBean> list = new ArrayList<>();
+        Iterable<ShippingStatus> statuses = this.findAll();
+        for (ShippingStatus status : statuses) {
+            StatusDescriptionBean description = findTranslateByStatusId(status.getId()).orElse(null);
+            if (description == null) return null;
+            list.add(description);
+        }
+        return list;
     }
 
     /**

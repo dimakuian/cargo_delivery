@@ -2,8 +2,8 @@ package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionWithDriverManager;
-import com.epam.delivery.entities.Locality;
-import com.epam.delivery.entities.Order;
+import com.epam.delivery.db.entities.Locality;
+import com.epam.delivery.db.entities.Order;
 import org.junit.jupiter.api.*;
 
 import java.io.FileOutputStream;

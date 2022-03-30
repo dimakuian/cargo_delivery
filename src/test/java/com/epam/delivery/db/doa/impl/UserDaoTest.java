@@ -2,7 +2,7 @@ package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionWithDriverManager;
-import com.epam.delivery.entities.User;
+import com.epam.delivery.db.entities.User;
 import org.junit.jupiter.api.*;
 
 import java.io.*;

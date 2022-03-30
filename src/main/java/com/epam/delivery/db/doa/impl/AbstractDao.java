@@ -5,8 +5,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractDao<T, ID> implements Serializable {
@@ -29,7 +28,7 @@ public abstract class AbstractDao<T, ID> implements Serializable {
 
     public abstract boolean existsById(ID id);
 
-    public abstract Iterable<T> findAll();
+    public abstract List<T> findAll();
 
     public abstract boolean deleteById(ID id);
 

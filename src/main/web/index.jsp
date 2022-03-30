@@ -41,17 +41,26 @@
 <c:remove var="message"/>
 <h1>Some description about our company</h1>
 <hr>
-<c:set var="tariffs" value="${applicationScope['tariff']}"/>
-<c:set var="localities" value="${applicationScope['localities']}"/>
 <h1><fmt:message key="index.our_department"/></h1>
 <div class="tariff_table">
+    <c:set var="localitiesBean" value="${applicationScope['localities']}"/>
     <table>
         <tr>
             <th><fmt:message key="index.department"/></th>
         </tr>
-        <c:forEach items="${localities}" var="local">
+        <c:forEach items="${localitiesBean}" var="local">
             <tr>
-                <td>${local.name}</td>
+                <c:choose>
+                    <c:when test="${locale=='en'}">
+                        <td>${local.description.en}</td>
+                    </c:when>
+                    <c:when test="${locale=='ua'}">
+                        <td>${local.description.ua}</td>
+                    </c:when>
+                    <c:otherwise>
+                        <td>${local.description.ua}</td>
+                    </c:otherwise>
+                </c:choose>
             </tr>
         </c:forEach>
     </table>

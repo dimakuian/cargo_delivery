@@ -2,9 +2,9 @@ package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionWithDriverManager;
-import com.epam.delivery.entities.Entity;
-import com.epam.delivery.entities.ShippingStatus;
-import com.epam.delivery.entities.ShippingStatusDescription;
+import com.epam.delivery.db.entities.Entity;
+import com.epam.delivery.db.entities.ShippingStatus;
+import com.epam.delivery.db.entities.bean.StatusDescriptionBean;
 import org.junit.jupiter.api.*;
 
 import java.io.FileOutputStream;
@@ -81,7 +81,7 @@ class ShippingStatusDaoTest {
         ShippingStatus test = ShippingStatus.createShippingStatus("test");
         ShippingStatus paid = ShippingStatus.createShippingStatus("paid");
         assertTrue(dao.insert(test));
-        assertEquals(8,test.getId());
+        assertEquals(8, test.getId());
         assertFalse(dao.insert(paid));
     }
 
@@ -91,19 +91,19 @@ class ShippingStatusDaoTest {
         status.setName("test");
         assertTrue(dao.update(status));
         ShippingStatus afterUpdate = dao.findById(1L).orElse(null);
-        assertEquals("test",afterUpdate.getName());
+        assertEquals("test", afterUpdate.getName());
     }
 
     @Test
     void findById() {
         ShippingStatus status1 = dao.findById(1L).orElse(null);
         assertNotNull(status1);
-        assertEquals(1,status1.getId());
-        assertEquals("created",status1.getName());
+        assertEquals(1, status1.getId());
+        assertEquals("created", status1.getName());
         ShippingStatus status2 = dao.findById(2L).orElse(null);
         assertNotNull(status2);
-        assertEquals(2,status2.getId());
-        assertEquals("paid",status2.getName());
+        assertEquals(2, status2.getId());
+        assertEquals("paid", status2.getName());
         ShippingStatus status3 = dao.findById(8L).orElse(null);
         assertNull(status3);
     }
@@ -127,8 +127,8 @@ class ShippingStatusDaoTest {
         ArrayList<ShippingStatus> statuses = (ArrayList<ShippingStatus>) dao.findAll();
         statuses.sort(Comparator.comparingLong(Entity::getId));
         assertFalse(statuses.isEmpty());
-        assertEquals(7,statuses.size());
-        assertEquals("paid",statuses.get(1).getName());
+        assertEquals(7, statuses.size());
+        assertEquals("paid", statuses.get(1).getName());
     }
 
     @Test
@@ -141,20 +141,20 @@ class ShippingStatusDaoTest {
         assertFalse(dao.deleteById(10L));
         ArrayList<ShippingStatus> afterDelete = (ArrayList<ShippingStatus>) dao.findAll();
         afterDelete.sort(Comparator.comparingLong(Entity::getId));
-        assertEquals(Arrays.asList(statuses.get(0),statuses.get(3),statuses.get(5),statuses.get(6)),afterDelete);
+        assertEquals(Arrays.asList(statuses.get(0), statuses.get(3), statuses.get(5), statuses.get(6)), afterDelete);
     }
 
     @Test
     void findTranslateByStatusId() {
-        ShippingStatusDescription description1 = dao.findTranslateByStatusId(3l).orElse(null);
+        StatusDescriptionBean description1 = dao.findTranslateByStatusId(3L).orElse(null);
         assertNotNull(description1);
-        assertEquals("confirmed",description1.getDescription().get("en"));
-        assertEquals("підтверджений",description1.getDescription().get("ua"));
-        ShippingStatusDescription description2 = dao.findTranslateByStatusId(5l).orElse(null);
+        assertEquals("confirmed", description1.getDescription().get("en"));
+        assertEquals("підтверджений", description1.getDescription().get("ua"));
+        StatusDescriptionBean description2 = dao.findTranslateByStatusId(5L).orElse(null);
         assertNotNull(description2);
-        assertEquals("in the way",description2.getDescription().get("en"));
-        assertEquals("в дорозі",description2.getDescription().get("ua"));
-        ShippingStatusDescription description3 = dao.findTranslateByStatusId(10l).orElse(null);
+        assertEquals("in the way", description2.getDescription().get("en"));
+        assertEquals("в дорозі", description2.getDescription().get("ua"));
+        StatusDescriptionBean description3 = dao.findTranslateByStatusId(10L).orElse(null);
         assertNull(description3);
     }
 }

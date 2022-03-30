@@ -2,7 +2,7 @@ package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.doa.EntityMapper;
-import com.epam.delivery.entities.Order;
+import com.epam.delivery.db.entities.Order;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -122,7 +122,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     }
 
     @Override
-    public Iterable<Order> findAll() {
+    public List<Order> findAll() {
         List<Order> list = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {

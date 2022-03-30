@@ -25,7 +25,7 @@
 <%@include file="/WEB-INF/jspf/head.jspf" %>
 
 <body>
-<%@include file="/WEB-INF/jspf/header.jspf"%>
+<%@include file="/WEB-INF/jspf/header.jspf" %>
 <!-- Language switcher begin -->
 <form name="locales" action="/controller" method="post">
     <select name="lang" onchange="this.form.submit()">
@@ -39,6 +39,8 @@
 <!-- end Language switcher -->
 
 <div class="user_cabinet_main">
+    <c:set var="statuses" value="${applicationScope['status_description']}"/>
+    <c:set var="localitiesBeanList" value="${applicationScope['localities']}"/>
     <div>
         <c:if test="${clientOrders.size()>0}">
             <table>
@@ -52,31 +54,58 @@
                     <th><fmt:message key="userCabinet.details"/></th>
                 </tr>
                 <c:forEach var="order" items="${clientOrders}">
+                    <c:set var="description" value="${statuses.get(order.getStatusID()-1).getDescription()}"/>
+                    <c:set var="shippingBean" value="${localitiesBeanList.get(order.getShippingAddressID()-1)}"/>
+                    <c:set var="deliveryBean" value="${localitiesBeanList.get(order.getDeliveryAddressID()-1)}"/>
                     <tr>
-                        <td>${order.getShippingAddressID()}</td>
-                        <td>${order.getDeliveryAddressID()}</td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${locale=='en'}">
+                                    ${shippingBean.description.en}
+                                </c:when>
+                                <c:when test="${locale=='ua'}">
+                                    ${shippingBean.description.ua}
+                                </c:when>
+                                <c:otherwise>
+                                    ${shippingBean.description.ua}
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
+                        <td>
+                            <c:choose>
+                                <c:when test="${locale=='en'}">
+                                    ${deliveryBean.description.en}
+                                </c:when>
+                                <c:when test="${locale=='ua'}">
+                                    ${deliveryBean.description.ua}
+                                </c:when>
+                                <c:otherwise>
+                                    ${deliveryBean.description.ua}
+                                </c:otherwise>
+                            </c:choose>
+                        </td>
                         <td>${order.getCreationTime()}</td>
                         <td>${order.getConsignee()}</td>
                         <td>${order.getFare()}</td>
                         <td><c:choose>
                             <c:when test="${locale=='en'}">
-                                ${order.getStatusID()}
+                                ${description.en}
                             </c:when>
                             <c:when test="${locale=='ua'}">
-                                ${order.getStatusID()}
+                                ${description.ua}
                             </c:when>
                             <c:otherwise>
-                                ${order.getStatusID()}
+                                ${description.ua}
                             </c:otherwise>
                         </c:choose>
-                        <c:if test="${order.getStatusID() == 1}">
-                            <form action="/controller" method="post">
-                                <input type="hidden" name="command" value="payOrder">
-                                <input type="hidden" name="order" value="${order.getId()}">
-                                <fmt:message key="userCabinet.button.pay" var="button_pay"/>
-                                <input type="submit" value="${button_pay}">
-                            </form>
-                        </c:if>
+                            <c:if test="${order.getStatusID() == 1}">
+                                <form action="/controller" method="post">
+                                    <input type="hidden" name="command" value="payOrder">
+                                    <input type="hidden" name="order" value="${order.getId()}">
+                                    <fmt:message key="userCabinet.button.pay" var="button_pay"/>
+                                    <input type="submit" value="${button_pay}">
+                                </form>
+                            </c:if>
                         </td>
                         <td>
                             <form action="/controller" method="post">

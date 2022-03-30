@@ -3,7 +3,7 @@ package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.doa.EntityMapper;
-import com.epam.delivery.entities.Admin;
+import com.epam.delivery.db.entities.Admin;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -107,7 +107,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
     }
 
     @Override
-    public Iterable<Admin> findAll() {
+    public List<Admin> findAll() {
         List<Admin> admins = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {

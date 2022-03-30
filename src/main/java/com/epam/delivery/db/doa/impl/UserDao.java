@@ -2,7 +2,7 @@ package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.doa.EntityMapper;
-import com.epam.delivery.entities.User;
+import com.epam.delivery.db.entities.User;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -105,7 +105,7 @@ public class UserDao extends AbstractDao<User, Long> {
     }
 
     @Override
-    public Iterable<User> findAll() {
+    public List<User> findAll() {
         List<User> users = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {

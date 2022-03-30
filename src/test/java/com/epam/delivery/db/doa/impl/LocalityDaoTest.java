@@ -2,8 +2,7 @@ package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionWithDriverManager;
-import com.epam.delivery.entities.Entity;
-import com.epam.delivery.entities.Locality;
+import com.epam.delivery.db.entities.Locality;
 import org.junit.jupiter.api.*;
 
 import java.io.FileOutputStream;
@@ -14,7 +13,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;

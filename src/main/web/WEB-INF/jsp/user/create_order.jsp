@@ -23,7 +23,6 @@
 <%@include file="/WEB-INF/jspf/head.jspf" %>
 <body>
 <%-- CONTENT --%>
-<c:set var="list" value="${applicationScope['localities']}"/>
 <%@include file="/WEB-INF/jspf/header.jspf" %>
 
 <!-- Language switcher begin -->
@@ -41,26 +40,49 @@
 <c:choose>
     <c:when test="${role.getName() eq 'client'}">
         <div class="count_container">
+            <c:set var="localitiesBeanList" value="${applicationScope['localities']}"/>
             <form action="<c:url value="/controller"/>" method="post"
                   oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)">
                 <input type="hidden" name="command" value="createOrder">
                 <h5><fmt:message key="rout"/></h5>
                 <label>
-                    <label>
-                        <select id="ship" class="address" list="shipping" name="shipping_address" required>
-                            <c:forEach items="${list}" var="loc">
-                                <option value="${loc.id}">${loc.name}</option>
-                            </c:forEach>
-                        </select>
-                    </label>
-                    <span>==&gt</span>
-                    <label>
-                        <select id="deliv" class="address" list="delivery" name="delivery_address" required>
-                            <c:forEach items="${list}" var="loc">
-                                <option value="${loc.id}">${loc.name}</option>
-                            </c:forEach>
-                        </select>
-                    </label>
+                    <select id="ship" class="address" list="shipping" name="shipping_address" required>
+                        <c:forEach items="${localitiesBeanList}" var="bean">
+                            <option value="${bean.localityID}"><c:out value="#${bean.localityID} "/>
+                                <c:choose>
+                                    <c:when test="${locale=='en'}">
+                                        ${bean.description.en}
+                                    </c:when>
+                                    <c:when test="${locale=='ua'}">
+                                        ${bean.description.ua}
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${bean.description.ua}
+                                    </c:otherwise>
+                                </c:choose>
+                            </option>
+                        </c:forEach>
+                    </select>
+                </label>
+                <span>==&gt</span>
+                <label>
+                    <select id="deliv" class="address" list="delivery" name="delivery_address" required>
+                        <c:forEach items="${localitiesBeanList}" var="bean">
+                            <option value="${bean.localityID}"><c:out value="#${bean.localityID} "/>
+                                <c:choose>
+                                    <c:when test="${locale=='en'}">
+                                        ${bean.description.en}
+                                    </c:when>
+                                    <c:when test="${locale=='ua'}">
+                                        ${bean.description.ua}
+                                    </c:when>
+                                    <c:otherwise>
+                                        ${bean.description.ua}
+                                    </c:otherwise>
+                                </c:choose>
+                            </option>
+                        </c:forEach>
+                    </select>
                 </label>
                 <br>
                 <label class="param" for="length"><fmt:message key="countCost.length_cm"/></label>

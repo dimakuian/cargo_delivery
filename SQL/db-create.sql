@@ -179,8 +179,8 @@ INSERT INTO `language` (id, short_name, full_name)
 VALUES (DEFAULT, 'UA', 'Ukraine');
 
 INSERT INTO `locality` (id, name, lat, lng)
-VALUES (DEFAULT, 'Kiev department №2', 50.430152159229465, 30.400358449390378),
-       (DEFAULT, 'Lviv department №1', 49.85580301226521, 24.019571021514157),
+VALUES (DEFAULT, 'Kiev department №1', 50.430152159229465, 30.400358449390378),
+       (DEFAULT, 'Lviv department №2', 49.85580301226521, 24.019571021514157),
        (DEFAULT, 'Odesa department №3', 46.47743026963285, 30.700937087405833),
        (DEFAULT, 'Ternopil department №4', 49.551989782699984, 25.57133777998255),
        (DEFAULT, 'Rivne department №5', 50.612594968969354, 26.246152539988664),
@@ -195,6 +195,40 @@ VALUES (DEFAULT, 'Kiev department №2', 50.430152159229465, 30.400358449390378)
        (DEFAULT, 'Mykolaiv department №14', 46.95604226441692, 32.032779749536004),
        (DEFAULT, 'Ivano-Frankivsk department №15', 48.91735027526064, 24.7003315862229),
        (DEFAULT, 'Mukachevo department №16', 48.444585453958084, 22.724035901090634);
+
+INSERT INTO description_locality (locality_id, language_id, city, street, street_number)
+VALUES (1, 1, 'Kiev', 'null', '0'),
+       (1, 2, 'Київ', 'null', '0'),
+       (2, 1, 'Lviv', 'null', '0'),
+       (2, 2, 'Львів', 'null', '0'),
+       (3, 1, 'Odesa', 'null', '0'),
+       (3, 2, 'Одеса', 'null', '0'),
+       (4, 1, 'Ternopil', 'null', '0'),
+       (4, 2, 'Тернопіль', 'null', '0'),
+       (5, 1, 'Rivne', 'null', '0'),
+       (5, 2, 'Рівне', 'null', '0'),
+       (6, 1, 'Lutsk', 'null', '0'),
+       (6, 2, 'Луцьк', 'null', '0'),
+       (7, 1, 'Kovel', 'null', '0'),
+       (7, 2, 'Ковель', 'null', '0'),
+       (8, 1, 'Chernivtsi', 'null', '0'),
+       (8, 2, 'Чернівці', 'null', '0'),
+       (9, 1, 'Khmelnytskyi', 'null', '0'),
+       (9, 2, 'Хмельницький', 'null', '0'),
+       (10, 1, 'Vinnytsia', 'null', '0'),
+       (10, 2, 'Вінниця', 'null', '0'),
+       (11, 1, 'Zhytomyr', 'null', '0'),
+       (11, 2, 'Житомир', 'null', '0'),
+       (12, 1, 'Dnipro', 'null', '0'),
+       (12, 2, 'Дніпро', 'null', '0'),
+       (13, 1, 'Zaporizhzhya', 'null', '0'),
+       (13, 2, 'Запоріжжя', 'null', '0'),
+       (14, 1, 'Mykolaiv', 'null', '0'),
+       (14, 2, 'Миколаїв', 'null', '0'),
+       (15, 1, 'Ivano-Frankivsk', 'null', '0'),
+       (15, 2, 'Івано-Франківськ', 'null', '0'),
+       (16, 1, 'Mukachevo', 'null', '0'),
+       (16, 2, 'Мукачево', 'null', '0');
 
 INSERT INTO `shipping_status` (id, name)
 VALUES (DEFAULT, 'created'),
@@ -224,6 +258,7 @@ VALUES (1, 1, 'created'),
 INSERT INTO `order` (id, shipping_address, delivery_address, creation_time, client_id, consignee, description, distance,
                      length, height, width, weight, volume, fare, shipping_status_id, delivery_date)
 VALUES (DEFAULT, 1, 2, DEFAULT, 1, 'Test', 'Description', 300, 2, 2, 2, 3, 8, 30, 1, DEFAULT);
+
 
 
 

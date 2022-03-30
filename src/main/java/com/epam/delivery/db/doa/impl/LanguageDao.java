@@ -2,7 +2,7 @@ package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.doa.EntityMapper;
-import com.epam.delivery.entities.Language;
+import com.epam.delivery.db.entities.Language;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -105,7 +105,7 @@ public class LanguageDao extends AbstractDao <Language,Long> {
     }
 
     @Override
-    public Iterable<Language> findAll() {
+    public List<Language> findAll() {
         List<Language> languageList = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
