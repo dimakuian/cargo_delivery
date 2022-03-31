@@ -3,6 +3,7 @@ package com.epam.delivery.db.doa.impl;
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.db.entities.Order;
+import com.epam.delivery.db.entities.bean.OrderBean;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -237,6 +238,20 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 logger.error("SQLException while Order mapRaw. " + exception.getMessage());
                 throw new IllegalStateException(exception);
             }
+        }
+    }
+
+    private static class OrderBeanMapper implements EntityMapper<OrderBean>{
+
+        @Override
+        public OrderBean mapRow(ResultSet rs) {
+            try {
+                rs.ge
+            } catch (SQLException exception) {
+                logger.error("SQLException while OrderBeanMapper mapRaw. " + exception.getMessage());
+                throw new IllegalStateException(exception);
+            }
+            return null;
         }
     }
 }
