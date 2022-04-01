@@ -33,7 +33,14 @@ Header (top area).
             <c:when test="${not empty user}">
                 <button onclick="window.location.href='/controller?command=logout'"><fmt:message
                         key="button.logout"/></button>
-                <button onclick="window.location.href='/controller?command=userCabinet'">${user.getLogin()}</button>
+                <c:choose>
+                    <c:when test="${role.getName() eq 'client'}">
+                        <button onclick="window.location.href='/controller?command=userCabinet'">${user.getLogin()}</button>
+                    </c:when>
+                    <c:when test="${role.getName() eq 'admin'}">
+                        <button onclick="window.location.href='/controller?command=adminCabinet'">${user.getLogin()}</button>
+                    </c:when>
+                </c:choose>
             </c:when>
         </c:choose>
     </div>

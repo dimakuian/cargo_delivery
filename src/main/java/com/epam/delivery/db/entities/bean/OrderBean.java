@@ -3,6 +3,7 @@ package com.epam.delivery.db.entities.bean;
 import com.epam.delivery.db.entities.Entity;
 
 import java.sql.Timestamp;
+import java.util.Map;
 
 /**
  * Order entity.
@@ -10,8 +11,8 @@ import java.sql.Timestamp;
 public class OrderBean extends Entity {
     private static final long serialVersionUID = 1255434001425151410L;
 
-    private LocalityBean shippingAddress;
-    private LocalityBean deliveryAddress;
+    private Map<String,String> shippingAddress;
+    private Map<String,String> deliveryAddress;
     private Timestamp creationTime;
     private long clientID;
     private String client;
@@ -24,25 +25,25 @@ public class OrderBean extends Entity {
     private double weight;
     private double volume;
     private double fare;
-    private StatusDescriptionBean status;
+    private Map<String,String> status;
     private Timestamp deliveryDate;
 
     public OrderBean() {
     }
 
-    public LocalityBean getShippingAddress() {
+    public Map<String, String> getShippingAddress() {
         return shippingAddress;
     }
 
-    public void setShippingAddress(LocalityBean shippingAddress) {
+    public void setShippingAddress(Map<String, String> shippingAddress) {
         this.shippingAddress = shippingAddress;
     }
 
-    public LocalityBean getDeliveryAddress() {
+    public Map<String, String> getDeliveryAddress() {
         return deliveryAddress;
     }
 
-    public void setDeliveryAddress(LocalityBean deliveryAddress) {
+    public void setDeliveryAddress(Map<String, String> deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
     }
 
@@ -142,11 +143,11 @@ public class OrderBean extends Entity {
         this.fare = fare;
     }
 
-    public StatusDescriptionBean getStatus() {
+    public Map<String, String> getStatus() {
         return status;
     }
 
-    public void setStatus(StatusDescriptionBean status) {
+    public void setStatus(Map<String, String> status) {
         this.status = status;
     }
 
@@ -160,7 +161,7 @@ public class OrderBean extends Entity {
 
     @Override
     public String toString() {
-        return "ListOrderBean{" +
+        return "OrderBean{" +
                 "shippingAddress=" + shippingAddress +
                 ", deliveryAddress=" + deliveryAddress +
                 ", creationTime=" + creationTime +
@@ -177,6 +178,6 @@ public class OrderBean extends Entity {
                 ", fare=" + fare +
                 ", status=" + status +
                 ", deliveryDate=" + deliveryDate +
-                '}';
+                "} " + super.toString();
     }
 }

@@ -345,3 +345,34 @@
      width: 45%;
      display: inline-block;
  }
+
+
+ /* style for admin cabinet */
+ .admin_cabinet_main table {
+     width: 100%;
+     border: 1px solid #dddddd;
+     border-collapse: collapse;
+     margin: auto;
+     font-family: Raleway, serif;
+ }
+
+ .admin_cabinet_main table th {
+     color: white;
+     font-weight: bold;
+     padding: 5px;
+     background: #555;
+     border: 1px solid #dddddd;
+ }
+
+ .admin_cabinet_main table td {
+     border: 1px solid #dddddd;
+     padding: 5px;
+ }
+
+ .admin_cabinet_main{
+     display: flex;
+     flex-direction: row-reverse;
+
+     width: 1200px;
+     margin: 0 auto;
+ }

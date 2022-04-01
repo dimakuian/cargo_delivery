@@ -98,7 +98,7 @@
                                 ${description.ua}
                             </c:otherwise>
                         </c:choose>
-                            <c:if test="${order.getStatusID() == 1}">
+                            <c:if test="${order.getStatusID() == 3}">
                                 <form action="/controller" method="post">
                                     <input type="hidden" name="command" value="payOrder">
                                     <input type="hidden" name="order" value="${order.getId()}">

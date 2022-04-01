@@ -7,12 +7,18 @@ public final class Fields {
 
     // beans
     public static final String USER_ORDER_BEAN__ORDER_ID = "id";
-    public static final String USER_ORDER_BEAN__SHIPPING_CITY = "shipping_city";
-    public static final String USER_ORDER_BEAN__SHIPPING_STREET = "shipping_street";
-    public static final String USER_ORDER_BEAN__SHIPPING_STREET_NUMBER = "shipping_street_number";
-    public static final String USER_ORDER_BEAN__DELIVERY_CITY = "delivery_city";
-    public static final String USER_ORDER_BEAN__DELIVERY_STREET = "delivery_street";
-    public static final String USER_ORDER_BEAN__DELIVERY_STREET_NUMBER = "delivery_street_number";
+    public static final String USER_ORDER_BEAN__SHIPPING_CITY_UA = "shipping_city_ua";
+    public static final String USER_ORDER_BEAN__SHIPPING_STREET_UA = "shipping_street_ua";
+    public static final String USER_ORDER_BEAN__SHIPPING_STREET_NUMBER_UA = "shipping_street_number_ua";
+    public static final String USER_ORDER_BEAN__SHIPPING_CITY_EN = "shipping_city_en";
+    public static final String USER_ORDER_BEAN__SHIPPING_STREET_EN = "shipping_street_en";
+    public static final String USER_ORDER_BEAN__SHIPPING_STREET_NUMBER_EN = "shipping_street_number_en";
+    public static final String USER_ORDER_BEAN__DELIVERY_CITY_UA = "delivery_city_ua";
+    public static final String USER_ORDER_BEAN__DELIVERY_STREET_UA = "delivery_street_ua";
+    public static final String USER_ORDER_BEAN__DELIVERY_STREET_NUMBER_UA = "delivery_street_number_ua";
+    public static final String USER_ORDER_BEAN__DELIVERY_CITY_EN = "delivery_city_en";
+    public static final String USER_ORDER_BEAN__DELIVERY_STREET_EN = "delivery_street_en";
+    public static final String USER_ORDER_BEAN__DELIVERY_STREET_NUMBER_EN = "delivery_street_number_en";
     public static final String USER_ORDER_BEAN__DELIVERY_CREATION_TIME = "creation_time";
     public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_ID = "client_id";
     public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_NAME = "name";
@@ -20,14 +26,16 @@ public final class Fields {
     public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_PATRONYMIC = "patronymic";
     public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_CONSIGNEE = "consignee";
     public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_DESCRIPTION = "description";
+    public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_DISTANCE = "distance";
     public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_LENGTH = "length";
-    public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_HEIGHT = "height";
-    public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_WIDTH = "width";
-    public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_WEIGHT = "weight";
-    public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_VOLUME = "volume";
-    public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_FARE = "fare";
-    public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_STATUS = "status";
-    public static final String USER_ORDER_BEAN__DELIVERY_CLIENT_DELIVERY_DATE = "delivery_date";
+    public static final String USER_ORDER_BEAN__DELIVERY_HEIGHT = "height";
+    public static final String USER_ORDER_BEAN__DELIVERY_WIDTH = "width";
+    public static final String USER_ORDER_BEAN__DELIVERY_WEIGHT = "weight";
+    public static final String USER_ORDER_BEAN__DELIVERY_VOLUME = "volume";
+    public static final String USER_ORDER_BEAN__DELIVERY_FARE = "fare";
+    public static final String USER_ORDER_BEAN__DELIVERY_STATUS_UA = "status_ua";
+    public static final String USER_ORDER_BEAN__DELIVERY_STATUS_EN = "status_en";
+    public static final String USER_ORDER_BEAN__DELIVERY_DELIVERY_DATE = "delivery_date";
 
     private Fields() {
     }

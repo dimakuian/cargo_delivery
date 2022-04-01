@@ -6,9 +6,9 @@ import com.epam.delivery.db.ConnectionPool;
 import com.epam.delivery.db.doa.impl.AdminDao;
 import com.epam.delivery.db.doa.impl.OrderDao;
 import com.epam.delivery.db.entities.Admin;
-import com.epam.delivery.db.entities.Order;
 import com.epam.delivery.db.entities.Role;
 import com.epam.delivery.db.entities.User;
+import com.epam.delivery.db.entities.bean.OrderBean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -50,8 +50,7 @@ public class AdminCabinetCommand implements Command {
 
             if (admin != null && role == Role.ADMIN) {
                 OrderDao orderDao = new OrderDao(builder);
-                List<Order> orders = new ArrayList<>();
-                orderDao.findAll().forEach(orders::add);
+                List<OrderBean> orders = new ArrayList<>(orderDao.findAllOrderBean());
                 session.setAttribute("admin", admin);
                 logger.trace("Set the session attribute: admin --> " + admin);
 

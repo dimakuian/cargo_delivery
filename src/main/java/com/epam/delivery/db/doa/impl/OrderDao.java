@@ -1,14 +1,13 @@
 package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
+import com.epam.delivery.db.Fields;
 import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.db.entities.Order;
 import com.epam.delivery.db.entities.bean.OrderBean;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 public class OrderDao extends AbstractDao<Order, Long> {
     private static final long serialVersionUID = 7139334124441683412L;
@@ -37,6 +36,55 @@ public class OrderDao extends AbstractDao<Order, Long> {
             " delivery_date FROM delivery.`order`WHERE client_id=?";
 
     private static final String DELETE = "DELETE FROM delivery.`order` WHERE id=?";
+
+    private static final String SELECT_ALL_ORDER_BEAN = "SELECT o.id,\n" +
+            "       sa_ua.city          as shipping_city_ua,\n" +
+            "       sa_ua.street        as shipping_street_ua,\n" +
+            "       sa_ua.street_number as shipping_street_number_ua,\n" +
+            "       sa_en.city          as shipping_city_en,\n" +
+            "       sa_en.street        as shipping_street_en,\n" +
+            "       sa_en.street_number as shipping_street_number_en,\n" +
+            "       da_ua.city          as delivery_city_ua,\n" +
+            "       da_ua.street        as delivery_street_ua,\n" +
+            "       da_ua.street_number as delivery_street_number_ua,\n" +
+            "       da_en.city          as delivery_city_en,\n" +
+            "       da_en.street        as delivery_street_en,\n" +
+            "       da_en.street_number as delivery_street_number_en,\n" +
+            "       o.creation_time,\n" +
+            "       o.client_id,\n" +
+            "       c.name,\n" +
+            "       c.surname,\n" +
+            "       c.patronymic,\n" +
+            "       o.consignee,\n" +
+            "       o.description,\n" +
+            "       o.distance,\n" +
+            "       o.length,\n" +
+            "       o.height,\n" +
+            "       o.width,\n" +
+            "       o.weight,\n" +
+            "       o.volume,\n" +
+            "       o.fare,\n" +
+            "       ssd_ua.description     AS status_ua,\n" +
+            "       ssd_en.description     AS status_en,\n" +
+            "       o.delivery_date\n" +
+            "FROM `order` o\n" +
+            "         JOIN\n" +
+            "     description_locality sa_ua ON sa_ua.locality_id = o.shipping_address\n" +
+            "         JOIN\n" +
+            "     description_locality sa_en ON sa_en.locality_id = o.shipping_address\n" +
+            "         JOIN\n" +
+            "     description_locality da_ua ON da_ua.locality_id = o.delivery_address\n" +
+            "         JOIN\n" +
+            "     description_locality da_en ON da_en.locality_id = o.delivery_address\n" +
+            "         JOIN client c on o.client_id = c.id\n" +
+            "         JOIN shipping_status_description ssd_ua on o.shipping_status_id = ssd_ua.shipping_status_id\n" +
+            "         JOIN shipping_status_description ssd_en on o.shipping_status_id = ssd_en.shipping_status_id\n" +
+            "WHERE sa_ua.language_id = 2\n" +
+            "  AND sa_en.language_id = 1\n" +
+            "  AND da_ua.language_id = 2\n" +
+            "  AND da_en.language_id = 1\n" +
+            "  AND ssd_ua.language_id = 2\n" +
+            "  AND ssd_en.language_id = 1";
 
     public OrderDao(ConnectionBuilder builder) {
         super(builder);
@@ -197,6 +245,25 @@ public class OrderDao extends AbstractDao<Order, Long> {
         stat.setNull(15, 0);
     }
 
+    public List<OrderBean> findAllOrderBean() {
+        List<OrderBean> list = new ArrayList<>();
+        Connection connection = builder.getConnection();
+        try (Statement stat = connection.createStatement()) {
+            try (ResultSet rs = stat.executeQuery(SELECT_ALL_ORDER_BEAN)) {
+                while (rs.next()) {
+                    OrderBeanMapper mapper = new OrderBeanMapper();
+                    OrderBean order = mapper.mapRow(rs);
+                    list.add(order);
+                }
+            }
+        } catch (SQLException exception) {
+            logger.error("SQLException while Order findAllOrderBean. " + exception.getMessage());
+        } finally {
+            builder.closeConnection(connection);
+        }
+        return list;
+    }
+
 
     /**
      * Extracts an order from the result set row.
@@ -241,17 +308,94 @@ public class OrderDao extends AbstractDao<Order, Long> {
         }
     }
 
-    private static class OrderBeanMapper implements EntityMapper<OrderBean>{
+    private static class OrderBeanMapper implements EntityMapper<OrderBean> {
 
         @Override
         public OrderBean mapRow(ResultSet rs) {
             try {
-                rs.ge
+                long orderID = rs.getLong(Fields.USER_ORDER_BEAN__ORDER_ID);
+                String shippingCityUA = rs.getString(Fields.USER_ORDER_BEAN__SHIPPING_CITY_UA);
+                String shippingStreetUA = rs.getString(Fields.USER_ORDER_BEAN__SHIPPING_STREET_UA);
+                String shippingStreetNumberUA = rs.getString(Fields.USER_ORDER_BEAN__SHIPPING_STREET_NUMBER_UA);
+                String shippingAddressUA = String.format("%s %s №%s", shippingCityUA, shippingStreetUA,
+                        shippingStreetNumberUA);
+
+                String shippingCityEN = rs.getString(Fields.USER_ORDER_BEAN__SHIPPING_CITY_EN);
+                String shippingStreetEN = rs.getString(Fields.USER_ORDER_BEAN__SHIPPING_STREET_EN);
+                String shippingStreetNumberEN = rs.getString(Fields.USER_ORDER_BEAN__SHIPPING_STREET_NUMBER_EN);
+                String shippingAddressEN = String.format("%s %s №%s", shippingCityEN, shippingStreetEN,
+                        shippingStreetNumberEN);
+
+
+                String deliveryCityUA = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_CITY_UA);
+                String deliveryStreetUA = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_STREET_UA);
+                String deliveryStreetNumberUA = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_STREET_NUMBER_UA);
+                String deliveryAddressUA = String.format("%s %s №%s", deliveryCityUA, deliveryStreetUA,
+                        deliveryStreetNumberUA);
+
+                String deliveryCityEN = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_CITY_EN);
+                String deliveryStreetEN = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_STREET_EN);
+                String deliveryStreetNumberEN = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_STREET_NUMBER_EN);
+                String deliveryAddressEN = String.format("%s %s №%s", deliveryCityEN, deliveryStreetEN,
+                        deliveryStreetNumberEN);
+
+
+                Timestamp creationTime = rs.getTimestamp(Fields.USER_ORDER_BEAN__DELIVERY_CREATION_TIME);
+                long clientID = rs.getLong(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_ID);
+                String clientName = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_NAME);
+                String clientSurname = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_SURNAME);
+                String clientPatronymic = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_PATRONYMIC);
+                String consignee = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_CONSIGNEE);
+                String description = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_DESCRIPTION);
+                double distance = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_DISTANCE);
+                double length = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_LENGTH);
+                double height = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_HEIGHT);
+                double width = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_WIDTH);
+                double weight = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_WEIGHT);
+                double volume = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_VOLUME);
+                double fare = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_FARE);
+
+                String statusUA = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_STATUS_UA);
+                String statusEN = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_STATUS_EN);
+                Map<String, String> statusMap = new HashMap<>();
+                statusMap.put("ua", statusUA);
+                statusMap.put("en", statusEN);
+
+                Timestamp deliveryDate = rs.getTimestamp(Fields.USER_ORDER_BEAN__DELIVERY_DELIVERY_DATE);
+
+                OrderBean bean = new OrderBean();
+
+                bean.setId(orderID);
+                Map<String, String> shippingMap = new HashMap<>();
+                shippingMap.put("ua", shippingAddressUA);
+                shippingMap.put("en", shippingAddressEN);
+                bean.setShippingAddress(shippingMap);
+
+                Map<String, String> deliveryMap = new HashMap<>();
+                deliveryMap.put("ua", deliveryAddressUA);
+                deliveryMap.put("en", deliveryAddressEN);
+                bean.setDeliveryAddress(deliveryMap);
+
+                bean.setCreationTime(creationTime);
+                bean.setClientID(clientID);
+                bean.setClient(String.format("%s %s %s", clientName, clientSurname, clientPatronymic));
+                bean.setConsignee(consignee);
+                bean.setDescription(description);
+                bean.setDistance(distance);
+                bean.setLength(length);
+                bean.setHeight(height);
+                bean.setWidth(width);
+                bean.setWeight(weight);
+                bean.setVolume(volume);
+                bean.setFare(fare);
+                bean.setStatus(statusMap);
+                bean.setDeliveryDate(deliveryDate);
+
+                return bean;
             } catch (SQLException exception) {
                 logger.error("SQLException while OrderBeanMapper mapRaw. " + exception.getMessage());
                 throw new IllegalStateException(exception);
             }
-            return null;
         }
     }
 }
