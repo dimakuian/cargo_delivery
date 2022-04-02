@@ -29,9 +29,9 @@
 <form name="locales" action="<c:url value="/controller"/>" method="post">
     <select name="lang" onchange="this.form.submit()">
         <option selected disabled><fmt:message
-                key="register.chooseLang"/></option>
-        <option value="ua"><fmt:message key="register.ua"/></option>
-        <option value="en"><fmt:message key="register.en"/></option>
+                key="language.chooseLang"/></option>
+        <option value="ua"><fmt:message key="language.ua"/></option>
+        <option value="en"><fmt:message key="language.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
     <input type="hidden" name="page" value="controller?command=viewCreateOrderPage">
@@ -46,7 +46,7 @@
                   parseFloat(width.value)).toFixed(2)">
 
                 <input type="hidden" name="command" value="createOrder">
-                <h5><fmt:message key="rout"/></h5>
+                <h5><fmt:message key="inner_text.rout"/></h5>
                 <label>
                     <select id="ship" class="address" list="shipping" name="shipping_address" required>
                         <c:forEach items="${localitiesBeanList}" var="bean">
@@ -87,18 +87,18 @@
                     </select>
                 </label>
                 <br>
-                <label class="param" for="length"><fmt:message key="countCost.length_cm"/></label>
+                <label class="param" for="length"><fmt:message key="inner_text.length_cm"/></label>
                 <input id="length" name="length" type="number" required min="0.1" max="70" step="any" value="1"
                        title="length can't be less the 1mm"/>
-                <label class="param" for="height"><fmt:message key="countCost.height_cm"/></label>
+                <label class="param" for="height"><fmt:message key="inner_text.height_cm"/></label>
                 <input id="height" name="height" type="number" required min="0.1" max="70" step="any" value="1"
                        title="height can't be less the 1mm"/>
-                <label class="param" for="width"><fmt:message key="countCost.width_cm"/></label>
+                <label class="param" for="width"><fmt:message key="inner_text.width_cm"/></label>
                 <input id="width" name="width" type="number" required min="0.1" max="70" step="any" value="1"
                        title="width can't be less the 1mm"/>
-                <label class="param" for="volume"><fmt:message key="countCost.volume_cc"/></label>
+                <label class="param" for="volume"><fmt:message key="inner_text.volume_cc"/></label>
                 <input type="text" id="volume" name="volume" value="1" readonly>
-                <label class="param" for="weight"><fmt:message key="countCost.weight_kg"/></label>
+                <label class="param" for="weight"><fmt:message key="inner_text.weight_kg"/></label>
                 <input id="weight" name="weight" type="number" required min="0.1" max="100" step="any" value="1"/><br>
                 <fmt:message key="placeholder.consignee" var="consignee_placeholder"/>
                 <label><input style="width: 48%" type="text" name="consignee" required

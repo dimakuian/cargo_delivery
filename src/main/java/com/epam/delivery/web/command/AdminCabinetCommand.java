@@ -15,7 +15,6 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 
 public class AdminCabinetCommand implements Command {
@@ -49,11 +48,31 @@ public class AdminCabinetCommand implements Command {
             logger.trace("Found in DB: admin --> " + admin);
 
             if (admin != null && role == Role.ADMIN) {
+
+                int page = 1;
+                int recordsPerPage = 5;
+                if (request.getParameter("page_number") != null)
+                    page = Integer.parseInt(request.getParameter("page_number"));
+
+                String sort = "status_id ASC";
+                if (request.getParameter("sort") != null)
+                    sort = request.getParameter("sort");
+
                 OrderDao orderDao = new OrderDao(builder);
-                List<OrderBean> orders = new ArrayList<>(orderDao.findAllOrderBean());
+
+                // get orders list
+                List<OrderBean> orders = orderDao.findAllOrderBean((page - 1) * recordsPerPage, recordsPerPage, sort);
+
+                int noOfRecords = orderDao.getNoOfAllOrders();
+                int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+                request.setAttribute("noOfPages", noOfPages);
+                request.setAttribute("currentPage", page);
+                request.setAttribute("currentSort", sort);
+
                 session.setAttribute("admin", admin);
                 logger.trace("Set the session attribute: admin --> " + admin);
 
+                //put orders list to the request
                 session.setAttribute("allOrders", orders);
                 logger.trace("Set the session attribute: allOrders --> " + orders);
 

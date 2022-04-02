@@ -30,9 +30,9 @@
     <form name="locales" action="<c:url value="/controller"/>" method="post">
         <label><select name="lang" onchange="this.form.submit()">
             <option selected disabled><fmt:message
-                    key="register.chooseLang"/></option>
-            <option value="ua"><fmt:message key="register.ua"/></option>
-            <option value="en"><fmt:message key="register.en"/></option>
+                    key="language.chooseLang"/></option>
+            <option value="ua"><fmt:message key="language.ua"/></option>
+            <option value="en"><fmt:message key="language.en"/></option>
         </select></label>
         <input type="hidden" name="command" value="setLocale">
         <input type="hidden" name="page" value="/controller?command=viewRegistrationPage">

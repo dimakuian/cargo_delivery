@@ -33,6 +33,7 @@ public final class Fields {
     public static final String USER_ORDER_BEAN__DELIVERY_WEIGHT = "weight";
     public static final String USER_ORDER_BEAN__DELIVERY_VOLUME = "volume";
     public static final String USER_ORDER_BEAN__DELIVERY_FARE = "fare";
+    public static final String USER_ORDER_BEAN__DELIVERY_STATUS_ID = "status_id";
     public static final String USER_ORDER_BEAN__DELIVERY_STATUS_UA = "status_ua";
     public static final String USER_ORDER_BEAN__DELIVERY_STATUS_EN = "status_en";
     public static final String USER_ORDER_BEAN__DELIVERY_DELIVERY_DATE = "delivery_date";

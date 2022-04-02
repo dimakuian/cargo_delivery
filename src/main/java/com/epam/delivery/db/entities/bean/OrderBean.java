@@ -25,6 +25,7 @@ public class OrderBean extends Entity {
     private double weight;
     private double volume;
     private double fare;
+    private long statusId;
     private Map<String,String> status;
     private Timestamp deliveryDate;
 
@@ -141,6 +142,14 @@ public class OrderBean extends Entity {
 
     public void setFare(double fare) {
         this.fare = fare;
+    }
+
+    public long getStatusId() {
+        return statusId;
+    }
+
+    public void setStatusId(long statusId) {
+        this.statusId = statusId;
     }
 
     public Map<String, String> getStatus() {

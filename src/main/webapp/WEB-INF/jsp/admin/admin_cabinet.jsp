@@ -19,8 +19,8 @@
 </c:choose>
 <fmt:setBundle basename="resource"/>
 <html>
-<%--<fmt:message key="userCabinet.title" var="user_cabinet_title"/>--%>
 <c:set var="title" value="admin_cabinet" scope="page"/>
+<%--<fmt:message key="userCabinet.title" var="user_cabinet_title"/>--%>
 <%--<c:set var="title" value="${user_cabinet_title}" scope="page"/>--%>
 <%@include file="/WEB-INF/jspf/head.jspf" %>
 <body>
@@ -28,29 +28,65 @@
 <!-- Language switcher begin -->
 <form name="locales" action="/controller" method="post">
     <select name="lang" onchange="this.form.submit()">
-        <option selected disabled><fmt:message key="register.chooseLang"/></option>
-        <option value="ua"><fmt:message key="register.ua"/></option>
-        <option value="en"><fmt:message key="register.en"/></option>
+        <option selected disabled><fmt:message key="language.chooseLang"/></option>
+        <option value="ua"><fmt:message key="language.ua"/></option>
+        <option value="en"><fmt:message key="language.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
     <input type="hidden" name="page" value="/controller?command=adminCabinet">
 </form>
 <!-- end Language switcher -->
-<div class="admin_cabinet_main">
+<div class="admin_cabinet_main" style="display: inline-block">
     <c:set var="statuses" value="${applicationScope['status_description']}"/>
+
+    <!-- button for fort table -->
+    <form action="/controller" method="do">
+        <select name="sort" onchange="this.form.submit()">
+            <option selected disabled><fmt:message key="inner_text.sort_by"/></option>
+            <option value="id ASC"><fmt:message key="sort_type.number_lowest"/></option>
+            <option value="id DESC"><fmt:message key="sort_type.number_highest"/></option>
+            <option value="surname ASC"><fmt:message key="sort_type.sender_A_Z"/></option>
+            <option value="surname DESC"><fmt:message key="sort_type.sender_Z_A"/></option>
+            <c:choose>
+                <c:when test="${locale=='en'}">
+                    <option value="shipping_city_en ASC"><fmt:message key="sort_type.shipping_address_A_Z"/></option>
+                    <option value="shipping_city_en DESC"><fmt:message key="sort_type.shipping_address_Z_A"/></option>
+                    <option value="delivery_city_en ASC"><fmt:message key="sort_type.delivery_address_A_Z"/></option>
+                    <option value="delivery_city_en DESC"><fmt:message key="sort_type.delivery_address_Z_A"/></option>
+                </c:when>
+                <c:when test="${locale=='ua'}">
+                    <option value="shipping_city_ua ASC"><fmt:message key="sort_type.shipping_address_A_Z"/></option>
+                    <option value="shipping_city_ua DESC"><fmt:message key="sort_type.shipping_address_Z_A"/></option>
+                    <option value="delivery_city_ua ASC"><fmt:message key="sort_type.delivery_address_A_Z"/></option>
+                    <option value="delivery_city_ua DESC"><fmt:message key="sort_type.delivery_address_Z_A"/></option>
+                </c:when>
+                <c:otherwise>
+                    <option value="shipping_city_ua ASC"><fmt:message key="sort_type.shipping_address_A_Z"/></option>
+                    <option value="shipping_city_ua DESC"><fmt:message key="sort_type.shipping_address_Z_A"/></option>
+                    <option value="delivery_city_ua ASC"><fmt:message key="sort_type.delivery_address_A_Z"/></option>
+                    <option value="delivery_city_ua DESC"><fmt:message key="sort_type.delivery_address_Z_A"/></option>
+                </c:otherwise>
+            </c:choose>
+            <option value="status_id ASC"><fmt:message key="sort_type.status_show_new"/></option>
+        </select>
+        <input type="hidden" name="command" value="adminCabinet">
+        <input type="hidden" name="page_number" value="${currentPage}">
+    </form>
     <table>
         <tr>
-            <th>sender</th> <!--replace fmt-->
-            <th><fmt:message key="userCabinet.from"/></th>
-            <th><fmt:message key="userCabinet.to"/></th>
-            <th><fmt:message key="userCabinet.create_date"/></th>
-            <th><fmt:message key="userCabinet.consignee"/></th>
-            <th><fmt:message key="userCabinet.fare"/></th>
-            <th><fmt:message key="userCabinet.shipping_status"/></th>
-            <th><fmt:message key="userCabinet.details"/></th>
+            <th><fmt:message key="inner_text.order_number"/></th>
+            <th><fmt:message key="inner_text.sender"/></th>
+            <th><fmt:message key="inner_text.from"/></th>
+            <th><fmt:message key="inner_text.to"/></th>
+            <th><fmt:message key="inner_text.create_date"/></th>
+            <th><fmt:message key="inner_text.consignee"/></th>
+            <th><fmt:message key="inner_text.fare"/></th>
+            <th><fmt:message key="inner_text.shipping_status"/></th>
+            <th><fmt:message key="inner_text.details"/></th>
         </tr>
         <c:forEach var="order" items="${allOrders}">
             <tr>
+                <td><c:out value="${order.id}"/></td>
                 <td><c:out value="${order.client}"/></td>
                 <td>
                     <c:choose>
@@ -114,6 +150,26 @@
                 </td>
             </tr>
         </c:forEach>
+    </table>
+    <br>
+    <%--For displaying Page numbers.
+    The when condition does not display a link for the current page--%>
+    <table>
+        <tr>
+            <c:forEach begin="1" end="${noOfPages}" var="i">
+                <c:choose>
+                    <c:when test="${currentPage eq i}">
+                        <td><c:out value="${i}"/></td>
+                    </c:when>
+                    <c:otherwise>
+                        <td>
+                            <a href="/controller?command=adminCabinet&page_number=${i}&sort=${currentSort}">
+                                <c:out value="${i}"/></a>
+                        </td>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+        </tr>
     </table>
     <c:out value="${message}"/>
     <c:remove var="message"/>

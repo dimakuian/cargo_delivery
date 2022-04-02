@@ -6,15 +6,14 @@ import com.epam.delivery.db.ConnectionPool;
 import com.epam.delivery.db.doa.impl.ClientDao;
 import com.epam.delivery.db.doa.impl.OrderDao;
 import com.epam.delivery.db.entities.Client;
-import com.epam.delivery.db.entities.Order;
 import com.epam.delivery.db.entities.User;
+import com.epam.delivery.db.entities.bean.OrderBean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.util.ArrayList;
 import java.util.List;
 
 public class UserCabinetCommand implements Command {
@@ -45,9 +44,25 @@ public class UserCabinetCommand implements Command {
             logger.trace("Found in DB: client --> " + client);
 
             if (client != null) {
+                int page = 1;
+                int recordsPerPage = 5;
+                if (request.getParameter("page_number") != null)
+                    page = Integer.parseInt(request.getParameter("page_number"));
+
+                String sort = "id";
+                if (request.getParameter("sort") != null)
+                    sort = request.getParameter("sort");
+
                 OrderDao orderDao = new OrderDao(connectionBuilder);
-                List<Order> orders = new ArrayList<>();
-                orderDao.findAllByUserID(client.getId()).forEach(orders::add);
+                List<OrderBean> orders = orderDao.findClientOrdersBean((page - 1) * recordsPerPage,
+                        recordsPerPage, sort,client.getId());
+
+                int noOfRecords = orderDao.getNoOfUserOrders(client.getId());
+                int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
+                request.setAttribute("noOfPages", noOfPages);
+                request.setAttribute("currentPage", page);
+                request.setAttribute("currentSort", sort);
+
                 session.setAttribute("client", client);
                 logger.trace("Set the session attribute: client --> " + client);
 
