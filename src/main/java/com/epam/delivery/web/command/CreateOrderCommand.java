@@ -78,7 +78,7 @@ public class CreateOrderCommand implements Command {
         if (user == null) return forward;
 
         ClientDao clientDao = new ClientDao(connectionBuilder);
-        Client client = clientDao.findById(user.getId()).orElse(null);
+        Client client = clientDao.getByUserId(user.getId()).orElse(null);  //!!!!! problem
         logger.trace("Found in DB: client --> " + client);
 
         if (distance != null && consignee != null && description != null && client != null) {

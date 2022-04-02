@@ -36,7 +36,6 @@
     <input type="hidden" name="page" value="/controller?command=adminCabinet">
 </form>
 <!-- end Language switcher -->
-
 <div class="admin_cabinet_main">
     <c:set var="statuses" value="${applicationScope['status_description']}"/>
     <table>
@@ -52,46 +51,46 @@
         </tr>
         <c:forEach var="order" items="${allOrders}">
             <tr>
-                <td>${order.client}</td>
+                <td><c:out value="${order.client}"/></td>
                 <td>
                     <c:choose>
                         <c:when test="${locale=='en'}">
-                            ${order.shippingAddress.en}
+                            <c:out value="${order.shippingAddress.en}"/>
                         </c:when>
                         <c:when test="${locale=='ua'}">
-                            ${order.shippingAddress.ua}
+                            <c:out value="${order.shippingAddress.ua}"/>
                         </c:when>
                         <c:otherwise>
-                            ${order.shippingAddress.ua}
+                            <c:out value="${order.shippingAddress.ua}"/>
                         </c:otherwise>
                     </c:choose>
                 </td>
                 <td>
                     <c:choose>
                         <c:when test="${locale=='en'}">
-                            ${order.deliveryAddress.en}
+                            <c:out value="${order.deliveryAddress.en}"/>
                         </c:when>
                         <c:when test="${locale=='ua'}">
-                            ${order.deliveryAddress.ua}
+                            <c:out value="${order.deliveryAddress.ua}"/>
                         </c:when>
                         <c:otherwise>
-                            ${order.deliveryAddress.ua}
+                            <c:out value="${order.deliveryAddress.ua}"/>
                         </c:otherwise>
                     </c:choose>
                 </td>
-                <td>${order.creationTime}</td>
-                <td>${order.consignee}</td>
-                <td>${order.fare}</td>
+                <td><c:out value="${order.creationTime}"/></td>
+                <td><c:out value="${order.consignee}"/></td>
+                <td><c:out value="${order.fare}"/></td>
                 <td>
                     <c:choose>
                         <c:when test="${locale=='en'}">
-                            ${order.status.en}
+                            <c:out value="${order.status.en}"/>
                         </c:when>
                         <c:when test="${locale=='ua'}">
-                            ${order.status.ua}
+                            <c:out value="${order.status.ua}"/>
                         </c:when>
                         <c:otherwise>
-                            ${order.status.ua}
+                            <c:out value="${order.status.ua}"/>
                         </c:otherwise>
                     </c:choose>
                     <c:if test="${order.status.ua eq 'створений' or order.status.en eq 'created'}">

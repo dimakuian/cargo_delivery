@@ -39,7 +39,7 @@
 <!-- end Language switcher -->
 <c:out value="${message}"/>
 <c:remove var="message"/>
-<h1>Some description about our company</h1>
+<h1><c:out value="Some description about our company"/></h1>
 <hr>
 <h1><fmt:message key="index.our_department"/></h1>
 <div class="tariff_table">
@@ -52,39 +52,39 @@
             <tr>
                 <c:choose>
                     <c:when test="${locale=='en'}">
-                        <td>${local.description.en}</td>
+                        <td><c:out value="${local.description.en}"/></td>
                     </c:when>
                     <c:when test="${locale=='ua'}">
-                        <td>${local.description.ua}</td>
+                        <td><c:out value="${local.description.ua}"/></td>
                     </c:when>
                     <c:otherwise>
-                        <td>${local.description.ua}</td>
+                        <td><c:out value="${local.description.ua}"/></td>
                     </c:otherwise>
                 </c:choose>
             </tr>
         </c:forEach>
     </table>
     <h1><fmt:message key="index.tariffs"/></h1>
-    <table>
-        <tr>
-            <th>Weight, including up to ...kg.</th> <!--replace to fmt:-->
-            <th>including up to 500km, hrn.</th> <!--replace to fmt:-->
-            <th>including up to 700km, hrn.</th> <!--replace to fmt:-->
-            <th>including up to 900km, hrn.</th> <!--replace to fmt:-->
-            <th>including up to 1200km, hrn.</th> <!--replace to fmt:-->
-            <th>including up to 1500km, hrn.</th> <!--replace to fmt:-->
-        </tr>
-        <c:forEach items="${tariffs}" var="tarif">
-            <tr>
-                <td>${tarif.weight}</td>
-                <td>${tarif.priceUpTo500km}</td>
-                <td>${tarif.priceUpTo700km}</td>
-                <td>${tarif.priceUpTo900km}</td>
-                <td>${tarif.priceUpTo1200km}</td>
-                <td>${tarif.priceUpTo1500km}</td>
-            </tr>
-        </c:forEach>
-    </table>
+<%--    <table>--%>
+<%--        <tr>--%>
+<%--            <th>Weight, including up to ...kg.</th> <!--replace to fmt:-->--%>
+<%--            <th>including up to 500km, hrn.</th> <!--replace to fmt:-->--%>
+<%--            <th>including up to 700km, hrn.</th> <!--replace to fmt:-->--%>
+<%--            <th>including up to 900km, hrn.</th> <!--replace to fmt:-->--%>
+<%--            <th>including up to 1200km, hrn.</th> <!--replace to fmt:-->--%>
+<%--            <th>including up to 1500km, hrn.</th> <!--replace to fmt:-->--%>
+<%--        </tr>--%>
+<%--        <c:forEach items="${tariffs}" var="tarif">--%>
+<%--            <tr>--%>
+<%--                <td>${tarif.weight}</td>--%>
+<%--                <td>${tarif.priceUpTo500km}</td>--%>
+<%--                <td>${tarif.priceUpTo700km}</td>--%>
+<%--                <td>${tarif.priceUpTo900km}</td>--%>
+<%--                <td>${tarif.priceUpTo1200km}</td>--%>
+<%--                <td>${tarif.priceUpTo1500km}</td>--%>
+<%--            </tr>--%>
+<%--        </c:forEach>--%>
+<%--    </table>--%>
 </div>
 </body>
 </html>

@@ -61,41 +61,41 @@
                         <td>
                             <c:choose>
                                 <c:when test="${locale=='en'}">
-                                    ${shippingBean.description.en}
+                                    <c:out value="${shippingBean.description.en}"/>
                                 </c:when>
                                 <c:when test="${locale=='ua'}">
-                                    ${shippingBean.description.ua}
+                                    <c:out value="${shippingBean.description.ua}"/>
                                 </c:when>
                                 <c:otherwise>
-                                    ${shippingBean.description.ua}
+                                    <c:out value="${shippingBean.description.ua}"/>
                                 </c:otherwise>
                             </c:choose>
                         </td>
                         <td>
                             <c:choose>
                                 <c:when test="${locale=='en'}">
-                                    ${deliveryBean.description.en}
+                                   <c:out value=" ${deliveryBean.description.en}"/>
                                 </c:when>
                                 <c:when test="${locale=='ua'}">
-                                    ${deliveryBean.description.ua}
+                                    <c:out value="${deliveryBean.description.ua}"/>
                                 </c:when>
                                 <c:otherwise>
-                                    ${deliveryBean.description.ua}
+                                    <c:out value="${deliveryBean.description.ua}"/>
                                 </c:otherwise>
                             </c:choose>
                         </td>
-                        <td>${order.getCreationTime()}</td>
-                        <td>${order.getConsignee()}</td>
-                        <td>${order.getFare()}</td>
+                        <td><c:out value="${order.getCreationTime()}"/></td>
+                        <td><c:out value="${order.getConsignee()}"/></td>
+                        <td><c:out value="${order.getFare()}"/></td>
                         <td><c:choose>
                             <c:when test="${locale=='en'}">
-                                ${description.en}
+                               <c:out value=" ${description.en}"/>
                             </c:when>
                             <c:when test="${locale=='ua'}">
-                                ${description.ua}
+                                <c:out value="${description.ua}"/>
                             </c:when>
                             <c:otherwise>
-                                ${description.ua}
+                                <c:out value="${description.ua}"/>
                             </c:otherwise>
                         </c:choose>
                             <c:if test="${order.getStatusID() == 3}">

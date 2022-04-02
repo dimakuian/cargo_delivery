@@ -47,7 +47,7 @@ public class UserCabinetCommand implements Command {
             if (client != null) {
                 OrderDao orderDao = new OrderDao(connectionBuilder);
                 List<Order> orders = new ArrayList<>();
-                orderDao.findAllByUserID(user.getId()).forEach(orders::add);
+                orderDao.findAllByUserID(client.getId()).forEach(orders::add);
                 session.setAttribute("client", client);
                 logger.trace("Set the session attribute: client --> " + client);
 

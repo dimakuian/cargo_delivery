@@ -42,7 +42,9 @@
         <div class="count_container">
             <c:set var="localitiesBeanList" value="${applicationScope['localities']}"/>
             <form action="<c:url value="/controller"/>" method="post"
-                  oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)">
+                  oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*
+                  parseFloat(width.value)).toFixed(2)">
+
                 <input type="hidden" name="command" value="createOrder">
                 <h5><fmt:message key="rout"/></h5>
                 <label>
@@ -51,13 +53,13 @@
                             <option value="${bean.localityID}"><c:out value="#${bean.localityID} "/>
                                 <c:choose>
                                     <c:when test="${locale=='en'}">
-                                        ${bean.description.en}
+                                        <c:out value=" ${bean.description.en}"/>
                                     </c:when>
                                     <c:when test="${locale=='ua'}">
-                                        ${bean.description.ua}
+                                        <c:out value="${bean.description.ua}"/>
                                     </c:when>
                                     <c:otherwise>
-                                        ${bean.description.ua}
+                                        <c:out value=" ${bean.description.ua}"/>
                                     </c:otherwise>
                                 </c:choose>
                             </option>
@@ -71,13 +73,13 @@
                             <option value="${bean.localityID}"><c:out value="#${bean.localityID} "/>
                                 <c:choose>
                                     <c:when test="${locale=='en'}">
-                                        ${bean.description.en}
+                                        <c:out value=" ${bean.description.en}"/>
                                     </c:when>
                                     <c:when test="${locale=='ua'}">
-                                        ${bean.description.ua}
+                                        <c:out value="${bean.description.ua}"/>
                                     </c:when>
                                     <c:otherwise>
-                                        ${bean.description.ua}
+                                        <c:out value="${bean.description.ua}"/>
                                     </c:otherwise>
                                 </c:choose>
                             </option>
