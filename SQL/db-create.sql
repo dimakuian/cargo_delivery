@@ -148,6 +148,34 @@ CREATE TABLE IF NOT EXISTS `order`
         ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
+DROP TABLE IF EXISTS `invoice_status`;
+
+CREATE TABLE IF NOT EXISTS `invoice_status`
+(
+    `id`   INT                NOT NULL,
+    `name` VARCHAR(45) UNIQUE NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+DROP TABLE IF EXISTS `invoice`;
+
+CREATE TABLE IF NOT EXISTS `invoice`
+(
+    `id`                INT           NOT NULL AUTO_INCREMENT,
+    `client_id`         INT           NOT NULL,
+    `creation_datetime` DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `order_id`          INT           NOT NULL,
+    `sum`               DECIMAL(8, 2) NOT NULL DEFAULT 0,
+    `invoice_status_id` INT           NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_invoice_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (id)
+        ON DELETE CASCADE ON UPDATE RESTRICT,
+    CONSTRAINT `fk_order_id` FOREIGN KEY (`order_id`) REFERENCES `order` (id)
+        ON DELETE CASCADE ON UPDATE RESTRICT,
+    CONSTRAINT `fk_invoice_status_id` FOREIGN KEY (`invoice_status_id`) REFERENCES `invoice_status` (id)
+        ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
 INSERT INTO `role` (id, name)
 VALUES (0, 'admin');
 
@@ -254,6 +282,9 @@ VALUES (1, 1, 'created'),
        (6, 2, 'доставлений'),
        (7, 1, 'canceled'),
        (7, 2, 'скасований');
+
+INSERT INTO `invoice_status` (id, name)
+VALUES (0, 'created'),(1,'paid'),(2,'declined');
 
 INSERT INTO `order` (id, shipping_address, delivery_address, creation_time, client_id, consignee, description, distance,
                      length, height, width, weight, volume, fare, shipping_status_id, delivery_date)
