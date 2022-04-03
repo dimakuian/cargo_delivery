@@ -148,6 +148,34 @@ CREATE TABLE IF NOT EXISTS `order`
         ON DELETE CASCADE ON UPDATE RESTRICT
 );
 
+DROP TABLE IF EXISTS `invoice_status`;
+
+CREATE TABLE IF NOT EXISTS `invoice_status`
+(
+    `id`   INT                NOT NULL,
+    `name` VARCHAR(45) UNIQUE NOT NULL,
+    PRIMARY KEY (`id`)
+);
+
+DROP TABLE IF EXISTS `invoice`;
+
+CREATE TABLE IF NOT EXISTS `invoice`
+(
+    `id`                INT           NOT NULL AUTO_INCREMENT,
+    `client_id`         INT           NOT NULL,
+    `creation_datetime` DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+    `order_id`          INT           NOT NULL UNIQUE,
+    `sum`               DECIMAL(8, 2) NOT NULL DEFAULT 0,
+    `invoice_status_id` INT           NOT NULL,
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_invoice_client_id` FOREIGN KEY (`client_id`) REFERENCES `client` (id)
+        ON DELETE CASCADE ON UPDATE RESTRICT,
+    CONSTRAINT `fk_order_id` FOREIGN KEY (`order_id`) REFERENCES `order` (id)
+        ON DELETE CASCADE ON UPDATE RESTRICT,
+    CONSTRAINT `fk_invoice_status_id` FOREIGN KEY (`invoice_status_id`) REFERENCES `invoice_status` (id)
+        ON DELETE CASCADE ON UPDATE RESTRICT
+);
+
 INSERT INTO `role` (id, name)
 VALUES (0, 'admin');
 
@@ -179,8 +207,8 @@ INSERT INTO `language` (id, short_name, full_name)
 VALUES (DEFAULT, 'UA', 'Ukraine');
 
 INSERT INTO `locality` (id, name, lat, lng)
-VALUES (DEFAULT, 'Kiev department №2', 50.430152159229465, 30.400358449390378),
-       (DEFAULT, 'Lviv department №1', 49.85580301226521, 24.019571021514157),
+VALUES (DEFAULT, 'Kiev department №1', 50.430152159229465, 30.400358449390378),
+       (DEFAULT, 'Lviv department №2', 49.85580301226521, 24.019571021514157),
        (DEFAULT, 'Odesa department №3', 46.47743026963285, 30.700937087405833),
        (DEFAULT, 'Ternopil department №4', 49.551989782699984, 25.57133777998255),
        (DEFAULT, 'Rivne department №5', 50.612594968969354, 26.246152539988664),
@@ -195,6 +223,40 @@ VALUES (DEFAULT, 'Kiev department №2', 50.430152159229465, 30.400358449390378)
        (DEFAULT, 'Mykolaiv department №14', 46.95604226441692, 32.032779749536004),
        (DEFAULT, 'Ivano-Frankivsk department №15', 48.91735027526064, 24.7003315862229),
        (DEFAULT, 'Mukachevo department №16', 48.444585453958084, 22.724035901090634);
+
+INSERT INTO description_locality (locality_id, language_id, city, street, street_number)
+VALUES (1, 1, 'Kiev', 'null', '0'),
+       (1, 2, 'Київ', 'null', '0'),
+       (2, 1, 'Lviv', 'null', '0'),
+       (2, 2, 'Львів', 'null', '0'),
+       (3, 1, 'Odesa', 'null', '0'),
+       (3, 2, 'Одеса', 'null', '0'),
+       (4, 1, 'Ternopil', 'null', '0'),
+       (4, 2, 'Тернопіль', 'null', '0'),
+       (5, 1, 'Rivne', 'null', '0'),
+       (5, 2, 'Рівне', 'null', '0'),
+       (6, 1, 'Lutsk', 'null', '0'),
+       (6, 2, 'Луцьк', 'null', '0'),
+       (7, 1, 'Kovel', 'null', '0'),
+       (7, 2, 'Ковель', 'null', '0'),
+       (8, 1, 'Chernivtsi', 'null', '0'),
+       (8, 2, 'Чернівці', 'null', '0'),
+       (9, 1, 'Khmelnytskyi', 'null', '0'),
+       (9, 2, 'Хмельницький', 'null', '0'),
+       (10, 1, 'Vinnytsia', 'null', '0'),
+       (10, 2, 'Вінниця', 'null', '0'),
+       (11, 1, 'Zhytomyr', 'null', '0'),
+       (11, 2, 'Житомир', 'null', '0'),
+       (12, 1, 'Dnipro', 'null', '0'),
+       (12, 2, 'Дніпро', 'null', '0'),
+       (13, 1, 'Zaporizhzhya', 'null', '0'),
+       (13, 2, 'Запоріжжя', 'null', '0'),
+       (14, 1, 'Mykolaiv', 'null', '0'),
+       (14, 2, 'Миколаїв', 'null', '0'),
+       (15, 1, 'Ivano-Frankivsk', 'null', '0'),
+       (15, 2, 'Івано-Франківськ', 'null', '0'),
+       (16, 1, 'Mukachevo', 'null', '0'),
+       (16, 2, 'Мукачево', 'null', '0');
 
 INSERT INTO `shipping_status` (id, name)
 VALUES (DEFAULT, 'created'),
@@ -221,9 +283,18 @@ VALUES (1, 1, 'created'),
        (7, 1, 'canceled'),
        (7, 2, 'скасований');
 
+INSERT INTO `invoice_status` (id, name)
+VALUES (0, 'created'),(1,'paid'),(2,'declined');
+
 INSERT INTO `order` (id, shipping_address, delivery_address, creation_time, client_id, consignee, description, distance,
                      length, height, width, weight, volume, fare, shipping_status_id, delivery_date)
-VALUES (DEFAULT, 1, 2, DEFAULT, 1, 'Test', 'Description', 300, 2, 2, 2, 3, 8, 30, 1, DEFAULT);
+VALUES (DEFAULT, 1, 2, DEFAULT, 1, 'Test', 'Description', 300, 2, 2, 2, 3, 8, 30, 1, DEFAULT),
+       (DEFAULT, 1, 2, DEFAULT, 1, 'Test2', 'Description2', 300, 2, 2, 2, 3, 8, 30, 1, DEFAULT);
+
+INSERT INTO `invoice` (id, client_id, creation_datetime, order_id, sum, invoice_status_id)
+VALUES (DEFAULT, 1, DEFAULT, 1, 30, 0);
+
+
 
 
 

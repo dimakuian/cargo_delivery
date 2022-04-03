@@ -25,7 +25,9 @@ class OrderDaoTest {
     private static String userDefinedAppContent;
     private static final String APP_PROPS_FILE = "app.properties";
     public static final String DROP_TABLE =
-            "DROP TABLE IF EXISTS delivery.`order`;\n" +
+            "DROP TABLE IF EXISTS delivery.`invoice`;" +
+                    "DROP TABLE IF EXISTS delivery.`invoice_status`;" +
+                    "DROP TABLE IF EXISTS delivery.`order`;\n" +
                     "DROP TABLE IF EXISTS delivery.`description_locality`;\n" +
                     "DROP TABLE IF EXISTS delivery.`locality`;" +
                     "DROP TABLE IF EXISTS delivery.`shipping_status_description`;" +
@@ -97,7 +99,7 @@ class OrderDaoTest {
                 .withShippingStatus(1L);
         order = builder.build();
         assertTrue(dao.insert(order));
-        assertEquals(2,order.getId());
+        assertEquals(3,order.getId());
     }
 
     @Test
@@ -116,14 +118,14 @@ class OrderDaoTest {
         assertEquals(1,order.getShippingAddressID());
         assertEquals(2,order.getDeliveryAddressID());
         assertEquals(1,order.getClientID());
-        Order order2 = dao.findById(2L).orElse(null);
+        Order order2 = dao.findById(3L).orElse(null);
         assertNull(order2);
     }
 
     @Test
     void existsById() {
         assertTrue(dao.existsById(1L));
-        assertFalse(dao.existsById(2L));
+        assertFalse(dao.existsById(3L));
         assertFalse(dao.existsById(20L));
     }
 
@@ -131,7 +133,7 @@ class OrderDaoTest {
     void findAll() {
         ArrayList<Order> orders = (ArrayList<Order>) dao.findAll();
         assertFalse(orders.isEmpty());
-        assertEquals(1,orders.size());
+        assertEquals(2,orders.size());
         assertEquals(1,orders.get(0).getShippingAddressID());
         assertEquals(2,orders.get(0).getDeliveryAddressID());
         assertEquals(1,orders.get(0).getClientID());
@@ -140,6 +142,7 @@ class OrderDaoTest {
     @Test
     void deleteById() {
         assertTrue(dao.deleteById(1L));
+        assertTrue(dao.deleteById(2L));
         ArrayList<Order> orders = (ArrayList<Order>) dao.findAll();
         assertTrue(orders.isEmpty());
     }
@@ -148,7 +151,7 @@ class OrderDaoTest {
     void findAllByUserID() {
         ArrayList<Order> orders = (ArrayList<Order>) dao.findAllByUserID(1L);
         assertFalse(orders.isEmpty());
-        assertEquals(1,orders.size());
+        assertEquals(2,orders.size());
         assertEquals(1,orders.get(0).getShippingAddressID());
         assertEquals(2,orders.get(0).getDeliveryAddressID());
         assertEquals(1,orders.get(0).getClientID());

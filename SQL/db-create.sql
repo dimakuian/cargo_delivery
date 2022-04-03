@@ -164,7 +164,7 @@ CREATE TABLE IF NOT EXISTS `invoice`
     `id`                INT           NOT NULL AUTO_INCREMENT,
     `client_id`         INT           NOT NULL,
     `creation_datetime` DATETIME      NOT NULL DEFAULT CURRENT_TIMESTAMP(),
-    `order_id`          INT           NOT NULL,
+    `order_id`          INT           NOT NULL UNIQUE,
     `sum`               DECIMAL(8, 2) NOT NULL DEFAULT 0,
     `invoice_status_id` INT           NOT NULL,
     PRIMARY KEY (`id`),
@@ -187,19 +187,17 @@ INSERT INTO `user` (id, login, password, role_id)
 VALUES (DEFAULT, 'user1', '24c9e15e52afc47c225b757e7bee1f9d', 1),
        (DEFAULT, 'user2', '7e58d63b60197ceb55a1c487989a3720', 1),
        (DEFAULT, 'user3', '92877af70a45fd6a2ed7fe81e1236b78', 1),
-       (DEFAULT, 'user4', '3f02ebe3d7929b091e3d8ccfde2f3bc6', 1),
        (DEFAULT, 'admin1', 'e00cf25ad42683b3df678c61f42c6bda', 0),
-       (DEFAULT, 'admin2', 'c84258e9c39059a89ab77d846ddab909', 0),
-       (DEFAULT, 'admin3', '32cacb2f994f6b42183a1300d9a3e8d6', 0);
+       (DEFAULT, 'admin2', 'c84258e9c39059a89ab77d846ddab909', 0);
 
 INSERT INTO `admin` (id, user_id, name, surname)
-VALUES (DEFAULT, 6, 'John', 'Jonson'),
-       (DEFAULT, 7, 'Anatolij', 'Sych');
+VALUES (DEFAULT, 4, 'John', 'Jonson'),
+       (DEFAULT, 5, 'Anatolij', 'Sych');
 
 INSERT INTO `client` (id, user_id, name, surname, patronymic, email, phone)
 VALUES (DEFAULT, 1, 'Borys', 'Horbenko', 'Stefanovych', 'mail1@example.com', '+380671111111'),
-       (DEFAULT, 3, 'Marta', 'Semenova', 'Artemivna', 'mail3_wagner@example.com.ua', '+380671111113'),
-       (DEFAULT, 4, 'Zoya', 'Bozhko', 'Havrylivna', 'mail4@gmail.com', '+380671111114');
+       (DEFAULT, 2, 'Marta', 'Semenova', 'Artemivna', 'mail3_wagner@example.com.ua', '+380671111113'),
+       (DEFAULT, 3, 'Zoya', 'Bozhko', 'Havrylivna', 'mail4@gmail.com', '+380671111114');
 
 INSERT INTO `language` (id, short_name, full_name)
 VALUES (DEFAULT, 'EN', 'English');
@@ -284,11 +282,14 @@ VALUES (1, 1, 'created'),
        (7, 2, 'скасований');
 
 INSERT INTO `invoice_status` (id, name)
-VALUES (0, 'created'),(1,'paid'),(2,'declined');
+VALUES (0, 'created'),
+       (1, 'paid'),
+       (2, 'declined');
 
 INSERT INTO `order` (id, shipping_address, delivery_address, creation_time, client_id, consignee, description, distance,
                      length, height, width, weight, volume, fare, shipping_status_id, delivery_date)
 VALUES (DEFAULT, 1, 2, DEFAULT, 1, 'Test', 'Description', 300, 2, 2, 2, 3, 8, 30, 1, DEFAULT);
+
 
 
 

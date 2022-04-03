@@ -34,6 +34,7 @@ public class CommandContainer {
         // admin commands
         commands.put("adminCabinet", new AdminCabinetCommand());
         commands.put("confirmOrder",new ConfirmOrderCommand());
+        commands.put("changeOrderStatus",new ChangeOrderStatusCommand());
 
         logger.debug("Command container was successfully initialized");
         logger.trace("Number of commands --> " + commands.size());

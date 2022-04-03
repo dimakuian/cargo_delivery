@@ -129,16 +129,47 @@
                             <c:out value="${order.status.ua}"/>
                         </c:otherwise>
                     </c:choose>
-                    <c:if test="${order.status.ua eq 'створений' or order.status.en eq 'created'}">
-                        <form action="/controller" method="post">
-                            <input type="hidden" name="command" value="confirmOrder">
-                            <input type="hidden" name="order" value="${order.getId()}">
-                            <fmt:message key="adminCabinet.button.confirm" var="button_confirm"/>
-                            <input type="submit" name="procedure" value="${button_confirm}"><br>
-                            <fmt:message key="button.cancel" var="button_cancel"/>
-                            <input type="submit" name="procedure" value="${button_cancel}">
-                        </form>
-                    </c:if>
+                    <br>
+                    <c:choose>
+                        <c:when test="${order.status.ua eq 'створений' or order.status.en eq 'created'}">
+                            <form action="/controller" method="post">
+                                <input type="hidden" name="command" value="confirmOrder">
+                                <input type="hidden" name="order" value="${order.getId()}">
+                                <fmt:message key="adminCabinet.button.confirm" var="button_confirm"/>
+                                <input type="submit" name="procedure" value="${button_confirm}"><br>
+                                <fmt:message key="button.cancel" var="button_cancel"/>
+                                <input type="submit" name="procedure" value="${button_cancel}">
+                            </form>
+                        </c:when>
+                        <c:otherwise>
+                            <form action="/controller" method="post">
+                                <input type="hidden" name="command" value="changeOrderStatus">
+                                <input type="hidden" name="order" value="${order.getId()}">
+                                <select name="status_id" onchange="this.form.submit()">
+                                    <option selected disabled><c:out value="change status"/></option>
+                                    <c:forEach var="status" items="${statuses}">
+                                        <c:if test="${status.description.ua ne 'створений' and
+                                        status.description.en ne 'created' and status.description.ua ne 'підтверджений'
+                                        and status.description.en ne 'confirmed'}">
+                                            <option value="${status.statusID}">
+                                                <c:choose>
+                                                    <c:when test="${locale=='en'}">
+                                                        <c:out value="${status.description.en}"/>
+                                                    </c:when>
+                                                    <c:when test="${locale=='ua'}">
+                                                        <c:out value="${status.description.ua}"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:out value="${status.description.ua}"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </option>
+                                        </c:if>
+                                    </c:forEach>
+                                </select>
+                            </form>
+                        </c:otherwise>
+                    </c:choose>
                 </td>
                 <td>
                     <form action="/controller" method="post">

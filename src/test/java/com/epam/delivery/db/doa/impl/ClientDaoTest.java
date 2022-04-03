@@ -24,7 +24,9 @@ class ClientDaoTest {
     private static String userDefinedAppContent;
     private static final String APP_PROPS_FILE = "app.properties";
     public static final String DROP_TABLE =
-            "DROP TABLE IF EXISTS delivery.`order`;\n" +
+            "DROP TABLE IF EXISTS delivery.`invoice`;" +
+                    "DROP TABLE IF EXISTS delivery.`invoice_status`;" +
+                    "DROP TABLE IF EXISTS delivery.`order`;\n" +
                     "DROP TABLE IF EXISTS delivery.`description_locality`;\n" +
                     "DROP TABLE IF EXISTS delivery.`locality`;" +
                     "DROP TABLE IF EXISTS delivery.`shipping_status_description`;" +

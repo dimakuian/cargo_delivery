@@ -2,7 +2,9 @@ package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionWithDriverManager;
-import com.epam.delivery.db.entities.Locality;
+import com.epam.delivery.db.entities.Invoice;
+import com.epam.delivery.db.entities.Order;
+import com.epam.delivery.db.entities.User;
 import org.junit.jupiter.api.*;
 
 import java.io.FileOutputStream;
@@ -12,12 +14,13 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Properties;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class LocalityDaoTest {
+class InvoiceDaoTest {
 
     private static final String URL_CONNECTION = "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1";
     private static String userDefinedAppContent;
@@ -39,7 +42,7 @@ class LocalityDaoTest {
 
     private static ConnectionBuilder builder;
 
-    private static LocalityDao dao;
+    private static InvoiceDao dao;
 
     @BeforeAll
     static void globalSetUp() throws IOException {
@@ -64,7 +67,7 @@ class LocalityDaoTest {
     @BeforeEach
     void setUp() {
         builder = new ConnectionWithDriverManager();
-        dao = new LocalityDao(builder);
+        dao = new InvoiceDao(builder);
         ConnectionWithDriverManager.createDataBase();
     }
 
@@ -73,79 +76,68 @@ class LocalityDaoTest {
         builder.getConnection().createStatement().executeUpdate(DROP_TABLE);
     }
 
+
     @Test
     void insert() {
-        Locality test = Locality.createLocality("Test", 48.444585453958084, 22.724035901090634);
-        assertTrue(dao.insert(test));
-        assertEquals(17, test.getId());
-        assertFalse(dao.insert(test));
+        Invoice invoice = new Invoice(1, new Timestamp(System.currentTimeMillis()), 2L, 80, 1);
+        assertTrue(dao.insert(invoice));
+        assertEquals(2, invoice.getId());
+
     }
 
     @Test
     void update() {
-        Locality locality = dao.findById(12L).orElse(null);
-        locality.setName("Test department");
-        assertTrue(dao.update(locality));
-        Locality afterUpdate = dao.findById(12L).orElse(null);
-        assertEquals("Test department", afterUpdate.getName());
+        Invoice invoice = dao.findById(1L).orElse(null);
+        assertNotNull(invoice);
+        invoice.setClientID(2L);
+        assertTrue(dao.update(invoice));
+        Invoice afterUpdate = dao.findById(1L).orElse(null);
+        assertEquals(2L,afterUpdate.getClientID());
+
     }
 
     @Test
     void findById() {
-        Locality locality1 = dao.findById(1L).orElse(null);
-        assertNotNull(locality1);
-        assertEquals("Kiev department №1", locality1.getName());
-        Locality locality2 = dao.findById(12L).orElse(null);
-        assertNotNull(locality2);
-        assertEquals("Dnipro department №12", locality2.getName());
-        Locality locality3 = dao.findById(20L).orElse(null);
-        assertNull(locality3);
+        Invoice invoice1 = dao.findById(1L).orElse(null);
+        assertNotNull(invoice1);
+        assertEquals(30.0,invoice1.getSum());
+        Invoice invoice2 = dao.findById(2L).orElse(null);
+        assertNull(invoice2);
     }
 
     @Test
     void existsById() {
-        assertTrue(dao.existsById(5L));
-        assertTrue(dao.existsById(15L));
-        assertTrue(dao.existsById(10L));
-        assertTrue(dao.existsById(3L));
-        assertFalse(dao.existsById(30L));
-        assertFalse(dao.existsById(20L));
-        assertFalse(dao.existsById(18L));
+        assertTrue(dao.existsById(1L));
+        assertFalse(dao.existsById(13L));
     }
 
     @Test
     void findAll() {
-        ArrayList<Locality> localities = (ArrayList<Locality>) dao.findAll();
-        assertFalse(localities.isEmpty());
-        assertEquals(16,localities.size());
-        assertEquals("Dnipro department №12", localities.get(11).getName());
-        assertEquals("Kiev department №1", localities.get(0).getName());
+        ArrayList<Invoice> invoices = new ArrayList<>(dao.findAll());
+        assertFalse(invoices.isEmpty());
+        assertEquals(1, invoices.size());
+        assertEquals(30.0, invoices.get(0).getSum());
+        assertEquals(1, invoices.get(0).getId());
+        assertEquals(1, invoices.get(0).getOrderID());
     }
 
     @Test
     void deleteById() {
         assertTrue(dao.deleteById(1L));
-        assertTrue(dao.deleteById(3L));
-        assertTrue(dao.deleteById(5L));
-        assertTrue(dao.deleteById(6L));
-        assertTrue(dao.deleteById(7L));
-        assertTrue(dao.deleteById(11L));
-        assertTrue(dao.deleteById(12L));
-        assertTrue(dao.deleteById(10L));
-        assertFalse(dao.deleteById(17L));
-        assertFalse(dao.deleteById(10L));
-        assertFalse(dao.deleteById(1L));
-        ArrayList<Locality> afterDelete = (ArrayList<Locality>) dao.findAll();
-        assertEquals(8,afterDelete.size());
+        assertFalse(dao.deleteById(2L));
+        ArrayList<Invoice> invoices = new ArrayList<>(dao.findAll());
+        assertTrue(invoices.isEmpty());
     }
 
     @Test
-    void calcDistanceBetweenTwoLocality() {
-        Locality locality1 = dao.findById(1L).orElse(null);
-        Locality locality2 = dao.findById(11L).orElse(null);
-        Double dist1 = dao.calcDistanceBetweenTwoLocality(locality1, locality2).orElse(null);
-        assertNotNull(dist1);
-        double expected = 164.0;
-        assertEquals(expected,dist1);
+    void findClientInvoices() {
+        ArrayList<Invoice> invoices1 = new ArrayList<>(dao.findClientInvoices(1L));
+        assertFalse(invoices1.isEmpty());
+        assertEquals(1, invoices1.size());
+        assertEquals(30.0, invoices1.get(0).getSum());
+        assertEquals(1, invoices1.get(0).getId());
+        assertEquals(1, invoices1.get(0).getOrderID());
+        ArrayList<Invoice> invoices2 = new ArrayList<>(dao.findClientInvoices(10L));
+        assertTrue(invoices2.isEmpty());
     }
 }

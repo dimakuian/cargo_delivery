@@ -5,7 +5,10 @@ import com.epam.delivery.db.ConnectionWithDriverManager;
 import com.epam.delivery.db.entities.User;
 import org.junit.jupiter.api.*;
 
-import java.io.*;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -21,7 +24,9 @@ class UserDaoTest {
     private static String userDefinedAppContent;
     private static final String APP_PROPS_FILE = "app.properties";
     public static final String DROP_TABLE =
-            "DROP TABLE IF EXISTS delivery.`order`;\n" +
+            "DROP TABLE IF EXISTS delivery.`invoice`;" +
+                    "DROP TABLE IF EXISTS delivery.`invoice_status`;" +
+                    "DROP TABLE IF EXISTS delivery.`order`;\n" +
                     "DROP TABLE IF EXISTS delivery.`description_locality`;\n" +
                     "DROP TABLE IF EXISTS delivery.`locality`;" +
                     "DROP TABLE IF EXISTS delivery.`shipping_status_description`;" +
@@ -54,7 +59,7 @@ class UserDaoTest {
     static void globalTearDown() throws IOException {
         Properties properties = new Properties();
         OutputStream output = new FileOutputStream(APP_PROPS_FILE);
-        properties.setProperty("connection.url",userDefinedAppContent);
+        properties.setProperty("connection.url", userDefinedAppContent);
         properties.store(output, null);
     }
 
@@ -114,14 +119,14 @@ class UserDaoTest {
         ArrayList<User> users = (ArrayList<User>) dao.findAll();
         assertTrue(dao.deleteById(2L));
         ArrayList<User> afterDelete = (ArrayList<User>) dao.findAll();
-        assertEquals(Arrays.asList(users.get(0),users.get(2),users.get(3),users.get(4),users.get(5),users.get(6)), afterDelete);
+        assertEquals(Arrays.asList(users.get(0), users.get(2), users.get(3), users.get(4), users.get(5), users.get(6)), afterDelete);
     }
 
     @Test
     void getByLogin() {
         User user = dao.getByLogin("admin1").orElse(null);
         assertNotNull(user);
-        assertEquals(5,user.getId());
+        assertEquals(5, user.getId());
     }
 
     @Test

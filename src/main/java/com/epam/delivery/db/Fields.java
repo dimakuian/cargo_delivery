@@ -5,6 +5,13 @@ public final class Fields {
     // entities
     public static final String ENTITY__ID = "id";
 
+    //invoice
+    public static final String INVOICE__CREATION_DATETIME = "creation_datetime";
+    public static final String INVOICE__CLIENT_ID = "client_id";
+    public static final String INVOICE__ORDER_ID = "order_id";
+    public static final String INVOICE__SUM = "sum";
+    public static final String INVOICE__STATUS_ID = "invoice_status_id";
+
     // beans
     public static final String USER_ORDER_BEAN__ORDER_ID = "id";
     public static final String USER_ORDER_BEAN__SHIPPING_CITY_UA = "shipping_city_ua";
@@ -37,6 +44,9 @@ public final class Fields {
     public static final String USER_ORDER_BEAN__DELIVERY_STATUS_UA = "status_ua";
     public static final String USER_ORDER_BEAN__DELIVERY_STATUS_EN = "status_en";
     public static final String USER_ORDER_BEAN__DELIVERY_DELIVERY_DATE = "delivery_date";
+
+
+
 
     private Fields() {
     }
