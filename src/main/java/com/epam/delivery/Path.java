@@ -13,12 +13,15 @@ public final class Path {
 
     // pages
     public static final String PAGE__ERROR_PAGE = "/WEB-INF/jsp/error_page.jsp";
-    public static final String PAGE__CREATE_ORDER = "/WEB-INF/jsp/user/create_order.jsp";
-    public static final String PAGE__USER_CABINET = "/WEB-INF/jsp/user/user_cabinet.jsp";
+    public static final String PAGE__CREATE_ORDER = "/WEB-INF/jsp/client/create_order.jsp";
+    public static final String PAGE__CLIENT_CABINET = "/WEB-INF/jsp/client/client_cabinet.jsp";
     public static final String PAGE__COUNT_COAST = "/WEB-INF/jsp/calculate_сost.jsp";
     public static final String PAGE__REGISTRATION = "/WEB-INF/jsp/registration.jsp";
     public static final String PAGE__EDIT_ORDER = "/edit_order.jsp";
     public static final String PAGE__ADMIN_CABINET = "/WEB-INF/jsp/admin/admin_cabinet.jsp";
+    public static final String PAGE__ADMIN_VIEW_ORDER = "/WEB-INF/jsp/admin/admin_view_order.jsp";
+    public static final String PAGE__CLIENT_VIEW_ORDER = "/WEB-INF/jsp/client/client_view_order.jsp";
+
 
 
     // commands
@@ -30,7 +33,7 @@ public final class Path {
     public static final String COMMAND__VIEW_CALCULATE_COAST = "/controller?command=viewCalculateCost";
     public static final String COMMAND__SET_LOCALE = "/controller?command=setLocale";
 
-    public static final String COMMAND__USER_CABINET = "/controller?command=userCabinet";
+    public static final String COMMAND_CLIENT_CABINET = "/controller?command=clientCabinet";
     public static final String COMMAND__EDIT_USER = "/controller?command=editUser";
     public static final String COMMAND__RECHARGE = "/controller?command=recharge";
     public static final String COMMAND__PAY_ORDER = "/controller?command=payOrder";

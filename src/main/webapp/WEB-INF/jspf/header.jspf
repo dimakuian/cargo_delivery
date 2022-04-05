@@ -3,15 +3,74 @@ Header (top area).
 ===========================================================================--%>
 <%@ include file="/WEB-INF/jspf/directive/page.jspf" %>
 <%@ include file="/WEB-INF/jspf/directive/taglib.jspf" %>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarTogglerDemo03" aria-controls="navbarTogglerDemo03" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <a class="navbar-brand" href="#">Navbar</a>
+
+    <div class="collapse navbar-collapse" id="navbarTogglerDemo03">
+        <ul class="navbar-nav mr-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+                <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Link</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
+            </li>
+        </ul>
+        <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        </form>
+    </div>
+</nav>
+
+<%--<nav class="navbar navbar-expand-lg navbar-dark bg-dark">--%>
+<%--&lt;%&ndash;    <a class="navbar-brand" href="#">Navbar w/ text</a>&ndash;%&gt;--%>
+<%--    <div class="collapse navbar-collapse" id="navbarText">--%>
+<%--        <ul class="navbar-nav mr-auto">--%>
+<%--            <fmt:message key="button.home" var="home"/>--%>
+<%--            <li class="nav-item active">--%>
+<%--                <a class="nav-link" id="home_page" href="<c:url value="/index.jsp"/>"><c:out value="${home}"/></a>--%>
+<%--            </li>--%>
+<%--            <li class="nav-item">--%>
+<%--                <a class="nav-link" href="#about"><fmt:message key="button.about"/></a>--%>
+<%--            </li>--%>
+<%--            <li class="nav-item">--%>
+<%--                <a class="nav-link" href="<c:url value="/controller?command=viewCalculateCost"/>">--%>
+<%--                    <fmt:message key="button.count_coast"/></a>--%>
+<%--            </li>--%>
+<%--            <c:choose>--%>
+<%--                <c:when test="${role.getName() eq 'client'}">--%>
+<%--                    <li class="nav-item">--%>
+<%--                        <a class="nav-link" href="controller?command=viewCreateOrderPage">--%>
+<%--                            <fmt:message key="button.create_order"/></a>--%>
+<%--                    </li>--%>
+<%--                </c:when>--%>
+<%--            </c:choose>--%>
+<%--        </ul>--%>
+<%--        <span class="navbar-text">--%>
+<%--      Navbar text with an inline element--%>
+<%--    </span>--%>
+<%--    </div>--%>
+<%--    <form class="form-inline">--%>
+<%--        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">--%>
+<%--        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>--%>
+<%--    </form>--%>
+<%--</nav>--%>
+
 <div class="topnav">
-    <a id="home_page" class="active" href="<c:url value="/index.jsp"/>"><fmt:message key="button.home"/></a>
-    <a href="#about"><fmt:message key="button.about"/></a>
-    <a href="<c:url value="/controller?command=viewCalculateCost"/>"><fmt:message key="button.count_coast"/></a>
-    <c:choose>
-        <c:when test="${role.getName() eq 'client'}">
-            <a href="controller?command=viewCreateOrderPage"><fmt:message key="button.create_order"/></a>
-        </c:when>
-    </c:choose>
+<%--    <a id="home_page" class="active" href="<c:url value="/index.jsp"/>"><fmt:message key="button.home"/></a>--%>
+<%--    <a href="#about"><fmt:message key="button.about"/></a>--%>
+<%--    <a href="<c:url value="/controller?command=viewCalculateCost"/>"><fmt:message key="button.count_coast"/></a>--%>
+<%--    <c:choose>--%>
+<%--        <c:when test="${role.getName() eq 'client'}">--%>
+<%--            <a href="controller?command=viewCreateOrderPage"><fmt:message key="button.create_order"/></a>--%>
+<%--        </c:when>--%>
+<%--    </c:choose>--%>
 
     <div class="login-container">
         <c:choose>
@@ -35,7 +94,7 @@ Header (top area).
                         key="button.logout"/></button>
                 <c:choose>
                     <c:when test="${role.getName() eq 'client'}">
-                        <button onclick="window.location.href='/controller?command=userCabinet'">${user.getLogin()}</button>
+                        <button onclick="window.location.href='/controller?command=clientCabinet'">${user.getLogin()}</button>
                     </c:when>
                     <c:when test="${role.getName() eq 'admin'}">
                         <button onclick="window.location.href='/controller?command=adminCabinet'">${user.getLogin()}</button>

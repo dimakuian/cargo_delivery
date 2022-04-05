@@ -24,6 +24,8 @@
 <body>
 <%@include file="WEB-INF/jspf/header.jspf"%>
 <!-- Language switcher begin -->
+v>
+</nav>
 <form name="locales" action="/controller" method="post">
     <label>
         <select name="lang" onchange="this.form.submit()">

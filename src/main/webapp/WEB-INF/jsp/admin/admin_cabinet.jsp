@@ -33,7 +33,7 @@
         <option value="en"><fmt:message key="language.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="/controller?command=adminCabinet">
+    <input type="hidden" name="page" value="/controller?command=adminCabinet&page_number=${i}&sort=${currentSort}">
 </form>
 <!-- end Language switcher -->
 <div class="admin_cabinet_main" style="display: inline-block">
@@ -151,6 +151,7 @@
                                         <c:if test="${status.description.ua ne 'створений' and
                                         status.description.en ne 'created' and status.description.ua ne 'підтверджений'
                                         and status.description.en ne 'confirmed'}">
+
                                             <option value="${status.statusID}">
                                                 <c:choose>
                                                     <c:when test="${locale=='en'}">
@@ -172,9 +173,9 @@
                     </c:choose>
                 </td>
                 <td>
-                    <form action="/controller" method="post">
-                        <input type="hidden" name="command" value="adminEditOrder">
-                        <input type="hidden" name="order" value="${order.getId()}">
+                    <form action="/controller" method="do">
+                        <input type="hidden" name="command" value="adminViewOrder">
+                        <input type="hidden" name="orderID" value="${order.id}">
                         <fmt:message key="adminCabinet.button.show" var="button_show"/>
                         <input type="submit" value="${button_show}">
                     </form>
@@ -194,6 +195,9 @@
                     </c:when>
                     <c:otherwise>
                         <td>
+<%--                            <form action="/controller" method="post">--%>
+<%--                                --%>
+<%--                            </form>--%>
                             <a href="/controller?command=adminCabinet&page_number=${i}&sort=${currentSort}">
                                 <c:out value="${i}"/></a>
                         </td>

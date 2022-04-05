@@ -34,7 +34,7 @@
         <option value="en"><fmt:message key="language.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="/controller?command=userCabinet">
+    <input type="hidden" name="page" value="/controller?command=clientCabinet&page_number=${currentPage}&sort=${currentSort}">
 </form>
 <!-- end Language switcher -->
 
@@ -42,6 +42,8 @@
     <c:set var="statuses" value="${applicationScope['status_description']}"/>
     <c:set var="localitiesBeanList" value="${applicationScope['localities']}"/>
     <div>
+        <fmt:message key="inner_text.invoices_to_pay" var="invoices_to_pay"/>
+        <c:out value="${invoices_to_pay} ${clientInvoices.size()}"/>
         <!-- button for fort table -->
         <form action="/controller" method="do">
             <select name="sort" onchange="this.form.submit()">
@@ -70,7 +72,7 @@
                 </c:choose>
                 <option value="status_id ASC"><fmt:message key="sort_type.status_show_new"/></option>
             </select>
-            <input type="hidden" name="command" value="userCabinet">
+            <input type="hidden" name="command" value="clientCabinet">
             <input type="hidden" name="page_number" value="${currentPage}">
         </form>
         <c:if test="${clientOrders.size()>0}">
@@ -128,19 +130,19 @@
                                 <c:out value="${order.status.ua}"/>
                             </c:otherwise>
                         </c:choose>
-                            <c:if test="${order.status.en eq confirmed}">
-                                <form action="/controller" method="post">
-                                    <input type="hidden" name="command" value="payOrder">
-                                    <input type="hidden" name="order" value="${order.id}">
-                                    <fmt:message key="button.pay" var="button_pay"/>
-                                    <input type="submit" value="${button_pay}">
-                                </form>
-                            </c:if>
+<%--                            <c:if test="${order.status.en eq confirmed}">--%>
+<%--                                <form action="/controller" method="post">--%>
+<%--                                    <input type="hidden" name="command" value="payOrder">--%>
+<%--                                    <input type="hidden" name="order" value="${order.id}">--%>
+<%--                                    <fmt:message key="button.pay" var="button_pay"/>--%>
+<%--                                    <input type="submit" value="${button_pay}">--%>
+<%--                                </form>--%>
+<%--                            </c:if>--%>
                         </td>
                         <td>
-                            <form action="/controller" method="post">
-                                <input type="hidden" name="command" value="editOrder">
-                                <input type="hidden" name="order" value="${order.id}">
+                            <form action="/controller" method="do">
+                                <input type="hidden" name="command" value="clientViewOrder">
+                                <input type="hidden" name="orderID" value="${order.id}">
                                 <fmt:message key="button.show" var="button_show"/>
                                 <input type="submit" value="${button_show}">
                             </form>
@@ -160,7 +162,7 @@
                         </c:when>
                         <c:otherwise>
                             <td>
-                                <a href="/controller?command=userCabinet&page_number=${i}&sort=${currentSort}">
+                                <a href="/controller?command=clientCabinet&page_number=${i}&sort=${currentSort}">
                                     <c:out value="${i}"/></a>
                             </td>
                         </c:otherwise>
@@ -171,25 +173,25 @@
     </div>
 
 
-    <aside class="sidebar">
-        <form action="/controller" method="post" style="display: inline">
-            <input type="hidden" name="command" value="editUser">
-            <input type="text" name="name" value="${client.name}" readonly><br>
-            <input type="text" name="surname" value="${client.surname}" readonly><br>
-            <input type="text" name="patronymic" value="${client.patronymic}" readonly><br>
-            <input type="text" name="email" value="${client.email}" readonly><br>
-            <input type="text" name="phone" value="${client.phone}" readonly><br>
-            <input type="submit" value="Edit">
-        </form>
-        <p><fmt:message key="userCabinet.user_balance"/><c:out value=" ${client.getBalance()}"/></p>
-        <form action="/controller" method="post">
-            <input type="hidden" name="command" value="recharge">
-            <input type="number" name="balance" value="0" autocomplete="false">
-            <fmt:message key="userCabinet.recharge_balance" var="recharge_balance"/>
-            <input type="submit" value="${recharge_balance}">
-        </form>
-    </aside>
-</div>
+<%--    <aside class="sidebar">--%>
+<%--        <form action="/controller" method="post" style="display: inline">--%>
+<%--            <input type="hidden" name="command" value="editUser">--%>
+<%--            <input type="text" name="name" value="${client.name}" readonly><br>--%>
+<%--            <input type="text" name="surname" value="${client.surname}" readonly><br>--%>
+<%--            <input type="text" name="patronymic" value="${client.patronymic}" readonly><br>--%>
+<%--            <input type="text" name="email" value="${client.email}" readonly><br>--%>
+<%--            <input type="text" name="phone" value="${client.phone}" readonly><br>--%>
+<%--            <input type="submit" value="Edit">--%>
+<%--        </form>--%>
+<%--        <p><fmt:message key="userCabinet.user_balance"/><c:out value=" ${client.getBalance()}"/></p>--%>
+<%--        <form action="/controller" method="post">--%>
+<%--            <input type="hidden" name="command" value="recharge">--%>
+<%--            <input type="number" name="balance" value="0" autocomplete="false">--%>
+<%--            <fmt:message key="userCabinet.recharge_balance" var="recharge_balance"/>--%>
+<%--            <input type="submit" value="${recharge_balance}">--%>
+<%--        </form>--%>
+<%--    </aside>--%>
+<%--</div>--%>
 <c:out value="${message}"/>
 <c:remove var="message"/>
 </body>

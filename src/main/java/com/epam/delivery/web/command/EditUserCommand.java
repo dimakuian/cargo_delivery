@@ -70,7 +70,7 @@ public class EditUserCommand implements Command {
                 request.getServletContext().setAttribute("message", message);
                 logger.trace("Set servlet context attribute: message --> " + "successful");
             }
-            forward = Path.COMMAND__USER_CABINET;
+            forward = Path.COMMAND_CLIENT_CABINET;
         } else {
             String errorMessage = "can't find this user";
             request.getServletContext().setAttribute("message", errorMessage);

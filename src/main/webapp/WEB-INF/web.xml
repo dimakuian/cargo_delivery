@@ -47,11 +47,11 @@
         <filter-class>com.epam.delivery.web.filter.CommandAccessFilter</filter-class>
         <init-param>
             <param-name>admin</param-name>
-            <param-value>adminCabinet confirmOrder changeOrderStatus</param-value>
+            <param-value>adminCabinet confirmOrder changeOrderStatus adminViewOrder</param-value>
         </init-param>
         <init-param>
             <param-name>client</param-name>
-            <param-value>userCabinet editUser recharge payOrder editOrder createOrder viewCreateOrderPage</param-value>
+            <param-value>clientCabinet editUser recharge payOrder editOrder createOrder viewCreateOrderPage clientViewOrder</param-value>
         </init-param>
         <init-param>
             <param-name>common</param-name>

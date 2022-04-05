@@ -67,7 +67,7 @@ public class PayOrderCommand implements Command {
             request.getServletContext().setAttribute("message", message);
             logger.trace("Set servlet context attribute: message --> " + message);
 
-            forward = Path.COMMAND__USER_CABINET;
+            forward = Path.COMMAND_CLIENT_CABINET;
         } else {
             request.getServletContext().setAttribute("errorMessage", "problem with user");
             logger.trace("Set servlet context attribute: errorMessage --> " + "problem with user");

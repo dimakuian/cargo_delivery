@@ -17,6 +17,8 @@
         <entry key="file://$PROJECT_DIR$/src/main/web/registration.jsp" value="file://$PROJECT_DIR$/src/main/web" />
         <entry key="file://$PROJECT_DIR$/src/main/web/userCabinet.jsp" value="file://$PROJECT_DIR$/src/main/web" />
         <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/admin/admin_cabinet.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/admin" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/admin/admin_view_order.jsp" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jsp/admin" />
+        <entry key="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jspf/header.jspf" value="file://$PROJECT_DIR$/src/main/webapp/WEB-INF/jspf" />
       </map>
     </option>
   </component>

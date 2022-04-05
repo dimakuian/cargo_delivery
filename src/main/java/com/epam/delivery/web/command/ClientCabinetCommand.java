@@ -4,8 +4,10 @@ import com.epam.delivery.Path;
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionPool;
 import com.epam.delivery.db.doa.impl.ClientDao;
+import com.epam.delivery.db.doa.impl.InvoiceDao;
 import com.epam.delivery.db.doa.impl.OrderDao;
 import com.epam.delivery.db.entities.Client;
+import com.epam.delivery.db.entities.Invoice;
 import com.epam.delivery.db.entities.User;
 import com.epam.delivery.db.entities.bean.OrderBean;
 import org.apache.logging.log4j.LogManager;
@@ -14,9 +16,10 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.util.ArrayList;
 import java.util.List;
 
-public class UserCabinetCommand implements Command {
+public class ClientCabinetCommand implements Command {
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -55,21 +58,32 @@ public class UserCabinetCommand implements Command {
 
                 OrderDao orderDao = new OrderDao(connectionBuilder);
                 List<OrderBean> orders = orderDao.findClientOrdersBean((page - 1) * recordsPerPage,
-                        recordsPerPage, sort,client.getId());
+                        recordsPerPage, sort, client.getId());
+
+                InvoiceDao invoiceDao = new InvoiceDao(connectionBuilder);
+                ArrayList<Invoice> invoices = new ArrayList<>(invoiceDao.findClientInvoices(client.getId()));
+                logger.trace("Found in DB: client's invoices --> " + invoices);
 
                 int noOfRecords = orderDao.getNoOfUserOrders(client.getId());
                 int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
                 request.setAttribute("noOfPages", noOfPages);
-                request.setAttribute("currentPage", page);
-                request.setAttribute("currentSort", sort);
+                logger.trace("Set the servlet attribute: noOfPages --> " + noOfPages);
 
-                session.setAttribute("client", client);
-                logger.trace("Set the session attribute: client --> " + client);
+                request.setAttribute("currentPage", page);
+                logger.trace("Set the servlet attribute: currentPage --> " + page);
+
+                request.setAttribute("currentSort", sort);
+                logger.trace("Set the servlet attribute: currentSort --> " + sort);
+
+                request.setAttribute("clientInvoices", invoices);
+                logger.trace("Set the servlet attribute: clientInvoices --> " + invoices);
 
                 session.setAttribute("clientOrders", orders);
                 logger.trace("Set the session attribute: clientOrders --> " + orders);
 
-                forward = Path.PAGE__USER_CABINET;
+                session.setAttribute("client", client);
+
+                forward = Path.PAGE__CLIENT_CABINET;
             } else {
                 errorMessage = "can't find this client";
                 request.getServletContext().setAttribute("message", errorMessage);

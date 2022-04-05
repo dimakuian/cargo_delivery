@@ -63,7 +63,7 @@ public class LoginCommand implements Command {
                 forward = Path.COMMAND__ADMIN_CABINET;
 
             if (role == Role.CLIENT)
-                forward = Path.COMMAND__USER_CABINET;
+                forward = Path.COMMAND_CLIENT_CABINET;
 
             session.setAttribute("user", user);
             logger.trace("Set the session attribute: user --> " + user);

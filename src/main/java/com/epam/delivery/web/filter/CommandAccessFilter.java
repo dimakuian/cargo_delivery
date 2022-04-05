@@ -72,9 +72,9 @@ public class CommandAccessFilter implements Filter {
         if (commandName == null || commandName.isEmpty())
             return false;
 
-        if (!outOfControl.contains(commandName) && !commons.contains(commandName) &&
-                accessMap.values().stream().noneMatch(list -> list.contains(commandName)))
-            return true;
+//        if (!outOfControl.contains(commandName) && !commons.contains(commandName) &&
+//                accessMap.values().stream().noneMatch(list -> list.contains(commandName)))
+//            return true;
 
             if (outOfControl.contains(commandName))
                 return true;

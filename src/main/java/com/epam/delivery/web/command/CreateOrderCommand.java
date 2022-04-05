@@ -122,7 +122,7 @@ public class CreateOrderCommand implements Command {
             OrderDao orderDao = new OrderDao(connectionBuilder);
             String message;
             if (orderDao.insert(order)) {
-                forward = Path.COMMAND__USER_CABINET;
+                forward = Path.COMMAND_CLIENT_CABINET;
                 message = "successful";
             } else {
                 forward = Path.PAGE__ERROR_PAGE;

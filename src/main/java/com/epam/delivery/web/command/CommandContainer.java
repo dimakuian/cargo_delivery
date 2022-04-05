@@ -23,18 +23,20 @@ public class CommandContainer {
         commands.put("noCommand", new NoCommand());
 
         // client commands
-        commands.put("userCabinet", new UserCabinetCommand());
+        commands.put("clientCabinet", new ClientCabinetCommand());
         commands.put("editUser", new EditUserCommand());
         commands.put("recharge", new RechargeCommand());
         commands.put("payOrder", new PayOrderCommand());
         commands.put("editOrder", new EditOrderCommand());
         commands.put("createOrder", new CreateOrderCommand());
         commands.put("viewCreateOrderPage", new ViewCreateOrderPageCommand());
+        commands.put("clientViewOrder",new ClientViewOrderCommand());
 
         // admin commands
         commands.put("adminCabinet", new AdminCabinetCommand());
         commands.put("confirmOrder",new ConfirmOrderCommand());
         commands.put("changeOrderStatus",new ChangeOrderStatusCommand());
+        commands.put("adminViewOrder",new AdminViewOrderCommand());
 
         logger.debug("Command container was successfully initialized");
         logger.trace("Number of commands --> " + commands.size());

@@ -85,6 +85,6 @@ public class Invoice extends Entity {
                 ", orderID=" + orderID +
                 ", sum=" + sum +
                 ", invoiceStatusID=" + invoiceStatusID +
-                "} " + super.toString();
+                "} ";
     }
 }

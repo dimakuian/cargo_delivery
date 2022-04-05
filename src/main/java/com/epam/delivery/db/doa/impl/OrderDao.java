@@ -85,7 +85,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
             "ORDER BY %s\n" +
             "LIMIT ?,?";
 
-    public static final String SELECT_USER_ORDERS_BEAN ="SELECT o.id,\n" +
+    public static final String SELECT_USER_ORDERS_BEAN = "SELECT o.id,\n" +
             "       sa_ua.city          AS shipping_city_ua,\n" +
             "       sa_ua.street        AS shipping_street_ua,\n" +
             "       sa_ua.street_number AS shipping_street_number_ua,\n" +
@@ -133,6 +133,53 @@ public class OrderDao extends AbstractDao<Order, Long> {
             "  AND client_id = ?\n" +
             "ORDER BY %s\n" +
             "LIMIT ?,?";
+
+    public static final String SELECT_ORDER_BEAN_BY_ID = "SELECT o.id,\n" +
+            "       sa_ua.city          AS shipping_city_ua,\n" +
+            "       sa_ua.street        AS shipping_street_ua,\n" +
+            "       sa_ua.street_number AS shipping_street_number_ua,\n" +
+            "       sa_en.city          AS shipping_city_en,\n" +
+            "       sa_en.street        AS shipping_street_en,\n" +
+            "       sa_en.street_number AS shipping_street_number_en,\n" +
+            "       da_ua.city          AS delivery_city_ua,\n" +
+            "       da_ua.street        as delivery_street_ua,\n" +
+            "       da_ua.street_number AS delivery_street_number_ua,\n" +
+            "       da_en.city          AS delivery_city_en,\n" +
+            "       da_en.street        AS delivery_street_en,\n" +
+            "       da_en.street_number AS delivery_street_number_en,\n" +
+            "       o.creation_time,\n" +
+            "       o.client_id,\n" +
+            "       c.name,\n" +
+            "       c.surname,\n" +
+            "       c.patronymic,\n" +
+            "       o.consignee,\n" +
+            "       o.description,\n" +
+            "       o.distance,\n" +
+            "       o.length,\n" +
+            "       o.height,\n" +
+            "       o.width,\n" +
+            "       o.weight,\n" +
+            "       o.volume,\n" +
+            "       o.fare,\n" +
+            "       ssd_ua.shipping_status_id AS status_id,\n" +
+            "       ssd_ua.description  AS status_ua,\n" +
+            "       ssd_en.description  AS status_en,\n" +
+            "       o.delivery_date\n" +
+            "FROM `order` o\n" +
+            "         JOIN description_locality sa_ua ON sa_ua.locality_id = o.shipping_address\n" +
+            "         JOIN description_locality sa_en ON sa_en.locality_id = o.shipping_address\n" +
+            "         JOIN description_locality da_ua ON da_ua.locality_id = o.delivery_address\n" +
+            "         JOIN description_locality da_en ON da_en.locality_id = o.delivery_address\n" +
+            "         JOIN client c on o.client_id = c.id\n" +
+            "         JOIN shipping_status_description ssd_ua on o.shipping_status_id = ssd_ua.shipping_status_id\n" +
+            "         JOIN shipping_status_description ssd_en on o.shipping_status_id = ssd_en.shipping_status_id\n" +
+            "WHERE sa_ua.language_id = 2\n" +
+            "  AND sa_en.language_id = 1\n" +
+            "  AND da_ua.language_id = 2\n" +
+            "  AND da_en.language_id = 1\n" +
+            "  AND ssd_ua.language_id = 2\n" +
+            "  AND ssd_en.language_id = 1\n" +
+            "  AND o.id = ?";
 
     public static final String COUNT_ALL_ORDERS = "SELECT COUNT(*) FROM `order`";
 
@@ -300,7 +347,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     public List<OrderBean> findAllOrderBean(int from, int limit, String sort) {
         List<OrderBean> list = new ArrayList<>();
         Connection connection = builder.getConnection();
-        String sqlQuery = String.format(SELECT_ALL_ORDER_BEAN,sort);
+        String sqlQuery = String.format(SELECT_ALL_ORDER_BEAN, sort);
         try (PreparedStatement stat = connection.prepareStatement(sqlQuery)) {
             stat.setInt(1, from);
             stat.setInt(2, limit);
@@ -319,12 +366,31 @@ public class OrderDao extends AbstractDao<Order, Long> {
         return list;
     }
 
-    public List<OrderBean> findClientOrdersBean(int from, int limit, String sort,long clientId) {
+    public Optional<OrderBean> findOrderBeanById(Long orderID) {
+        OrderBean orderBean = null;
+        Connection connection = builder.getConnection();
+        try (PreparedStatement stat = connection.prepareStatement(SELECT_ORDER_BEAN_BY_ID)) {
+            stat.setLong(1, orderID);
+            try (ResultSet rs = stat.executeQuery()) {
+                if (rs.next()) {
+                    OrderBeanMapper mapper = new OrderBeanMapper();
+                    orderBean = mapper.mapRow(rs);
+                }
+            }
+        } catch (SQLException exception) {
+            logger.error("SQLException while Order findOrderBeanById. " + exception.getMessage());
+        } finally {
+            builder.closeConnection(connection);
+        }
+        return Optional.ofNullable(orderBean);
+    }
+
+    public List<OrderBean> findClientOrdersBean(int from, int limit, String sort, long clientId) {
         List<OrderBean> list = new ArrayList<>();
         Connection connection = builder.getConnection();
-        String sqlQuery = String.format(SELECT_USER_ORDERS_BEAN,sort);
+        String sqlQuery = String.format(SELECT_USER_ORDERS_BEAN, sort);
         try (PreparedStatement stat = connection.prepareStatement(sqlQuery)) {
-            stat.setLong(1,clientId);
+            stat.setLong(1, clientId);
             stat.setInt(2, from);
             stat.setInt(3, limit);
             try (ResultSet rs = stat.executeQuery()) {
@@ -362,7 +428,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     public int getNoOfUserOrders(long clientId) {
         Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(COUNT_USER_ORDERS)) {
-            stat.setLong(1,clientId);
+            stat.setLong(1, clientId);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1);
