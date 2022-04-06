@@ -26,172 +26,182 @@
 
 <body>
 <%@include file="/WEB-INF/jspf/header.jspf" %>
-<!-- Language switcher begin -->
-<form name="locales" action="/controller" method="post">
-    <select name="lang" onchange="this.form.submit()">
-        <option selected disabled><fmt:message key="language.chooseLang"/></option>
-        <option value="ua"><fmt:message key="language.ua"/></option>
-        <option value="en"><fmt:message key="language.en"/></option>
-    </select>
-    <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="/controller?command=clientCabinet&page_number=${currentPage}&sort=${currentSort}">
-</form>
-<!-- end Language switcher -->
+<div>
+    <!-- Language switcher begin -->
+    <form name="locales" action="/controller" method="post">
+        <select name="lang" onchange="this.form.submit()">
+            <option selected disabled><fmt:message key="language.chooseLang"/></option>
+            <option value="ua"><fmt:message key="language.ua"/></option>
+            <option value="en"><fmt:message key="language.en"/></option>
+        </select>
+        <input type="hidden" name="command" value="setLocale">
+        <input type="hidden" name="page"
+               value="/controller?command=clientCabinet&page_number=${currentPage}&sort=${currentSort}">
+    </form>
+    <!-- end Language switcher -->
 
-<div class="user_cabinet_main">
-    <c:set var="statuses" value="${applicationScope['status_description']}"/>
-    <c:set var="localitiesBeanList" value="${applicationScope['localities']}"/>
-    <div>
+    <c:if test="${clientInvoices.size()>0}">
         <fmt:message key="inner_text.invoices_to_pay" var="invoices_to_pay"/>
-        <c:out value="${invoices_to_pay} ${clientInvoices.size()}"/>
-        <!-- button for fort table -->
-        <form action="/controller" method="do">
-            <select name="sort" onchange="this.form.submit()">
-                <option selected disabled><fmt:message key="inner_text.sort_by"/></option>
-                <option value="id ASC"><fmt:message key="sort_type.number_lowest"/></option>
-                <option value="id DESC"><fmt:message key="sort_type.number_highest"/></option>
-                <c:choose>
-                    <c:when test="${locale=='en'}">
-                        <option value="shipping_city_en ASC"><fmt:message key="sort_type.shipping_address_A_Z"/></option>
-                        <option value="shipping_city_en DESC"><fmt:message key="sort_type.shipping_address_Z_A"/></option>
-                        <option value="delivery_city_en ASC"><fmt:message key="sort_type.delivery_address_A_Z"/></option>
-                        <option value="delivery_city_en DESC"><fmt:message key="sort_type.delivery_address_Z_A"/></option>
-                    </c:when>
-                    <c:when test="${locale=='ua'}">
-                        <option value="shipping_city_ua ASC"><fmt:message key="sort_type.shipping_address_A_Z"/></option>
-                        <option value="shipping_city_ua DESC"><fmt:message key="sort_type.shipping_address_Z_A"/></option>
-                        <option value="delivery_city_ua ASC"><fmt:message key="sort_type.delivery_address_A_Z"/></option>
-                        <option value="delivery_city_ua DESC"><fmt:message key="sort_type.delivery_address_Z_A"/></option>
-                    </c:when>
-                    <c:otherwise>
-                        <option value="shipping_city_ua ASC"><fmt:message key="sort_type.shipping_address_A_Z"/></option>
-                        <option value="shipping_city_ua DESC"><fmt:message key="sort_type.shipping_address_Z_A"/></option>
-                        <option value="delivery_city_ua ASC"><fmt:message key="sort_type.delivery_address_A_Z"/></option>
-                        <option value="delivery_city_ua DESC"><fmt:message key="sort_type.delivery_address_Z_A"/></option>
-                    </c:otherwise>
-                </c:choose>
-                <option value="status_id ASC"><fmt:message key="sort_type.status_show_new"/></option>
-            </select>
-            <input type="hidden" name="command" value="clientCabinet">
-            <input type="hidden" name="page_number" value="${currentPage}">
-        </form>
+        <button type="button" class="btn btn-primary"><c:out value="${invoices_to_pay}"/><span class="badge badge-light">
+        <c:out value="${clientInvoices.size()}"/></span>
+        </button>
+    </c:if>
+
+
+    <!--button for sort content -->
+    <form action="/controller" method="do">
+        <select name="sort" onchange="this.form.submit()">
+            <option selected disabled><fmt:message key="inner_text.sort_by"/></option>
+            <option value="id ASC"><fmt:message key="sort_type.number_lowest"/></option>
+            <option value="id DESC"><fmt:message key="sort_type.number_highest"/></option>
+            <c:choose>
+                <c:when test="${locale=='en'}">
+                    <option value="shipping_city_en ASC"><fmt:message
+                            key="sort_type.shipping_address_A_Z"/></option>
+                    <option value="shipping_city_en DESC"><fmt:message
+                            key="sort_type.shipping_address_Z_A"/></option>
+                    <option value="delivery_city_en ASC"><fmt:message
+                            key="sort_type.delivery_address_A_Z"/></option>
+                    <option value="delivery_city_en DESC"><fmt:message
+                            key="sort_type.delivery_address_Z_A"/></option>
+                </c:when>
+                <c:when test="${locale=='ua'}">
+                    <option value="shipping_city_ua ASC"><fmt:message
+                            key="sort_type.shipping_address_A_Z"/></option>
+                    <option value="shipping_city_ua DESC"><fmt:message
+                            key="sort_type.shipping_address_Z_A"/></option>
+                    <option value="delivery_city_ua ASC"><fmt:message
+                            key="sort_type.delivery_address_A_Z"/></option>
+                    <option value="delivery_city_ua DESC"><fmt:message
+                            key="sort_type.delivery_address_Z_A"/></option>
+                </c:when>
+                <c:otherwise>
+                    <option value="shipping_city_ua ASC"><fmt:message
+                            key="sort_type.shipping_address_A_Z"/></option>
+                    <option value="shipping_city_ua DESC"><fmt:message
+                            key="sort_type.shipping_address_Z_A"/></option>
+                    <option value="delivery_city_ua ASC"><fmt:message
+                            key="sort_type.delivery_address_A_Z"/></option>
+                    <option value="delivery_city_ua DESC"><fmt:message
+                            key="sort_type.delivery_address_Z_A"/></option>
+                </c:otherwise>
+            </c:choose>
+            <option value="status_id ASC"><fmt:message key="sort_type.status_show_new"/></option>
+        </select>
+        <input type="hidden" name="command" value="clientCabinet">
+        <input type="hidden" name="page_number" value="${currentPage}">
+    </form>
+
+    <!--main content-->
+    <div class="container">
         <c:if test="${clientOrders.size()>0}">
-            <table>
-                <tr>
-                    <th><fmt:message key="inner_text.order_number"/></th>
-                    <th><fmt:message key="inner_text.from"/></th>
-                    <th><fmt:message key="inner_text.to"/></th>
-                    <th><fmt:message key="inner_text.create_date"/></th>
-                    <th><fmt:message key="inner_text.consignee"/></th>
-                    <th><fmt:message key="inner_text.fare"/></th>
-                    <th><fmt:message key="inner_text.shipping_status"/></th>
-                    <th><fmt:message key="inner_text.details"/></th>
-                </tr>
+            <div class="row">
                 <c:forEach var="order" items="${clientOrders}">
-                    <tr>
-                        <td><c:out value="${order.id}"/></td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${locale=='en'}">
-                                    <c:out value="${order.shippingAddress.en}"/>
-                                </c:when>
-                                <c:when test="${locale=='ua'}">
-                                    <c:out value="${order.shippingAddress.ua}"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:out value="${order.shippingAddress.ua}"/>
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td>
-                            <c:choose>
-                                <c:when test="${locale=='en'}">
-                                    <c:out value="${order.deliveryAddress.en}"/>
-                                </c:when>
-                                <c:when test="${locale=='ua'}">
-                                    <c:out value="${order.deliveryAddress.ua}"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:out value="${order.deliveryAddress.ua}"/>
-                                </c:otherwise>
-                            </c:choose>
-                        </td>
-                        <td><c:out value="${order.creationTime}"/></td>
-                        <td><c:out value="${order.consignee}"/></td>
-                        <td><c:out value="${order.fare}"/></td>
-                        <td><c:choose>
-                            <c:when test="${locale=='en'}">
-                                <c:out value="${order.status.en}"/>
-                            </c:when>
-                            <c:when test="${locale=='ua'}">
-                                <c:out value="${order.status.ua}"/>
-                            </c:when>
-                            <c:otherwise>
-                                <c:out value="${order.status.ua}"/>
-                            </c:otherwise>
-                        </c:choose>
-<%--                            <c:if test="${order.status.en eq confirmed}">--%>
-<%--                                <form action="/controller" method="post">--%>
-<%--                                    <input type="hidden" name="command" value="payOrder">--%>
-<%--                                    <input type="hidden" name="order" value="${order.id}">--%>
-<%--                                    <fmt:message key="button.pay" var="button_pay"/>--%>
-<%--                                    <input type="submit" value="${button_pay}">--%>
-<%--                                </form>--%>
-<%--                            </c:if>--%>
-                        </td>
-                        <td>
-                            <form action="/controller" method="do">
-                                <input type="hidden" name="command" value="clientViewOrder">
-                                <input type="hidden" name="orderID" value="${order.id}">
-                                <fmt:message key="button.show" var="button_show"/>
-                                <input type="submit" value="${button_show}">
-                            </form>
-                        </td>
-                    </tr>
+                    <div class="col-sm-6">
+                        <div class="card" style="margin: 3px">
+                            <div class="card-header">
+                                <fmt:message key="inner_text.order_number" var="order_number"/>
+                                <h5 class="card-title"><c:out value="${order_number}: ${order.id}"/></h5>
+                                <fmt:message key="inner_text.shipping_status" var="status"/>
+                                <c:out value="${status}: "/>
+                                <c:choose>
+                                    <c:when test="${locale=='en'}">
+                                        <c:out value="${order.status.en}"/>
+                                    </c:when>
+                                    <c:when test="${locale=='ua'}">
+                                        <c:out value="${order.status.ua}"/>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:out value="${order.status.ua}"/>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                            <div class="card-body">
+                                <ul class="list-group list-group-flush">
+                                    <li class="list-group-item"><fmt:message key="inner_text.from" var="from"/>
+                                        <c:out value="${from}: "/>
+                                        <c:choose>
+                                            <c:when test="${locale=='en'}">
+                                                <c:out value="${order.shippingAddress.en}"/>
+                                            </c:when>
+                                            <c:when test="${locale=='ua'}">
+                                                <c:out value="${order.shippingAddress.ua}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="${order.shippingAddress.ua}"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <fmt:message key="inner_text.to" var="to"/>
+                                        <c:out value="${to}: "/>
+                                        <c:choose>
+                                            <c:when test="${locale=='en'}">
+                                                <c:out value="${order.deliveryAddress.en}"/>
+                                            </c:when>
+                                            <c:when test="${locale=='ua'}">
+                                                <c:out value="${order.deliveryAddress.ua}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="${order.deliveryAddress.ua}"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <fmt:message key="inner_text.create_date" var="create_date"/>
+                                        <fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${order.creationTime}"
+                                                        var="time"/>
+                                        <c:out value="${create_date}: ${time}"/>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <fmt:message key="inner_text.consignee" var="consignee"/>
+                                        <c:out value="${consignee}: ${order.consignee}"/>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <fmt:message key="inner_text.fare" var="fare"/>
+                                        <c:out value="${fare}: ${order.fare}"/>
+                                    </li>
+
+                                </ul>
+                                <form action="/controller" method="do">
+                                    <input type="hidden" name="command" value="clientViewOrder">
+                                    <input type="hidden" name="orderID" value="${order.id}">
+                                    <fmt:message key="button.show" var="button_show"/>
+                                    <button class="btn btn-primary" type="submit"><c:out value="${button_show}"/></button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
                 </c:forEach>
-            </table>
-        </c:if><br>
-        <%--For displaying Page numbers.
-        The when condition does not display a link for the current page--%>
-        <table>
-            <tr>
-                <c:forEach begin="1" end="${noOfPages}" var="i">
-                    <c:choose>
-                        <c:when test="${currentPage eq i}">
-                            <td><c:out value="${i}"/></td>
-                        </c:when>
-                        <c:otherwise>
-                            <td>
-                                <a href="/controller?command=clientCabinet&page_number=${i}&sort=${currentSort}">
-                                    <c:out value="${i}"/></a>
-                            </td>
-                        </c:otherwise>
-                    </c:choose>
-                </c:forEach>
-            </tr>
-        </table>
+            </div>
+        </c:if>
     </div>
 
-
-<%--    <aside class="sidebar">--%>
-<%--        <form action="/controller" method="post" style="display: inline">--%>
-<%--            <input type="hidden" name="command" value="editUser">--%>
-<%--            <input type="text" name="name" value="${client.name}" readonly><br>--%>
-<%--            <input type="text" name="surname" value="${client.surname}" readonly><br>--%>
-<%--            <input type="text" name="patronymic" value="${client.patronymic}" readonly><br>--%>
-<%--            <input type="text" name="email" value="${client.email}" readonly><br>--%>
-<%--            <input type="text" name="phone" value="${client.phone}" readonly><br>--%>
-<%--            <input type="submit" value="Edit">--%>
-<%--        </form>--%>
-<%--        <p><fmt:message key="userCabinet.user_balance"/><c:out value=" ${client.getBalance()}"/></p>--%>
-<%--        <form action="/controller" method="post">--%>
-<%--            <input type="hidden" name="command" value="recharge">--%>
-<%--            <input type="number" name="balance" value="0" autocomplete="false">--%>
-<%--            <fmt:message key="userCabinet.recharge_balance" var="recharge_balance"/>--%>
-<%--            <input type="submit" value="${recharge_balance}">--%>
-<%--        </form>--%>
-<%--    </aside>--%>
-<%--</div>--%>
+    <%--For displaying Page numbers.
+    The when condition does not display a link for the current page--%>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-center">
+            <c:forEach begin="1" end="${noOfPages}" var="i">
+                <c:choose>
+                    <c:when test="${currentPage eq i}">
+                        <li class="page-item disabled">
+                            <a class="page-link"
+                               href="/controller?command=clientCabinet&page_number=${i}&sort=${currentSort}">
+                                <c:out value="${i}"/></a>
+                        </li>
+                    </c:when>
+                    <c:otherwise>
+                        <li class="page-item">
+                            <a class="page-link"
+                               href="/controller?command=clientCabinet&page_number=${i}&sort=${currentSort}">
+                                <c:out value="${i}"/></a>
+                        </li>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+        </ul>
+    </nav>
+</div>
 <c:out value="${message}"/>
 <c:remove var="message"/>
 </body>

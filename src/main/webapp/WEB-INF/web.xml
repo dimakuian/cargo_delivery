@@ -12,12 +12,30 @@
     </welcome-file-list>
 
     <servlet>
+        <servlet-name>HOME</servlet-name>
+        <jsp-file>/index.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>HOME</servlet-name>
+        <url-pattern>/home</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
         <servlet-name>REGISTRATION</servlet-name>
         <jsp-file>/registration.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>REGISTRATION</servlet-name>
         <url-pattern>/registration</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CLIENT_CABINET</servlet-name>
+        <jsp-file>/WEB-INF/jsp/client/client_cabinet.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CLIENT_CABINET</servlet-name>
+        <url-pattern>/home/client</url-pattern>
     </servlet-mapping>
 
     <!--============================================================

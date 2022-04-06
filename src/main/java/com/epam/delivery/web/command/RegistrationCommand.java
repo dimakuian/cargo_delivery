@@ -69,7 +69,7 @@ public class RegistrationCommand implements Command {
             //check if exist login
             UserDao userDao = new UserDao(connectionBuilder);
             if (userDao.existsByLogin(login)) {
-                errorMessage = String.format("This login is already taken: %s", login);
+                errorMessage = String.format("This login is already taken: %s", login);//replace localization
                 request.getServletContext().setAttribute("message", errorMessage);
                 logger.trace("Set servlet context attribute: message --> " + errorMessage);
 
@@ -186,9 +186,9 @@ public class RegistrationCommand implements Command {
             session.setAttribute("user", user);
             logger.trace("Set the session attribute: user --> " + user);
 
-            String roleName = Role.getRole(user).getName();
-            session.setAttribute("role", roleName);
-            logger.trace("Set the session attribute: role --> " + roleName);
+            Role role = Role.getRole(user);
+            session.setAttribute("role", role);
+            logger.trace("Set the session attribute: role --> " + role);
 
             request.getServletContext().setAttribute("message", "successful");
             logger.trace("Set servlet context attribute: message --> " + "successful");

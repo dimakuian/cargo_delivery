@@ -19,13 +19,13 @@
 </c:choose>
 <fmt:setBundle basename="resource"/>
 <html>
-<c:set var="title" value="Registration" scope="page" />
-<%@include file="/WEB-INF/jspf/head.jspf"%>
+<c:set var="title" value="Registration" scope="page"/>
+<%@include file="/WEB-INF/jspf/head.jspf" %>
 <body>
 <c:out value="${message}"/>
 <c:remove var="message"/>
 <div class="header">
-    <%@include file="/WEB-INF/jspf/header.jspf"%>
+    <%@include file="/WEB-INF/jspf/header.jspf" %>
     <!-- Language switcher begin -->
     <form name="locales" action="<c:url value="/controller"/>" method="post">
         <label><select name="lang" onchange="this.form.submit()">
@@ -39,54 +39,86 @@
     </form>
     <!-- end Language switcher -->
 </div>
-<div class="container">
-    <form action="<c:url value="/controller"/>" method="post">
-        <input type="hidden" name="command" value="registration">
-        <fmt:message key="placeholder.register.create_login" var="placeholder_create_login"/>
-        <label>
-            <input type="text" name="login" placeholder="${placeholder_create_login}" required pattern="^(\w{4,15})$">
-        </label><br>
-        <fmt:message key="placeholder.register.enter_password" var="placeholder_entre_password"/>
-        <label for="psw"></label>
-        <input type="password" id="psw" name="password" placeholder="${placeholder_entre_password}" required
-               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}$"><br>
-        <label>
-            <input type="checkbox" onclick="showPsw('psw')">
-        </label><fmt:message key="input.show_password"/>
-        <fmt:message key="placeholder.confirm_password" var="placeholder_confirm_password"/>
-        <label for="conf_psw"></label>
-        <input type="password" id="conf_psw" name="confirm_password" placeholder="${placeholder_confirm_password}"
-               required><br>
-        <label>
-            <input type="checkbox" onclick="showPsw('conf_psw')">
-        </label><fmt:message key="input.show_password"/>
-        <div id="message">
-            <h3><fmt:message key="registration.message.validation_password"/></h3>
-            <p id="letter" class="invalid">A <b><fmt:message key="registration.message.lowercase"/></b> letter</p>
-            <p id="capital" class="invalid">A <b><fmt:message key="registration.message.uppercase"/></b> letter</p>
-            <p id="number" class="invalid">A <b><fmt:message key="registration.message.number"/></b></p>
-            <p id="length" class="invalid"><fmt:message key="registration.message.minimum"/>
-                <b><fmt:message key="registration.message.characters"/></b></p>
+<main class="my-form">
+    <div class="cotainer">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header"><fmt:message key="button.register"/></div>
+                    <div class="card-body">
+                        <form name="my-form" onsubmit="return validform('${locale}')" action="/controller" method="post">
+                            <input type="hidden" name="command" value="registration">
+
+                            <div class="form-group row">
+                                <label for="phone" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="registration.fields_name.login"/></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="login" class="form-control" name="login" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="password" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="registration.fields_name.password"/></label>
+                                <div class="col-md-6">
+                                    <input type="password" id="password" class="form-control" name="password" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="confirm_password" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="registration.fields_name.confirm_password"/></label>
+                                <div class="col-md-6">
+                                    <input type="password" id="confirm_password" class="form-control" name="confirm_password"
+                                           required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="name" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="registration.fields_name.name"/>
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="text" id="name" class="form-control" name="name" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="surname" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="registration.fields_name.surname"/></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="surname" class="form-control" name="surname" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="patronymic" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="registration.fields_name.patronymic"/></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="patronymic" class="form-control" name="patronymic" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="email" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="registration.fields_name.email"/></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="email" class="form-control" name="email" required>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="phone" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="registration.fields_name.phone"/></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="phone" class="form-control" name="tel" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary md">
+                                    <fmt:message key="button.register"/></button>
+                                <button type="button" onclick="window.location.href='/home'" class="btn btn-danger md">
+                                    <fmt:message key="button.cancel"/></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
         </div>
-        <fmt:message key="registration.placeholder.enter_name" var="placeholder_name"/>
-        <label><input type="text" name="name" placeholder="${placeholder_name}" required
-                      pattern="^[a-zA-Zа-яА-Я]+$"></label><br>
-        <fmt:message key="registration.placeholder.enter_surname" var="placeholder_surname"/>
-        <label><input type="text" name="surname" placeholder="${placeholder_surname}" required
-                      pattern="^[a-zA-Zа-яА-Я]+$"></label><br>
-        <fmt:message key="registration.placeholder.enter_patronymic" var="placeholder_patronymic"/>
-        <label><input type="text" name="patronymic" placeholder="${placeholder_patronymic}" required
-                      pattern="^[a-zA-Zа-яА-Я]+$"></label><br>
-        <fmt:message key="registration.placeholder.enter_email" var="placeholder_email"/>
-        <label><input type="email" name="email" placeholder="${placeholder_email}" required
-                      pattern='^[\w\-\.]+@([\w-]+\.)+[\w-]{2,4}$'></label><br>
-        <fmt:message key="registration.placeholder.enter_tel" var="placeholder_tel"/>
-        <label><input type="tel" name="tel" placeholder="${placeholder_tel}" required
-                      pattern="^(\+{1}(380){1}[0-9]{9}){1}$"></label><br>
-        <fmt:message key="button.register" var="register_button"/>
-        <input type="submit" value="${register_button}">
-        <button type="button" onclick="window.location.href='index.jsp'"><fmt:message key="button.cancel"/></button>
-    </form>
-</div>
+    </div>
+</main>
 </body>
 </html>

@@ -50,7 +50,7 @@ public class AdminCabinetCommand implements Command {
             if (admin != null && role == Role.ADMIN) {
 
                 int page = 1;
-                int recordsPerPage = 5;
+                int recordsPerPage = 6;
                 if (request.getParameter("page_number") != null)
                     page = Integer.parseInt(request.getParameter("page_number"));
 

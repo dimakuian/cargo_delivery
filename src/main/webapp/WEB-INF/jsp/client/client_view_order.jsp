@@ -36,46 +36,95 @@
     <input type="hidden" name="page" value="/controller?command=clientViewOrder&orderID=${orderBean.id}">
 </form>
 <!-- end Language switcher -->
-<div class="container-fluid">
-    <c:set value="${orderBean}" var="order"/>
-    <c:choose>
-        <c:when test="${locale=='en'}">
-            <c:out value="${order.shippingAddress.en}"/><br>
-            <c:out value="${order.deliveryAddress.en}"/><br>
-        </c:when>
-        <c:when test="${locale=='ua'}">
-            <c:out value="${order.shippingAddress.ua}"/><br>
-            <c:out value="${order.deliveryAddress.ua}"/><br>
-        </c:when>
-        <c:otherwise>
-            <c:out value="${order.shippingAddress.ua}"/><br>
-            <c:out value="${order.deliveryAddress.ua}"/><br>
-        </c:otherwise>
-    </c:choose>
-    <c:out value="${order.creationTime}"/><br>
-    <c:out value="${order.consignee}"/><br>
-    <c:out value="${order.description}"/><br>
-    <c:out value="${order.length}"/><br>
-    <c:out value="${order.height}"/><br>
-    <c:out value="${order.width}"/><br>
-    <c:out value="${order.weight}"/><br>
-    <c:out value="${order.volume}"/><br>
-    <c:out value="${order.fare}"/><br>
-    <c:if test="${order.deliveryDate ne null}">
-        <c:out value="${order.deliveryDate}"/>
-    </c:if>
-    <c:choose>
-        <c:when test="${locale=='en'}">
-            <c:out value="${order.status.en}"/><br>
-        </c:when>
-        <c:when test="${locale=='ua'}">
-            <c:out value="${order.status.ua}"/><br>
-        </c:when>
-        <c:otherwise>
-            <c:out value="${order.status.ua}"/><br>
-        </c:otherwise>
-    </c:choose>
-    <button onclick="window.location.href='/controller?command=clientCabinet'">Назад</button>
+<c:set value="${orderBean}" var="order"/>
+<div class="container">
+    <div class="card" style="margin: 3px">
+        <div class="card-header">
+            <fmt:message key="inner_text.order_number" var="order_number"/>
+            <h5 class="card-title"><c:out value="${order_number}: ${order.id}"/></h5>
+        </div>
+        <div class="card-body">
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><fmt:message key="inner_text.from" var="from"/>
+                    <c:out value="${from}: "/>
+                    <c:choose>
+                        <c:when test="${locale=='en'}">
+                            <c:out value="${order.shippingAddress.en}"/>
+                        </c:when>
+                        <c:when test="${locale=='ua'}">
+                            <c:out value="${order.shippingAddress.ua}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <c:out value="${order.shippingAddress.ua}"/>
+                        </c:otherwise>
+                    </c:choose>
+                </li>
+                <li class="list-group-item">
+                    <fmt:message key="inner_text.to" var="to"/>
+                    <c:out value="${to}: "/>
+                    <c:choose>
+                        <c:when test="${locale=='en'}">
+                            <c:out value="${order.deliveryAddress.en}"/>
+                        </c:when>
+                        <c:when test="${locale=='ua'}">
+                            <c:out value="${order.deliveryAddress.ua}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <c:out value="${order.deliveryAddress.ua}"/>
+                        </c:otherwise>
+                    </c:choose>
+                </li>
+                <li class="list-group-item">
+                    <fmt:message key="inner_text.create_date" var="create_date"/>
+                    <fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${order.creationTime}"
+                                    var="time"/>
+                    <c:out value="${create_date}: ${time}"/>
+                </li>
+                <li class="list-group-item">
+                    <fmt:message key="inner_text.consignee" var="consignee"/>
+                    <c:out value="${consignee}: ${order.consignee}"/>
+                </li>
+                <li class="list-group-item"><c:out value="${order.description}"/></li>
+                <fmt:message key="measurement_cm" var="cm"/>
+                <fmt:message key="parameters_length" var="length"/>
+                <li class="list-group-item"><c:out value="${length}: ${order.length} ${cm}"/></li>
+                <fmt:message key="parameters_height" var="height"/>
+                <li class="list-group-item"><c:out value="${height}: ${order.height} ${cm}"/></li>
+                <fmt:message key="parameters_width" var="width"/>
+                <li class="list-group-item"><c:out value="${width}: ${order.width} ${cm}"/></li>
+                <fmt:message key="parameters_weight" var="weight"/>
+                <fmt:message key="measurement_kg" var="kg"/>
+                <li class="list-group-item"><c:out value="${weight}: ${order.weight} ${kg}"/></li>
+                <fmt:message key="parameters_volume" var="volume"/>
+                <fmt:message key="measurement_cc" var="cc"/>
+                <li class="list-group-item"><c:out value="${volume}: ${order.volume} ${cc}"/></li>
+                <fmt:message key="inner_text.fare" var="fare"/>
+                <fmt:message key="inner_text.currency" var="currency"/>
+                <li class="list-group-item"><c:out value="${fare}: ${order.fare} ${currency}"/></li>
+
+                <c:if test="${order.deliveryDate ne null}">
+                    <li class="list-group-item"><c:out value="${order.deliveryDate}"/></li>
+                </c:if>
+                <li class="list-group-item">
+                    <fmt:message key="inner_text.shipping_status" var="status"/>
+                    <c:out value="${status}: "/>
+                    <c:choose>
+                        <c:when test="${locale=='en'}">
+                            <c:out value="${order.status.en}"/>
+                        </c:when>
+                        <c:when test="${locale=='ua'}">
+                            <c:out value="${order.status.ua}"/>
+                        </c:when>
+                        <c:otherwise>
+                            <c:out value="${order.status.ua}"/>
+                        </c:otherwise>
+                    </c:choose>
+                </li>
+                <button class="btn btn-primary" onclick="window.location.href='/controller?command=clientCabinet'">
+                    <fmt:message key="button.back"/></button>
+            </ul>
+        </div>
+    </div>
 </div>
 </body>
 </html>
