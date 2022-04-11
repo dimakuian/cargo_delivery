@@ -62,9 +62,10 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Client insert. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -83,9 +84,10 @@ public class ClientDao extends AbstractDao<Client,Long> {
             stat.setLong(8, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Client update. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -114,9 +116,10 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Client findById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return Optional.ofNullable(client);
     }
@@ -130,9 +133,10 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Client existsById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -150,9 +154,10 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Client findAll. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return clientList;
     }
@@ -164,9 +169,10 @@ public class ClientDao extends AbstractDao<Client,Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Client deleteById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -183,9 +189,10 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Client getByUserId. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return Optional.ofNullable(client);
     }
@@ -198,9 +205,10 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Client existsEmail. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -213,10 +221,10 @@ public class ClientDao extends AbstractDao<Client,Long> {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Client existsPhone. " + exception.getMessage());
-            exception.printStackTrace();
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }

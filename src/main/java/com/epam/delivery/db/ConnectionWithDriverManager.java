@@ -29,6 +29,8 @@ public class ConnectionWithDriverManager implements ConnectionBuilder {
             props.load(in);
             String url = props.getProperty("connection.url");
             connection = DriverManager.getConnection(url);
+            connection.setTransactionIsolation(Connection.TRANSACTION_READ_COMMITTED);
+            connection.setAutoCommit(false);
         } catch (IOException exception) {
             System.err.println("Cannot find file.");
         } catch (SQLException exception) {
@@ -36,6 +38,7 @@ public class ConnectionWithDriverManager implements ConnectionBuilder {
         }
         return connection;
     }
+
 
     public static void createDataBase() {
         byte[] bytes = null;
@@ -61,7 +64,7 @@ public class ConnectionWithDriverManager implements ConnectionBuilder {
         } catch (SQLException sqlException) {
             logger.error("some problem with creating DB: " + sqlException.getMessage());
         } finally {
-            builder.closeConnection(con);
+            builder.commitAndClose(con);
         }
     }
 }

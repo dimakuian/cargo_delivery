@@ -29,14 +29,14 @@
         <url-pattern>/registration</url-pattern>
     </servlet-mapping>
 
-    <servlet>
-        <servlet-name>CLIENT_CABINET</servlet-name>
-        <jsp-file>/WEB-INF/jsp/client/client_cabinet.jsp</jsp-file>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CLIENT_CABINET</servlet-name>
-        <url-pattern>/home/client</url-pattern>
-    </servlet-mapping>
+<!--    <servlet>-->
+<!--        <servlet-name>CLIENT_CABINET</servlet-name>-->
+<!--        <jsp-file>/WEB-INF/jsp/client/client_cabinet.jsp</jsp-file>-->
+<!--    </servlet>-->
+<!--    <servlet-mapping>-->
+<!--        <servlet-name>CLIENT_CABINET</servlet-name>-->
+<!--        <url-pattern>/home/client</url-pattern>-->
+<!--    </servlet-mapping>-->
 
     <!--============================================================
 	Controller
@@ -69,7 +69,7 @@
         </init-param>
         <init-param>
             <param-name>client</param-name>
-            <param-value>clientCabinet editUser recharge payOrder editOrder createOrder viewCreateOrderPage clientViewOrder</param-value>
+            <param-value>clientCabinet editUser recharge payInvoice editOrder createOrder viewCreateOrderPage clientViewOrder clientViewInvoices</param-value>
         </init-param>
         <init-param>
             <param-name>common</param-name>

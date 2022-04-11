@@ -17,10 +17,13 @@ public interface ConnectionBuilder {
      * @param connection Connection to be committed and closed.
      */
 
-    default void closeConnection(Connection connection) {
+    default void commitAndClose(Connection connection) {
         if (connection != null) {
             try {
-                if (!connection.isClosed()) connection.close();
+                if (!connection.isClosed()) {
+                    connection.commit();
+                    connection.close();
+                }
             } catch (SQLException e) {
                 e.printStackTrace();
             }

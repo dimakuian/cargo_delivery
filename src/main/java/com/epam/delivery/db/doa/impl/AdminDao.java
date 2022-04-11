@@ -44,9 +44,10 @@ public class AdminDao extends AbstractDao<Admin, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Admin insert. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return result;
     }
@@ -62,9 +63,10 @@ public class AdminDao extends AbstractDao<Admin, Long> {
             stat.setLong(4, entity.getId());
             if (stat.executeUpdate() > 0) result = true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Admin update. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return result;
     }
@@ -83,9 +85,10 @@ public class AdminDao extends AbstractDao<Admin, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             System.err.println("SQLException while Admin findById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return Optional.ofNullable(admin);
     }
@@ -99,9 +102,10 @@ public class AdminDao extends AbstractDao<Admin, Long> {
             ResultSet rs = stat.executeQuery();
             if (rs.next()) result = true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             System.err.println("SQLException while Admin existsById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return result;
     }
@@ -119,9 +123,10 @@ public class AdminDao extends AbstractDao<Admin, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             System.err.println("SQLException while Admin findAll. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return admins;
     }
@@ -134,9 +139,10 @@ public class AdminDao extends AbstractDao<Admin, Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) result = true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             System.err.println("SQLException while Admin deleteById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return result;
     }
@@ -156,9 +162,10 @@ public class AdminDao extends AbstractDao<Admin, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             System.err.println("SQLException while Admin getById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return Optional.ofNullable(admin);
     }

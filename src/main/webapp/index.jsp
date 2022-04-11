@@ -19,10 +19,10 @@
 </c:choose>
 <fmt:setBundle basename="resource"/>
 <html>
-<c:set var="title" value="Home" scope="page" />
-<%@include file="WEB-INF/jspf/head.jspf"%>
+<c:set var="title" value="Home" scope="page"/>
+<%@include file="WEB-INF/jspf/head.jspf" %>
 <body>
-<%@include file="WEB-INF/jspf/header.jspf"%>
+<%@include file="WEB-INF/jspf/header.jspf" %>
 <!-- Language switcher begin -->
 
 <form name="locales" action="/controller" method="post">
@@ -66,26 +66,26 @@
         </c:forEach>
     </table>
     <h1><fmt:message key="index.tariffs"/></h1>
-<%--    <table>--%>
-<%--        <tr>--%>
-<%--            <th>Weight, including up to ...kg.</th> <!--replace to fmt:-->--%>
-<%--            <th>including up to 500km, hrn.</th> <!--replace to fmt:-->--%>
-<%--            <th>including up to 700km, hrn.</th> <!--replace to fmt:-->--%>
-<%--            <th>including up to 900km, hrn.</th> <!--replace to fmt:-->--%>
-<%--            <th>including up to 1200km, hrn.</th> <!--replace to fmt:-->--%>
-<%--            <th>including up to 1500km, hrn.</th> <!--replace to fmt:-->--%>
-<%--        </tr>--%>
-<%--        <c:forEach items="${tariffs}" var="tarif">--%>
-<%--            <tr>--%>
-<%--                <td>${tarif.weight}</td>--%>
-<%--                <td>${tarif.priceUpTo500km}</td>--%>
-<%--                <td>${tarif.priceUpTo700km}</td>--%>
-<%--                <td>${tarif.priceUpTo900km}</td>--%>
-<%--                <td>${tarif.priceUpTo1200km}</td>--%>
-<%--                <td>${tarif.priceUpTo1500km}</td>--%>
-<%--            </tr>--%>
-<%--        </c:forEach>--%>
-<%--    </table>--%>
+    <%--    <table>--%>
+    <%--        <tr>--%>
+    <%--            <th>Weight, including up to ...kg.</th> <!--replace to fmt:-->--%>
+    <%--            <th>including up to 500km, hrn.</th> <!--replace to fmt:-->--%>
+    <%--            <th>including up to 700km, hrn.</th> <!--replace to fmt:-->--%>
+    <%--            <th>including up to 900km, hrn.</th> <!--replace to fmt:-->--%>
+    <%--            <th>including up to 1200km, hrn.</th> <!--replace to fmt:-->--%>
+    <%--            <th>including up to 1500km, hrn.</th> <!--replace to fmt:-->--%>
+    <%--        </tr>--%>
+    <%--        <c:forEach items="${tariffs}" var="tarif">--%>
+    <%--            <tr>--%>
+    <%--                <td>${tarif.weight}</td>--%>
+    <%--                <td>${tarif.priceUpTo500km}</td>--%>
+    <%--                <td>${tarif.priceUpTo700km}</td>--%>
+    <%--                <td>${tarif.priceUpTo900km}</td>--%>
+    <%--                <td>${tarif.priceUpTo1200km}</td>--%>
+    <%--                <td>${tarif.priceUpTo1500km}</td>--%>
+    <%--            </tr>--%>
+    <%--        </c:forEach>--%>
+    <%--    </table>--%>
 </div>
 </body>
 </html>

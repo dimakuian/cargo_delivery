@@ -64,6 +64,10 @@ public class ClientCabinetCommand implements Command {
                 ArrayList<Invoice> invoices = new ArrayList<>(invoiceDao.findClientInvoices(client.getId()));
                 logger.trace("Found in DB: client's invoices --> " + invoices);
 
+                int noOfNotPaidClientInvoices = invoiceDao.getNoOfNotPaidClientInvoices(client.getId());
+                logger.trace("Found in DB: client's number invoices to pay --> " + noOfNotPaidClientInvoices);
+                request.setAttribute("notPaidInvoices", noOfNotPaidClientInvoices);
+
                 int noOfRecords = orderDao.getNoOfUserOrders(client.getId());
                 int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
                 request.setAttribute("noOfPages", noOfPages);
@@ -78,7 +82,7 @@ public class ClientCabinetCommand implements Command {
                 request.setAttribute("clientInvoices", invoices);
                 logger.trace("Set the servlet attribute: clientInvoices --> " + invoices);
 
-                session.setAttribute("clientOrders", orders);
+                request.setAttribute("clientOrders", orders);
                 logger.trace("Set the session attribute: clientOrders --> " + orders);
 
                 session.setAttribute("client", client);

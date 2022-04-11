@@ -121,7 +121,7 @@
                     </c:choose>
                 </li>
                 <button class="btn btn-primary" onclick="window.location.href='/controller?command=clientCabinet'">
-                    <fmt:message key="button.back"/></button>
+                    <fmt:message key="button.back_to_orders"/></button>
             </ul>
         </div>
     </div>

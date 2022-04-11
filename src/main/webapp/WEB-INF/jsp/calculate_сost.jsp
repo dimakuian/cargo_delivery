@@ -40,77 +40,159 @@
     <input type="hidden" name="page" value="/controller?command=viewCalculateCost">
 </form>
 <!-- end Language switcher -->
-<div class="count_container">
-    <c:set var="localitiesBeanList" value="${applicationScope['localities']}"/>
-    <form action="/controller" method="post"
-          oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)">
-        <input type="hidden" name="command" value="calculateCost">
-        <h5><fmt:message key="inner_text.rout"/></h5>
-        <label>
-            <label>
-                <select id="ship" class="address" list="shipping" name="shipping_address" required>
-                    <c:forEach items="${localitiesBeanList}" var="bean">
-                        <option value="${bean.localityID}"><c:out value="#${bean.localityID} "/>
-                            <c:choose>
-                                <c:when test="${locale=='en'}">
-                                    <c:out value="${bean.description.en}"/>
-                                </c:when>
-                                <c:when test="${locale=='ua'}">
-                                    <c:out value="${bean.description.ua}"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:out value="${bean.description.ua}"/>
-                                </c:otherwise>
-                            </c:choose>
-                        </option>
-                    </c:forEach>
-                </select>
-            </label>
-            <span>==&gt</span>
-            <label>
-                <select id="deliv" class="address" list="delivery" name="delivery_address" required>
-                    <c:forEach items="${localitiesBeanList}" var="bean">
-                        <option value="${bean.localityID}"><c:out value="#${bean.localityID} "/>
-                            <c:choose>
-                                <c:when test="${locale=='en'}">
-                                    <c:out value="${bean.description.en}"/>
-                                </c:when>
-                                <c:when test="${locale=='ua'}">
-                                    <c:out value="${bean.description.ua}"/>
-                                </c:when>
-                                <c:otherwise>
-                                    <c:out value="${bean.description.ua}"/>
-                                </c:otherwise>
-                            </c:choose>
-                        </option>
-                    </c:forEach>
-                </select>
-            </label>
-        </label>
-        <br>
-        <label class="param" for="length"><fmt:message key="inner_text.length_cm"/> </label>
-        <input id="length" name="length" type="number" required min="0.1" max="70" step="any" value="1"
-               title="length can't be less the 1mm"/><br>
-        <label class="param" for="height"><fmt:message key="inner_text.height_cm"/> </label>
-        <input id="height" name="height" type="number" required min="0.1" max="70" step="any" value="1"
-               title="height can't be less the 1mm"/><br>
-        <label class="param" for="width"><fmt:message key="inner_text.width_cm"/></label>
-        <input id="width" name="width" type="number" required min="0.1" max="70" step="any" value="1"
-               title="width can't be less the 1mm"/><br>
-        <label class="param" for="volume"><fmt:message key="inner_text.volume_cc"/></label>
-        <input type="text" id="volume" name="volume" value="1" readonly>
-        <br>
-        <label class="param" for="weight"><fmt:message key="inner_text.weight_kg"/></label>
-        <input id="weight" name="weight" type="number" required min="0.1" max="100" step="any" value="1"/><br>
-        <button type="submit"><fmt:message key="button.count"/></button>
-    </form>
-    <c:if test="${not empty total}">
-        <fmt:message key="countCost.total_to_pay"/><c:out value=" ${total} "/><fmt:message key="inner_text.currency"/> <br>
-        <button type="button" onclick="location.href='/controller?command=viewCalculateCost'"><fmt:message
-                key="button.cancel"/></button>
-        <c:remove var="total"/>
-    </c:if>
-</div>
+<c:set var="localitiesBeanList" value="${applicationScope['localities']}"/>
+
 <%-- CONTENT --%>
+<main class="count_coast-form">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header"><fmt:message key="button.count_coast"/></div>
+                    <div class="card-body">
+                        <form action="/controller" method="post" onsubmit="return myFunction()"
+                              oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)">
+                            <input type="hidden" name="command" value="calculateCost">
+
+                            <!-- field for delivery shipping address -->
+                            <div class="form-group row">
+                                <label for="ship" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.shipping_address"/></label>
+                                <div class="col-md-6">
+                                    <select id="ship" list="shipping" name="shipping_address" class="form-control"
+                                            required>
+                                        <c:forEach items="${localitiesBeanList}" var="bean">
+                                            <option value="${bean.localityID}"><c:out value="#${bean.localityID} "/>
+                                                <c:choose>
+                                                    <c:when test="${locale=='en'}">
+                                                        <c:out value="${bean.description.en}"/>
+                                                    </c:when>
+                                                    <c:when test="${locale=='ua'}">
+                                                        <c:out value="${bean.description.ua}"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:out value="${bean.description.ua}"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- field for delivery delivery address -->
+                            <div class="form-group row">
+                                <label for="deliv" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.delivery_address"/></label>
+                                <div class="col-md-6">
+                                    <select id="deliv" list="shipping" name="delivery_address" class="form-control"
+                                            required>
+                                        <c:forEach items="${localitiesBeanList}" var="bean">
+                                            <option value="${bean.localityID}"><c:out value="#${bean.localityID} "/>
+                                                <c:choose>
+                                                    <c:when test="${locale=='en'}">
+                                                        <c:out value="${bean.description.en}"/>
+                                                    </c:when>
+                                                    <c:when test="${locale=='ua'}">
+                                                        <c:out value="${bean.description.ua}"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:out value="${bean.description.ua}"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- field for delivery length -->
+                            <div class="form-group row">
+                                <label for="length" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.length_cm"/></label>
+                                <div class="col-md-6">
+                                    <input type="number" id="length" name="length" class="form-control" required
+                                           min="0.1" max="70" step="any" value="1">
+                                </div>
+                            </div>
+
+                            <!-- field for delivery height -->
+                            <div class="form-group row">
+                                <label for="height" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.height_cm"/></label>
+                                <div class="col-md-6">
+                                    <input type="number" id="height" name="height" class="form-control" required
+                                           min="0.1" max="70" step="any" value="1">
+                                </div>
+                            </div>
+
+                            <!-- field for delivery width -->
+                            <div class="form-group row">
+                                <label for="width" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.width_cm"/></label>
+                                <div class="col-md-6">
+                                    <input type="number" id="width" name="width" class="form-control" required
+                                           min="0.1" max="70" step="any" value="1">
+                                </div>
+                            </div>
+
+                            <!-- field for delivery volume -->
+                            <div class="form-group row">
+                                <label for="volume" class="col-md-4 col-form-label text-md-right">
+                                    <span><fmt:message key="inner_text.volume_cc"/><sup>3</sup></span>
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="text" id="volume" name="volume" value="1" class="form-control"
+                                           readonly>
+                                </div>
+                            </div>
+
+                            <!-- field for delivery weight -->
+                            <div class="form-group row">
+                                <label for="weight" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.weight_kg"/></label>
+                                <div class="col-md-6">
+                                    <input id="weight" name="weight" type="number" class="form-control" required
+                                           min="0.1" max="100" step="any" value="1">
+                                </div>
+                            </div>
+
+                            <!-- button for count coast -->
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary md">
+                                    <fmt:message key="button.count"/></button>
+
+                                <c:if test="${not empty total}">
+                                    <!-- show delivery coast -->
+                                    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                        <strong><fmt:message key="countCost.total_to_pay"/></strong>
+                                        <c:out value=" ${total} "/><fmt:message key="inner_text.currency"/>
+
+                                        <!-- close message -->
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                        <c:remove var="total"/>
+                                    </div>
+                                </c:if>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script charset="utf-8">
+    function myFunction() {
+        var ship = document.getElementById("ship").value;
+        var deliv = document.getElementById("deliv").value;
+        <fmt:message key="message.address_mast_be_different" var="similar_address"/>
+        if (ship == deliv) {
+            alert("${similar_address}");
+            return false;
+        }
+    }
+</script>
 </body>
 </html>

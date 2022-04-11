@@ -34,13 +34,12 @@ public class ConnectionPool implements ConnectionBuilder {
     }
 
     public Connection getConnection() {
-        Connection con = null;
+        Connection connection = null;
         try {
-            con = getDataSource().getConnection();
+            connection = getDataSource().getConnection();
         } catch (SQLException e) {
             logger.fatal("Can't get sql connection from DataSource" + e.getMessage());
         }
-        return con;
+        return connection;
     }
-
 }

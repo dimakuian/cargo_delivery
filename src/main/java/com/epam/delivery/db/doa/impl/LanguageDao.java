@@ -46,9 +46,10 @@ public class LanguageDao extends AbstractDao <Language,Long> {
                 return true;
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Language insert. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -62,9 +63,10 @@ public class LanguageDao extends AbstractDao <Language,Long> {
             stat.setLong(3, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Language update. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -81,9 +83,10 @@ public class LanguageDao extends AbstractDao <Language,Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Language findById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return Optional.ofNullable(language);
     }
@@ -97,9 +100,10 @@ public class LanguageDao extends AbstractDao <Language,Long> {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Language existsById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -117,9 +121,10 @@ public class LanguageDao extends AbstractDao <Language,Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Language findAll. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return languageList;
     }
@@ -131,11 +136,10 @@ public class LanguageDao extends AbstractDao <Language,Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Language deleteById. " + exception.getMessage());
-            exception.printStackTrace();
-
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }

@@ -4,6 +4,7 @@ import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.Fields;
 import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.db.doa.SqlQuery;
+import com.epam.delivery.db.entities.Client;
 import com.epam.delivery.db.entities.Invoice;
 
 import java.sql.*;
@@ -39,9 +40,10 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
                 return true;
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Invoice insert. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -58,9 +60,10 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
             stat.setLong(6, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Invoice update. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -78,9 +81,10 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Invoice findById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return Optional.ofNullable(invoice);
     }
@@ -96,9 +100,10 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Invoice existsById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -116,9 +121,10 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Invoice findAll. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return list;
     }
@@ -130,9 +136,10 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Invoice deleteById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -150,11 +157,49 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Invoice findAll. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return list;
+    }
+
+    public boolean payClientInvoice(Invoice invoice, Client client) {
+        Connection connection = builder.getConnection();
+        try (PreparedStatement invoicePayStat = connection.prepareStatement(SqlQuery.SQL_QUERY__INVOICE_UPDATE_SET_PAY_STATUS_BY_ID);
+             PreparedStatement clientBalanceStat = connection.prepareStatement(SqlQuery.SQL_QUERY__CLIENT_UPDATE_BALANCE)) {
+            invoicePayStat.setLong(1, invoice.getId());
+            double currentBalance = client.getBalance();
+            double newBalance = currentBalance - invoice.getSum();
+            clientBalanceStat.setDouble(1, newBalance);
+            clientBalanceStat.setLong(2, client.getId());
+            if (invoicePayStat.executeUpdate() > 0 && clientBalanceStat.executeUpdate() > 0) return true;
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Invoice payClientInvoice. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return false;
+    }
+
+    public int getNoOfNotPaidClientInvoices(long clientId) {
+        Connection connection = builder.getConnection();
+        try (PreparedStatement stat = connection.prepareStatement(SqlQuery.SQL_QUERY__INVOICE_COUNT_CLIENT_NOT_PAID_INVOICES)) {
+            stat.setLong(1, clientId);
+            try (ResultSet rs = stat.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Invoice getNoOfNotPaidClientInvoices. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return 0;
     }
 
     /**

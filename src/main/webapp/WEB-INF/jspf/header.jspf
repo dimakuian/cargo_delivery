@@ -50,8 +50,18 @@ Header (top area).
             <c:when test="${not empty user}">
                 <c:choose>
                     <c:when test="${role.getName() eq 'client'}">
-                        <button type="button" onclick="window.location.href='/controller?command=clientCabinet'"
-                                class="btn btn-light"><c:out value="${user.getLogin()}"/></button>
+                        <div class="btn-group dropleft">
+                            <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                <c:out value="${user.getLogin()}"/></button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="<c:url value="/controller?command=clientCabinet"/>">
+                                    <fmt:message key="inner_text.my_orders"/></a>
+                                <a class="dropdown-item" href="<c:url value="/controller?command=clientViewInvoices"/>">
+                                    <fmt:message key="inner_text.my_invoices"/></a>
+                                <a class="dropdown-item" href="#">User details</a>
+                            </div>
+                        </div>
                     </c:when>
                     <c:when test="${role.getName() eq 'admin'}">
                         <button type="button" onclick="window.location.href='/controller?command=adminCabinet'"
@@ -65,4 +75,4 @@ Header (top area).
         </c:choose>
     </div>
 </nav>
-<script src="myJSFunction.js"></script>
+<%--<script src="myJSFunction.js"></script>--%>

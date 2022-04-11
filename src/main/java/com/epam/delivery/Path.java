@@ -14,13 +14,14 @@ public final class Path {
     // pages
     public static final String PAGE__ERROR_PAGE = "/WEB-INF/jsp/error_page.jsp";
     public static final String PAGE__CREATE_ORDER = "/WEB-INF/jsp/client/create_order.jsp";
-    public static final String PAGE__CLIENT_CABINET = "/home/client";
+    public static final String PAGE__CLIENT_CABINET = "/WEB-INF/jsp/client/client_cabinet.jsp";
     public static final String PAGE__COUNT_COAST = "/WEB-INF/jsp/calculate_сost.jsp";
     public static final String PAGE__REGISTRATION = "/WEB-INF/jsp/registration.jsp";
     public static final String PAGE__EDIT_ORDER = "/edit_order.jsp";
     public static final String PAGE__ADMIN_CABINET = "/WEB-INF/jsp/admin/admin_cabinet.jsp";
     public static final String PAGE__ADMIN_VIEW_ORDER = "/WEB-INF/jsp/admin/admin_view_order.jsp";
     public static final String PAGE__CLIENT_VIEW_ORDER = "/WEB-INF/jsp/client/client_view_order.jsp";
+    public static final String PAGE__CLIENT_VIEW_INVOICES = "/WEB-INF/jsp/client/client_view_invoices.jsp";
 
 
 

@@ -45,9 +45,10 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
                 return true;
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while ShippingStatus insert. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -60,9 +61,10 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
             stat.setLong(2, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while ShippingStatus update. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -79,9 +81,10 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while ShippingStatus findById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return Optional.ofNullable(status);
     }
@@ -95,9 +98,10 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while ShippingStatus existById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -115,9 +119,10 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while ShippingStatus findAll. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return statusList;
     }
@@ -129,9 +134,10 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while ShippingStatus deleteById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -162,9 +168,10 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while ShippingStatus getTranslateByStatusIdAndLangId. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return null;
     }

@@ -33,7 +33,7 @@
         <option value="en"><fmt:message key="language.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="/controller?command=adminCabinet&page_number=${i}&sort=${currentSort}">
+    <input type="hidden" name="page" value="/controller?command=adminCabinet&page_number=${currentPage}&sort=${currentSort}">
 </form>
 <!-- end Language switcher -->
 <div>
@@ -150,7 +150,7 @@
                                         <form action="/controller" method="post">
                                             <input type="hidden" name="command" value="confirmOrder">
                                             <input type="hidden" name="order" value="${order.getId()}">
-                                            <fmt:message key="adminCabinet.button.confirm" var="button_confirm"/>
+                                            <fmt:message key="button.confirm" var="button_confirm"/>
                                             <input type="submit" class="btn btn-success" name="procedure"
                                                    value="${button_confirm}">
                                             <fmt:message key="button.cancel" var="button_cancel"/>
@@ -195,8 +195,8 @@
                                     <input type="hidden" name="command" value="adminViewOrder">
                                     <input type="hidden" name="orderID" value="${order.id}">
                                     <fmt:message key="button.show" var="button_show"/>
-                                    <button class="btn btn-primary" type="submit"><c:out
-                                            value="${button_show}"/></button>
+                                    <button class="btn btn-primary" type="submit"><c:out value="${button_show}"/>
+                                    </button>
                                 </form>
                             </div>
                         </div>

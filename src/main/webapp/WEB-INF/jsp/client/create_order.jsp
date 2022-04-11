@@ -37,85 +37,217 @@
     <input type="hidden" name="page" value="controller?command=viewCreateOrderPage">
 </form>
 <!-- end Language switcher -->
-<c:choose>
-    <c:when test="${role.getName() eq 'client'}">
-        <div class="count_container">
-            <c:set var="localitiesBeanList" value="${applicationScope['localities']}"/>
-            <form action="<c:url value="/controller"/>" method="post"
-                  oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*
-                  parseFloat(width.value)).toFixed(2)">
-
-                <input type="hidden" name="command" value="createOrder">
-                <h5><fmt:message key="inner_text.rout"/></h5>
-                <label>
-                    <select id="ship" class="address" list="shipping" name="shipping_address" required>
-                        <c:forEach items="${localitiesBeanList}" var="bean">
-                            <option value="${bean.localityID}"><c:out value="#${bean.localityID} "/>
-                                <c:choose>
-                                    <c:when test="${locale=='en'}">
-                                        <c:out value=" ${bean.description.en}"/>
-                                    </c:when>
-                                    <c:when test="${locale=='ua'}">
-                                        <c:out value="${bean.description.ua}"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:out value=" ${bean.description.ua}"/>
-                                    </c:otherwise>
-                                </c:choose>
-                            </option>
-                        </c:forEach>
-                    </select>
-                </label>
-                <span>==&gt</span>
-                <label>
-                    <select id="deliv" class="address" list="delivery" name="delivery_address" required>
-                        <c:forEach items="${localitiesBeanList}" var="bean">
-                            <option value="${bean.localityID}"><c:out value="#${bean.localityID} "/>
-                                <c:choose>
-                                    <c:when test="${locale=='en'}">
-                                        <c:out value=" ${bean.description.en}"/>
-                                    </c:when>
-                                    <c:when test="${locale=='ua'}">
-                                        <c:out value="${bean.description.ua}"/>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:out value="${bean.description.ua}"/>
-                                    </c:otherwise>
-                                </c:choose>
-                            </option>
-                        </c:forEach>
-                    </select>
-                </label>
-                <br>
-                <label class="param" for="length"><fmt:message key="inner_text.length_cm"/></label>
-                <input id="length" name="length" type="number" required min="0.1" max="70" step="any" value="1"
-                       title="length can't be less the 1mm"/>
-                <label class="param" for="height"><fmt:message key="inner_text.height_cm"/></label>
-                <input id="height" name="height" type="number" required min="0.1" max="70" step="any" value="1"
-                       title="height can't be less the 1mm"/>
-                <label class="param" for="width"><fmt:message key="inner_text.width_cm"/></label>
-                <input id="width" name="width" type="number" required min="0.1" max="70" step="any" value="1"
-                       title="width can't be less the 1mm"/>
-                <label class="param" for="volume"><fmt:message key="inner_text.volume_cc"/></label>
-                <input type="text" id="volume" name="volume" value="1" readonly>
-                <label class="param" for="weight"><fmt:message key="inner_text.weight_kg"/></label>
-                <input id="weight" name="weight" type="number" required min="0.1" max="100" step="any" value="1"/><br>
-                <fmt:message key="placeholder.consignee" var="consignee_placeholder"/>
-                <label><input style="width: 48%" type="text" name="consignee" required
-                              placeholder="${consignee_placeholder}"></label><br>
-                <fmt:message key="placeholder.description" var="description_placeholder"/>
-                <label><input style="width: 48%" type="text" name="description" required
-                              placeholder="${description_placeholder}">
-                </label><br>
-                <fmt:message key="input.create_order" var="creteOrder"/>
-                <input type="submit" value="${creteOrder}"/>
-            </form>
-        </div>
-    </c:when>
-    <c:otherwise>
-        <p><fmt:message key="message.login_before"/></p>
-    </c:otherwise>
-</c:choose>
+<c:set var="localitiesBeanList" value="${applicationScope['localities']}"/>
 <%-- CONTENT --%>
+<main class="create_order-form">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header"><fmt:message key="button.create_order"/></div>
+                    <div class="card-body">
+                        <form name="create_order-form" onsubmit="return validformCreateOrder()" action="/controller"
+                              method="post"
+                              oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)">
+                            <input type="hidden" name="command" value="createOrder">
+
+                            <!-- field for delivery shipping address -->
+                            <div class="form-group row">
+                                <label for="ship" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.shipping_address"/></label>
+                                <div class="col-md-6">
+                                    <select id="ship" list="shipping" name="shipping_address" class="form-control"
+                                            required>
+                                        <c:forEach items="${localitiesBeanList}" var="bean">
+                                            <option value="${bean.localityID}"><c:out value="#${bean.localityID} "/>
+                                                <c:choose>
+                                                    <c:when test="${locale=='en'}">
+                                                        <c:out value="${bean.description.en}"/>
+                                                    </c:when>
+                                                    <c:when test="${locale=='ua'}">
+                                                        <c:out value="${bean.description.ua}"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:out value="${bean.description.ua}"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- field for delivery delivery address -->
+                            <div class="form-group row">
+                                <label for="deliv" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.delivery_address"/></label>
+                                <div class="col-md-6">
+                                    <select id="deliv" list="shipping" name="delivery_address" class="form-control"
+                                            required>
+                                        <c:forEach items="${localitiesBeanList}" var="bean">
+                                            <option value="${bean.localityID}"><c:out value="#${bean.localityID} "/>
+                                                <c:choose>
+                                                    <c:when test="${locale=='en'}">
+                                                        <c:out value="${bean.description.en}"/>
+                                                    </c:when>
+                                                    <c:when test="${locale=='ua'}">
+                                                        <c:out value="${bean.description.ua}"/>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <c:out value="${bean.description.ua}"/>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- field for delivery length -->
+                            <div class="form-group row">
+                                <label for="length" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.length_cm"/></label>
+                                <div class="col-md-6">
+                                    <input type="number" id="length" name="length" class="form-control" required
+                                           min="0.1" max="70" step="any" value="1">
+                                </div>
+                            </div>
+
+                            <!-- field for delivery height -->
+                            <div class="form-group row">
+                                <label for="height" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.height_cm"/></label>
+                                <div class="col-md-6">
+                                    <input type="number" id="height" name="height" class="form-control" required
+                                           min="0.1" max="70" step="any" value="1">
+                                </div>
+                            </div>
+
+                            <!-- field for delivery width -->
+                            <div class="form-group row">
+                                <label for="width" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.width_cm"/></label>
+                                <div class="col-md-6">
+                                    <input type="number" id="width" name="width" class="form-control" required
+                                           min="0.1" max="70" step="any" value="1">
+                                </div>
+                            </div>
+
+                            <!-- field for delivery volume -->
+                            <div class="form-group row">
+                                <label for="volume" class="col-md-4 col-form-label text-md-right">
+                                    <span><fmt:message key="inner_text.volume_cc"/><sup>3</sup></span>
+                                </label>
+                                <div class="col-md-6">
+                                    <input type="text" id="volume" name="volume" value="1" class="form-control"
+                                           readonly>
+                                </div>
+                            </div>
+
+                            <!-- field for delivery weight -->
+                            <div class="form-group row">
+                                <label for="weight" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.weight_kg"/></label>
+                                <div class="col-md-6">
+                                    <input id="weight" name="weight" type="number" class="form-control" required
+                                           min="0.1" max="100" step="any" value="1">
+                                </div>
+                            </div>
+
+                            <!-- field for delivery consignee -->
+                            <div class="form-group row">
+                                <label for="consignee" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.consignee"/></label>
+                                <div class="col-md-6">
+                                    <input id="consignee" name="consignee" type="text" class="form-control" required>
+                                </div>
+                            </div>
+
+                            <!-- field for delivery description -->
+                            <div class="form-group row">
+                                <label for="description" class="col-md-4 col-form-label text-md-right">
+                                    <fmt:message key="inner_text.description"/></label>
+                                <div class="col-md-6">
+                                    <input type="text" id="description" class="form-control" name="description"
+                                           required>
+                                </div>
+                            </div>
+
+                            <!-- button for count coast -->
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-primary md">
+                                    <fmt:message key="button.create_order"/></button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+<script>
+    <%--function validformCreateOrder() {--%>
+    <%--    var consignee = document.getElementById("consignee").value;--%>
+    <%--    var consigneeRegex = /([a-zA-Zа-яА-Я,.' -]{2,})((\+38)?[0-9]{10}){1}/;--%>
+    <%--    var description = document.getElementById("description").value;--%>
+    <%--    var descriptionRegex = /([0-9a-zA-Zа-яА-Я,.'\-]{3,}\s?)+/;--%>
+    <%--    var shipping_address = document.getElementById("ship").value;--%>
+    <%--    var delivery_address = document.getElementById("deliv").value;--%>
+    <%--    <fmt:message key="message.address_mast_be_different" var="simmilar_address"/>--%>
+    <%--    <fmt:message key="message.not_empty_consignee" var="empty_consignee"/>--%>
+    <%--    <fmt:message key="message.not_validate_consignee" var="validate_consignee"/>--%>
+    <%--    <fmt:message key="message.not_empty_description" var="empty_description"/>--%>
+    <%--    <fmt:message key="message.not_validate_description" var="validate_description"/>--%>
+
+    <%--    //check consignee--%>
+    <%--    if (consignee == null || consignee == "") {--%>
+    <%--        alert("${empty_consignee}");--%>
+    <%--        return false;--%>
+
+    <%--    } else if (!consigneeRegex.test(consignee)) {--%>
+    <%--        alert("${validate_consignee}");--%>
+    <%--        return false;--%>
+
+    <%--        //check description--%>
+    <%--    } else if (description == null || description == "") {--%>
+    <%--        alert("${empty_description}");--%>
+    <%--        return false;--%>
+
+    <%--    } else if (!descriptionRegex.test(description)) {--%>
+    <%--        alert("${validate_description}");--%>
+    <%--        return false;--%>
+
+    <%--    } else if (shipping_address == delivery_address) {--%>
+    <%--        alert("${simmilar_address}");--%>
+    <%--        return false;--%>
+    <%--    }--%>
+    <%--}--%>
+    function validformCreateOrder() {
+        var consignee = document.forms["create_order-form"]["consignee"].value;
+        var consigneeRegex = /([a-zA-Zа-яА-Я,.' -]{2,})((\+38)?[0-9]{10}){1}/;
+        var description = document.forms["create_order-form"]["description"].value;
+        var descriptionRegex = /([0-9a-zA-Zа-яА-Я,.'\-]{3,}\s?)+/;
+        var shipping_address = document.forms["create_order-form"]["shipping_address"].value;
+        var delivery_address = document.forms["create_order-form"]["delivery_address"].value;
+
+        <fmt:message key="message.not_validate_consignee" var="validate_consignee"/>
+        <fmt:message key="message.not_validate_description" var="validate_description"/>
+        <fmt:message key="message.address_mast_be_different" var="similar_address"/>
+        //check consignee
+
+         if (!consigneeRegex.test(consignee)) {
+            alert("${validate_consignee}");
+            return false;
+
+        } else if (!descriptionRegex.test(description)) {
+            alert("${validate_description}");
+            return false;
+
+        } else if (shipping_address == delivery_address) {
+            alert("${similar_address}");
+            return false;
+        }
+    }
+</script>
 </body>
 </html>

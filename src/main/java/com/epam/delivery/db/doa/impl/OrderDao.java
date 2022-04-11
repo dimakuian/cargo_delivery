@@ -194,7 +194,6 @@ public class OrderDao extends AbstractDao<Order, Long> {
         boolean result = false;
         Connection connection = builder.getConnection();
         try {
-            connection.setAutoCommit(false);
             try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
                 putDataToStatement(entity, stat);
                 if (stat.executeUpdate() > 0) {
@@ -207,13 +206,11 @@ public class OrderDao extends AbstractDao<Order, Long> {
                     result = true;
                 }
             }
-            connection.commit();
-            connection.setAutoCommit(true);
         } catch (SQLException exception) {
             logger.error("SQLException while Order insert. " + exception.getMessage());
             builder.rollbackAndClose(connection);
-        } finally {
-            builder.closeConnection(connection);
+        }finally {
+            builder.commitAndClose(connection);
         }
         return result;
     }
@@ -226,9 +223,10 @@ public class OrderDao extends AbstractDao<Order, Long> {
             stat.setLong(16, entity.getId());
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Order update. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -246,9 +244,10 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Order findById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return Optional.ofNullable(order);
     }
@@ -262,9 +261,10 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 if (rs.next()) return true;
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Order existsById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -282,9 +282,10 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Order findAll. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return list;
     }
@@ -296,9 +297,10 @@ public class OrderDao extends AbstractDao<Order, Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Order deleteById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return false;
     }
@@ -316,9 +318,10 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Order findAllByUserId. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return list;
     }
@@ -359,9 +362,10 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Order findAllOrderBean. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return list;
     }
@@ -378,9 +382,10 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Order findOrderBeanById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return Optional.ofNullable(orderBean);
     }
@@ -402,9 +407,10 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Order findClientOrdersBean. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return list;
     }
@@ -418,9 +424,10 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Order getNoOfRecords. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return 0;
     }
@@ -435,9 +442,10 @@ public class OrderDao extends AbstractDao<Order, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while Order getNoOfRecords. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return 0;
     }

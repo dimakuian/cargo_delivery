@@ -3,12 +3,11 @@ package com.epam.delivery.web.command;
 import com.epam.delivery.Path;
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionPool;
-import com.epam.delivery.db.doa.impl.ClientDao;
+import com.epam.delivery.db.doa.impl.InvoiceDao;
 import com.epam.delivery.db.doa.impl.OrderDao;
-import com.epam.delivery.db.doa.impl.ShippingStatusDao;
 import com.epam.delivery.db.entities.Client;
+import com.epam.delivery.db.entities.Invoice;
 import com.epam.delivery.db.entities.Order;
-import com.epam.delivery.db.entities.ShippingStatus;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -18,7 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-public class PayOrderCommand implements Command {
+public class PayInvoiceCommand implements Command {
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -41,33 +40,52 @@ public class PayOrderCommand implements Command {
         long orderID = Long.parseLong(request.getParameter("order"));
         logger.trace("Request parameter: order --> " + orderID);
 
+        Long invoiceID = Long.parseLong(request.getParameter("invoice"));
+        logger.trace("Request parameter: invoiceID --> " + invoiceID);
+
+        String procedure = request.getParameter("procedure");
+        logger.trace("Request parameter: procedure --> " + procedure);
+
         ConnectionBuilder connectionBuilder = new ConnectionPool();
         OrderDao orderDao = new OrderDao(connectionBuilder);
         Order order = orderDao.findById(orderID).orElse(null);
         logger.trace("Found in DB: order --> " + order);
 
-        String message;
-        if (order != null && client != null) {
+        InvoiceDao invoiceDao = new InvoiceDao(connectionBuilder);
+        Invoice invoice = invoiceDao.findById(invoiceID).orElse(null);
+        logger.trace("Found in DB: invoice --> " + invoice);
+
+        String message = "";
+        if (order != null && client != null && invoice != null && procedure != null) {
             double currentBalance = client.getBalance();
-            if (currentBalance > order.getFare()) {
-                ClientDao clientDao = new ClientDao(connectionBuilder);
-                client.setBalance(currentBalance - order.getFare());
-                if (!clientDao.update(client)) return forward; //replace test variant
 
-                ShippingStatusDao shippingStatusDao = new ShippingStatusDao(connectionBuilder);
-                ShippingStatus paid = shippingStatusDao.findById(2L).orElse(null);
-                logger.trace("Found in DB: status --> " + paid);
+            switch (procedure.trim().toLowerCase()) {
+                case "pay":
+                    if (currentBalance < invoice.getSum()) {
+                        message = "you don't have enough money";
 
-                order.setStatusID(paid.getId());
-                if (!orderDao.update(order)) return forward; //replace test variant
-                message = "successful";
-            } else {
-                message = "you don't have enough money";
+                    } else if (invoiceDao.payClientInvoice(invoice, client)) {
+                        order.setStatusID(2L);
+                        message = "successful";
+                    } else {
+                        message = "unknown error";
+                        request.getServletContext().setAttribute("message", message);
+                        logger.trace("Set servlet context attribute: message --> " + message);
+                        return forward;
+                    }
+                    break;
+                case "decline":
+                    invoice.setInvoiceStatusID(2);
+                    System.out.println(invoice.getInvoiceStatusID());
+                    order.setStatusID(7L);
+                    invoiceDao.update(invoice);
+                    break;
             }
+            orderDao.update(order);
             request.getServletContext().setAttribute("message", message);
             logger.trace("Set servlet context attribute: message --> " + message);
+            forward = "/controller?command=clientViewInvoices";
 
-            forward = Path.COMMAND_CLIENT_CABINET;
         } else {
             request.getServletContext().setAttribute("errorMessage", "problem with user");
             logger.trace("Set servlet context attribute: errorMessage --> " + "problem with user");
@@ -75,4 +93,5 @@ public class PayOrderCommand implements Command {
         logger.debug("Command finished");
         return forward;
     }
+
 }

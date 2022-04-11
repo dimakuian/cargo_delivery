@@ -26,11 +26,12 @@ public class CommandContainer {
         commands.put("clientCabinet", new ClientCabinetCommand());
         commands.put("editUser", new EditUserCommand());
         commands.put("recharge", new RechargeCommand());
-        commands.put("payOrder", new PayOrderCommand());
+        commands.put("payInvoice", new PayInvoiceCommand());
         commands.put("editOrder", new EditOrderCommand());
         commands.put("createOrder", new CreateOrderCommand());
         commands.put("viewCreateOrderPage", new ViewCreateOrderPageCommand());
         commands.put("clientViewOrder",new ClientViewOrderCommand());
+        commands.put("clientViewInvoices",new ClientInvoicesCommand());
 
         // admin commands
         commands.put("adminCabinet", new AdminCabinetCommand());

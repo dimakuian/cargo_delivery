@@ -26,6 +26,7 @@
 <c:remove var="message"/>
 <div class="header">
     <%@include file="/WEB-INF/jspf/header.jspf" %>
+
     <!-- Language switcher begin -->
     <form name="locales" action="<c:url value="/controller"/>" method="post">
         <label><select name="lang" onchange="this.form.submit()">
@@ -39,6 +40,8 @@
     </form>
     <!-- end Language switcher -->
 </div>
+
+<!-- main content-->
 <main class="my-form">
     <div class="cotainer">
         <div class="row justify-content-center">

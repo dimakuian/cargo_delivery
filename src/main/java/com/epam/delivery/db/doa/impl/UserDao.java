@@ -43,9 +43,10 @@ public class UserDao extends AbstractDao<User, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while User insert. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return result;
     }
@@ -61,9 +62,10 @@ public class UserDao extends AbstractDao<User, Long> {
             stat.setLong(4, entity.getId());
             if (stat.executeUpdate() > 0) result = true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while User update. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return result;
     }
@@ -80,9 +82,10 @@ public class UserDao extends AbstractDao<User, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while User findById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return Optional.ofNullable(user);
     }
@@ -97,9 +100,10 @@ public class UserDao extends AbstractDao<User, Long> {
                 if (rs.next()) result = true;
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while User existsById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return result;
     }
@@ -117,9 +121,10 @@ public class UserDao extends AbstractDao<User, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while User findAll. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return users;
     }
@@ -132,9 +137,10 @@ public class UserDao extends AbstractDao<User, Long> {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) result = true;
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while User deleteById. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return result;
     }
@@ -154,9 +160,10 @@ public class UserDao extends AbstractDao<User, Long> {
                 }
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while User getByLogin. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return Optional.ofNullable(user);
     }
@@ -170,9 +177,10 @@ public class UserDao extends AbstractDao<User, Long> {
                 if (rs.next()) result = true;
             }
         } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
             logger.error("SQLException while User existsByLogin. " + exception.getMessage());
         } finally {
-            builder.closeConnection(connection);
+            builder.commitAndClose(connection);
         }
         return result;
     }
