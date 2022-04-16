@@ -6,6 +6,7 @@ import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.db.doa.SqlQuery;
 import com.epam.delivery.db.entities.Client;
 import com.epam.delivery.db.entities.Invoice;
+import com.epam.delivery.db.entities.InvoiceStatus;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -147,8 +148,30 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
     public List<Invoice> findClientInvoices(Long clientID) {
         List<Invoice> list = new ArrayList<>();
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SqlQuery.SQL_QUERY__INVOICE_SELECT_CLIENT_INVOICES_BY_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(SqlQuery.SQL_QUERY__INVOICE_SELECT_CLIENT_INVOICES)) {
             stat.setLong(1, clientID);
+            try (ResultSet rs = stat.executeQuery()) {
+                while (rs.next()) {
+                    EntityMapper<Invoice> mapper = new InvoiceMapper();
+                    Invoice invoice = mapper.mapRow(rs);
+                    list.add(invoice);
+                }
+            }
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Invoice findAll. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return list;
+    }
+
+    public List<Invoice> findClientInvoicesByStatus(Long clientID, InvoiceStatus status) {
+        List<Invoice> list = new ArrayList<>();
+        Connection connection = builder.getConnection();
+        try (PreparedStatement stat = connection.prepareStatement(SqlQuery.SQL_QUERY__INVOICE_SELECT_CLIENT_INVOICES_BY_STATUS_ID)) {
+            stat.setLong(1, clientID);
+            stat.setInt(2,status.ordinal());
             try (ResultSet rs = stat.executeQuery()) {
                 while (rs.next()) {
                     EntityMapper<Invoice> mapper = new InvoiceMapper();

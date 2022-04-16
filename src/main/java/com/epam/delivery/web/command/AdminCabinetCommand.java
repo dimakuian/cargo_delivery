@@ -63,7 +63,7 @@ public class AdminCabinetCommand implements Command {
                 // get orders list
                 List<OrderBean> orders = orderDao.findAllOrderBean((page - 1) * recordsPerPage, recordsPerPage, sort);
 
-                int noOfRecords = orderDao.getNoOfAllOrders();
+                int noOfRecords = orderDao.getNoOfAllOrders(null); //replace
                 int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
                 request.setAttribute("noOfPages", noOfPages);
                 request.setAttribute("currentPage", page);

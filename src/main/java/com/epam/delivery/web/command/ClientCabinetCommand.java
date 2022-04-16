@@ -17,7 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.IntStream;
 
 public class ClientCabinetCommand implements Command {
 
@@ -56,9 +59,15 @@ public class ClientCabinetCommand implements Command {
                 if (request.getParameter("sort") != null)
                     sort = request.getParameter("sort");
 
+                String filter = "";
+                if (request.getParameter("filter") != null)
+                    filter = request.getParameter("filter");
+
+                System.out.println(filter);
+
                 OrderDao orderDao = new OrderDao(connectionBuilder);
                 List<OrderBean> orders = orderDao.findClientOrdersBean((page - 1) * recordsPerPage,
-                        recordsPerPage, sort, client.getId());
+                        recordsPerPage, sort, client.getId(), getFilter(filter));
 
                 InvoiceDao invoiceDao = new InvoiceDao(connectionBuilder);
                 ArrayList<Invoice> invoices = new ArrayList<>(invoiceDao.findClientInvoices(client.getId()));
@@ -68,7 +77,7 @@ public class ClientCabinetCommand implements Command {
                 logger.trace("Found in DB: client's number invoices to pay --> " + noOfNotPaidClientInvoices);
                 request.setAttribute("notPaidInvoices", noOfNotPaidClientInvoices);
 
-                int noOfRecords = orderDao.getNoOfUserOrders(client.getId());
+                int noOfRecords = orderDao.getNoOfUserOrders(client.getId(), filter);
                 int noOfPages = (int) Math.ceil(noOfRecords * 1.0 / recordsPerPage);
                 request.setAttribute("noOfPages", noOfPages);
                 logger.trace("Set the servlet attribute: noOfPages --> " + noOfPages);
@@ -78,6 +87,9 @@ public class ClientCabinetCommand implements Command {
 
                 request.setAttribute("currentSort", sort);
                 logger.trace("Set the servlet attribute: currentSort --> " + sort);
+
+                request.setAttribute("currentFilter", filter);
+                logger.trace("Set the servlet attribute: currentFilter --> " + filter);
 
                 request.setAttribute("clientInvoices", invoices);
                 logger.trace("Set the servlet attribute: clientInvoices --> " + invoices);
@@ -101,4 +113,29 @@ public class ClientCabinetCommand implements Command {
         logger.debug("Command finished");
         return forward;
     }
+
+    private String getFilter(String name) {
+        Map<String, String> filterMap = new LinkedHashMap<>();
+
+        //status filter
+        filterMap.put("created", "shipping_status_id=1");
+        filterMap.put("paid", "shipping_status_id=2");
+        filterMap.put("confirmed", "shipping_status_id=3");
+        filterMap.put("preparing to ship", "shipping_status_id=4");
+        filterMap.put("in the way", "shipping_status_id=5");
+        filterMap.put("delivered", "shipping_status_id=6");
+        filterMap.put("canceled", "shipping_status_id=7");
+
+        //shipping address filter
+        IntStream.range(1, 16).forEach(i -> filterMap.put("shipping_department" + i, "shipping_address=" + i));
+        System.out.println(filterMap);
+
+        //delivery address filter
+        IntStream.range(1, 16).forEach(i -> filterMap.put("delivery_department" + i, "delivery_address=" + i));
+        System.out.println(filterMap);
+
+        return filterMap.containsKey(name) ? filterMap.get(name) : "";
+    }
 }
+
+

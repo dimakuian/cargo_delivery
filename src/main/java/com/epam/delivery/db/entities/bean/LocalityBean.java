@@ -10,6 +10,11 @@ public class LocalityBean {
     public LocalityBean() {
     }
 
+    public LocalityBean(long localityID, Map<String, String> description) {
+        this.localityID = localityID;
+        this.description = description;
+    }
+
     public long getLocalityID() {
         return localityID;
     }

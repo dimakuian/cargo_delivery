@@ -27,6 +27,6 @@ public class Listener implements ServletContextListener {
         ShippingStatusDao descriptionDAO = new ShippingStatusDao(builder);
         List<StatusDescriptionBean> descriptions = descriptionDAO.getAllTranslate();
         descriptions.sort(Comparator.comparingLong(StatusDescriptionBean::getStatusID));
-        context.setAttribute("status_description", descriptions);
+        context.setAttribute("statuses", descriptions);
     }
 }

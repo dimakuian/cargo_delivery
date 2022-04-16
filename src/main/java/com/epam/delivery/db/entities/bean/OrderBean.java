@@ -11,8 +11,8 @@ import java.util.Map;
 public class OrderBean extends Entity {
     private static final long serialVersionUID = 1255434001425151410L;
 
-    private Map<String,String> shippingAddress;
-    private Map<String,String> deliveryAddress;
+    private LocalityBean shippingAddress;
+    private LocalityBean deliveryAddress;
     private Timestamp creationTime;
     private long clientID;
     private String client;
@@ -32,19 +32,19 @@ public class OrderBean extends Entity {
     public OrderBean() {
     }
 
-    public Map<String, String> getShippingAddress() {
+    public LocalityBean getShippingAddress() {
         return shippingAddress;
     }
 
-    public void setShippingAddress(Map<String, String> shippingAddress) {
+    public void setShippingAddress(LocalityBean shippingAddress) {
         this.shippingAddress = shippingAddress;
     }
 
-    public Map<String, String> getDeliveryAddress() {
+    public LocalityBean getDeliveryAddress() {
         return deliveryAddress;
     }
 
-    public void setDeliveryAddress(Map<String, String> deliveryAddress) {
+    public void setDeliveryAddress(LocalityBean deliveryAddress) {
         this.deliveryAddress = deliveryAddress;
     }
 

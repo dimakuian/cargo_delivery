@@ -49,13 +49,13 @@
                     <c:out value="${from}: "/>
                     <c:choose>
                         <c:when test="${locale=='en'}">
-                            <c:out value="${order.shippingAddress.en}"/>
+                            <c:out value="${order.shippingAddress.description.en}"/>
                         </c:when>
                         <c:when test="${locale=='ua'}">
-                            <c:out value="${order.shippingAddress.ua}"/>
+                            <c:out value="${order.shippingAddress.description.ua}"/>
                         </c:when>
                         <c:otherwise>
-                            <c:out value="${order.shippingAddress.ua}"/>
+                            <c:out value="${order.shippingAddress.description.ua}"/>
                         </c:otherwise>
                     </c:choose>
                 </li>
@@ -64,13 +64,13 @@
                     <c:out value="${to}: "/>
                     <c:choose>
                         <c:when test="${locale=='en'}">
-                            <c:out value="${order.deliveryAddress.en}"/>
+                            <c:out value="${order.deliveryAddress.description.en}"/>
                         </c:when>
                         <c:when test="${locale=='ua'}">
-                            <c:out value="${order.deliveryAddress.ua}"/>
+                            <c:out value="${order.deliveryAddress.description.ua}"/>
                         </c:when>
                         <c:otherwise>
-                            <c:out value="${order.deliveryAddress.ua}"/>
+                            <c:out value="${order.deliveryAddress.description.ua}"/>
                         </c:otherwise>
                     </c:choose>
                 </li>

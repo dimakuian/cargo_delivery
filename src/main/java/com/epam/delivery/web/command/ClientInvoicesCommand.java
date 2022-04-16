@@ -7,7 +7,7 @@ import com.epam.delivery.db.doa.impl.InvoiceDao;
 import com.epam.delivery.db.doa.impl.OrderDao;
 import com.epam.delivery.db.entities.Client;
 import com.epam.delivery.db.entities.Invoice;
-import com.epam.delivery.db.entities.Order;
+import com.epam.delivery.db.entities.InvoiceStatus;
 import com.epam.delivery.db.entities.bean.OrderBean;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -48,28 +48,27 @@ public class ClientInvoicesCommand implements Command {
         if (client != null) {
             ConnectionBuilder connectionBuilder = new ConnectionPool();
             InvoiceDao invoiceDao = new InvoiceDao(connectionBuilder);
-            List<Invoice> invoices = new ArrayList<>(invoiceDao.findClientInvoices(client.getId()));
-            logger.trace("Found in DB: invoices --> " + invoices);
+            List<Invoice> allInvoices = new ArrayList<>(invoiceDao.findClientInvoices(client.getId()));
+            logger.trace("Found in DB: allInvoices --> " + allInvoices);
+
+            List<Invoice> newInvoices = new ArrayList<>(invoiceDao.findClientInvoicesByStatus(client.getId(), InvoiceStatus.CREATED));
+            logger.trace("Found in DB: newInvoices --> " + newInvoices);
 
             OrderDao orderDao = new OrderDao(connectionBuilder);
-            Map<Invoice, OrderBean> invoiceOrderMap = new HashMap<>();
-            for (Invoice invoice : invoices) {
-                long orderID = invoice.getOrderID();
-                OrderBean order = orderDao.findOrderBeanById(orderID).orElse(null);
-                logger.trace("Found in DB: order --> " + order);
+            Map<Invoice, OrderBean> allInvoiceOrderMap = new HashMap<>();
+            allInvoices.forEach(invoice -> allInvoiceOrderMap.put(invoice,
+                    orderDao.findOrderBeanById(invoice.getOrderID()).get())); //replace
 
-                if (order != null) {
-                    invoiceOrderMap.put(invoice,order);
-                } else {
-                    errorMessage = "problem with read order"; //replace
-                    context.setAttribute("message", errorMessage);
-                    logger.error("errorMessage --> " + errorMessage);
-                    return forward;
-                }
-            }
 
-            context.setAttribute("invoicesMap", invoiceOrderMap);
-            logger.trace("Set the session attribute: invoicesMap --> " + invoiceOrderMap);
+            Map<Invoice, OrderBean> newInvoiceOrderMap = new HashMap<>();
+            newInvoices.forEach(invoice -> newInvoiceOrderMap
+                    .put(invoice, orderDao.findOrderBeanById(invoice.getOrderID()).get()));
+
+            context.setAttribute("allInvoicesMap", allInvoiceOrderMap);
+            logger.trace("Set the session attribute: allInvoicesMap --> " + allInvoiceOrderMap);
+
+            context.setAttribute("newInvoicesMap", newInvoiceOrderMap);
+            logger.trace("Set the session attribute: newInvoicesMap --> " + newInvoiceOrderMap);
 
             forward = Path.PAGE__CLIENT_VIEW_INVOICES;
         } else {
