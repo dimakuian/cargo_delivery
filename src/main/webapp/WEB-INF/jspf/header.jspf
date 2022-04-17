@@ -59,7 +59,8 @@ Header (top area).
                                     <fmt:message key="inner_text.my_orders"/></a>
                                 <a class="dropdown-item" href="<c:url value="/controller?command=clientViewInvoices"/>">
                                     <fmt:message key="inner_text.my_invoices"/></a>
-                                <a class="dropdown-item" href="#">User details</a>
+                                <a class="dropdown-item" href="<c:url value="/client_page.jsp"/>">
+                                    User details</a>
                             </div>
                         </div>
                     </c:when>

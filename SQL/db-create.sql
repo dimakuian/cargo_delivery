@@ -58,10 +58,10 @@ CREATE TABLE IF NOT EXISTS `client`
     `user_id`    INT         NOT NULL,
     `name`       VARCHAR(45) NOT NULL,
     `surname`    VARCHAR(45) NOT NULL,
-    `patronymic` VARCHAR(45) DEFAULT NULL,
-    `email`      VARCHAR(45) DEFAULT NULL,
-    `phone`      VARCHAR(45) DEFAULT NULL,
-    `balance`    DOUBLE      DEFAULT 0,
+    `patronymic` VARCHAR(45)                   DEFAULT NULL,
+    `email`      VARCHAR(45)                   DEFAULT NULL,
+    `phone`      VARCHAR(45)                   DEFAULT NULL,
+    `balance`    DOUBLE CHECK ( balance >= 0 ) DEFAULT 0,
     CONSTRAINT `fk_client_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
         ON DELETE CASCADE ON UPDATE RESTRICT,
     PRIMARY KEY (`id`)
