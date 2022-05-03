@@ -28,8 +28,7 @@
 <!-- Language switcher begin -->
 <form name="locales" action="<c:url value="/controller"/>" method="post">
     <select name="lang" onchange="this.form.submit()">
-        <option selected disabled><fmt:message
-                key="language.chooseLang"/></option>
+        <option selected disabled><fmt:message key="language.chooseLang"/></option>
         <option value="ua"><fmt:message key="language.ua"/></option>
         <option value="en"><fmt:message key="language.en"/></option>
     </select>
@@ -186,45 +185,10 @@
     </div>
 </main>
 <script>
-    <%--function validformCreateOrder() {--%>
-    <%--    var consignee = document.getElementById("consignee").value;--%>
-    <%--    var consigneeRegex = /([a-zA-Zа-яА-Я,.' -]{2,})((\+38)?[0-9]{10}){1}/;--%>
-    <%--    var description = document.getElementById("description").value;--%>
-    <%--    var descriptionRegex = /([0-9a-zA-Zа-яА-Я,.'\-]{3,}\s?)+/;--%>
-    <%--    var shipping_address = document.getElementById("ship").value;--%>
-    <%--    var delivery_address = document.getElementById("deliv").value;--%>
-    <%--    <fmt:message key="message.address_mast_be_different" var="simmilar_address"/>--%>
-    <%--    <fmt:message key="message.not_empty_consignee" var="empty_consignee"/>--%>
-    <%--    <fmt:message key="message.not_validate_consignee" var="validate_consignee"/>--%>
-    <%--    <fmt:message key="message.not_empty_description" var="empty_description"/>--%>
-    <%--    <fmt:message key="message.not_validate_description" var="validate_description"/>--%>
 
-    <%--    //check consignee--%>
-    <%--    if (consignee == null || consignee == "") {--%>
-    <%--        alert("${empty_consignee}");--%>
-    <%--        return false;--%>
-
-    <%--    } else if (!consigneeRegex.test(consignee)) {--%>
-    <%--        alert("${validate_consignee}");--%>
-    <%--        return false;--%>
-
-    <%--        //check description--%>
-    <%--    } else if (description == null || description == "") {--%>
-    <%--        alert("${empty_description}");--%>
-    <%--        return false;--%>
-
-    <%--    } else if (!descriptionRegex.test(description)) {--%>
-    <%--        alert("${validate_description}");--%>
-    <%--        return false;--%>
-
-    <%--    } else if (shipping_address == delivery_address) {--%>
-    <%--        alert("${simmilar_address}");--%>
-    <%--        return false;--%>
-    <%--    }--%>
-    <%--}--%>
     function validformCreateOrder() {
         var consignee = document.forms["create_order-form"]["consignee"].value;
-        var consigneeRegex = /([a-zA-Zа-яА-Я,.' -]{2,})((\+38)?[0-9]{10}){1}/;
+        var consigneeRegex = /([а-яєіїґА-ЯЄІЇҐ,.' -ʼ]{2,})|([a-zA-Z,.' -ʼ]{2,})((\+38)?[0-9]{10}){1}/;
         var description = document.forms["create_order-form"]["description"].value;
         var descriptionRegex = /([0-9a-zA-Zа-яА-Я,.'\-]{3,}\s?)+/;
         var shipping_address = document.forms["create_order-form"]["shipping_address"].value;

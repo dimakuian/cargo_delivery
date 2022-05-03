@@ -25,6 +25,7 @@
 <%@include file="/WEB-INF/jspf/head.jspf" %>
 <body>
 <%@include file="/WEB-INF/jspf/header.jspf" %>
+
 <!-- Language switcher begin -->
 <form name="locales" action="<c:url value="/controller"/>" method="post">
     <label for="lang"></label>
@@ -40,128 +41,324 @@
 
 <jsp:useBean id="client" scope="session" type="com.epam.delivery.db.entities.Client"/>
 <jsp:useBean id="user" scope="session" type="com.epam.delivery.db.entities.User"/>
+
 <div class="container" style="margin: auto">
-    <h1>Edit Profile</h1>
+
+    <c:if test="${not empty message}">
+        <jsp:useBean id="message" scope="application" type="java.lang.String"/>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>${message}</strong>
+            <!-- close message -->
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <c:remove var="message"/>
+        </div>
+    </c:if>
+
+    <h1><fmt:message key="client_page.jsp.text.user_profile"/></h1>
     <hr>
     <div class="row">
-        <%--        <!-- left column -->--%>
-        <%--        <div class="col-md-3">--%>
-        <%--            <div class="text-center">--%>
-        <%--                <img src="//placehold.it/100" class="avatar img-circle" alt="avatar">--%>
-        <%--                <h6>Upload a different photo...</h6>--%>
-
-        <%--                <input type="file" class="form-control">--%>
-        <%--            </div>--%>
-        <%--        </div>--%>
-
         <!-- edit form column -->
         <div class="col-md-7 personal-info">
-            <!-- add alert here -->
-            <h3>Personal info</h3>
-
-            <form class="form-horizontal" role="form">
+            <h3><fmt:message key="client_page.jsp.text.personal_info"/></h3>
+            <form class="form-horizontal" role="form" action="<c:url value="/controller"/>" method="post">
+                <input type="hidden" name="command" value="editUser">
                 <div class="row" style="padding: 5px">
                     <label class="col-lg-4 control-label" for="login">
-                        <strong><fmt:message key="create_order.jsp.label.login"/></strong>
+                        <strong><fmt:message key="client_page.jsp.label.login"/></strong>
                     </label>
                     <div class="col-lg-8">
-                        <input id="login" class="form-control" type="text" value="${user.login}" readonly>
+                        <input id="login" name="login" class="form-control" type="text" value="${user.login}" readonly>
                     </div>
                 </div>
                 <div class="row" style="padding: 5px">
                     <label class="col-lg-4 control-label" for="name">
-                        <strong><fmt:message key="create_order.jsp.label.name"/></strong>
+                        <strong><fmt:message key="client_page.jsp.label.name"/></strong>
                     </label>
                     <div class="col-lg-8">
-                        <input id="name" class="form-control" type="text" value="${client.name}" readonly>
+                        <input id="name" name="name" class="form-control" type="text" value="${client.name}" readonly>
                     </div>
                 </div>
                 <div class="row" style="padding: 5px">
                     <label class="col-lg-4 control-label" for="surname">
-                        <strong><fmt:message key="create_order.jsp.label.surname"/></strong>
+                        <strong><fmt:message key="client_page.jsp.label.surname"/></strong>
                     </label>
                     <div class="col-lg-8">
-                        <input id="surname" class="form-control" type="text" value="${client.surname}" readonly>
+                        <input id="surname" name="surname" class="form-control" type="text" value="${client.surname}"
+                               readonly>
                     </div>
                 </div>
                 <div class="row" style="padding: 5px">
                     <label class="col-lg-4 control-label" for="patronymic">
-                        <strong><fmt:message key="create_order.jsp.label.patronymic"/></strong>
+                        <strong><fmt:message key="client_page.jsp.label.patronymic"/></strong>
                     </label>
                     <div class="col-lg-8">
-                        <input id="patronymic" class="form-control" type="text" value="${client.patronymic}" readonly>
+                        <input id="patronymic" name="patronymic" class="form-control" type="text"
+                               value="${client.patronymic}" readonly>
                     </div>
                 </div>
                 <div class="row" style="padding: 5px">
                     <label class="col-lg-4 control-label" for="email">
-                        <strong><fmt:message key="create_order.jsp.label.email"/></strong>
+                        <strong><fmt:message key="client_page.jsp.label.email"/></strong>
                     </label>
                     <div class="col-lg-8">
-                        <input id="email" class="form-control" type="text" value="${client.email}" readonly>
+                        <input id="email" name="email" class="form-control" type="text" value="${client.email}"
+                               readonly>
                     </div>
                 </div>
                 <div class="row" style="padding: 5px">
                     <label class="col-lg-4 control-label" for="phone">
-                        <strong><fmt:message key="create_order.jsp.label.phone"/></strong>
+                        <strong><fmt:message key="client_page.jsp.label.phone"/></strong>
                     </label>
                     <div class="col-lg-8">
-                        <input id="phone" class="form-control" type="text" value="${client.phone}" readonly>
+                        <input id="phone" name="phone" class="form-control" type="text" value="${client.phone}"
+                               readonly>
                     </div>
                 </div>
                 <div class="row" style="padding: 5px">
                     <label class="col-lg-4 control-label" for="balance">
-                        <strong><fmt:message key="create_order.jsp.label.balance"/></strong>
+                        <strong><fmt:message key="client_page.jsp.label.balance"/></strong>
                     </label>
                     <div class="col-lg-8">
                         <input id="balance" class="form-control" type="text" value="${client.balance}" readonly>
                     </div>
                 </div>
-                <div class="row" style="margin: auto">
-                    <fmt:message key="create_order.jsp.button.edit" var="editButton"/>
-                    <button type="button" class="btn btn-primary" id="editButton" >
-                       ${editButton}
-                    </button>
-                    <button class="btn btn-success" type="submit" id="saveButton" style="display: none">
-                        <fmt:message key="create_order.jsp.button.save"/>
-                    </button>
+
+                <div class="row">
+                    <!-- button for editing fields -->
+                    <div class="col-md-2">
+                        <fmt:message key="client_page.jsp.button.edit" var="editButton"/>
+                        <input type="button" id="editButton" value="${editButton}" class="btn btn-primary">
+                    </div>
+
+                    <!-- button for save changes -->
+                    <div class="col-md-2">
+                        <button class="btn btn-success" type="submit" id="saveButton" style="display: none">
+                            <fmt:message key="client_page.jsp.button.save"/>
+                        </button>
+                    </div>
+
+                    <!-- change password button -->
+                    <div class="col-md-2">
+                        <fmt:message key="client_page.jsp.button.change_password" var="changePass"/>
+                        <input class="btn btn-secondary float-left" type="button" id="changePassButton"
+                               value="${changePass}">
+                    </div>
                 </div>
             </form>
+        </div>
+
+
+        <!-- left column -->
+        <div class="col-md-5">
+            <!-- payment form -->
+            <h3><fmt:message key="client_page.jsp.text.top_up_balance"/></h3>
+            <form action="<c:url value="/controller"/>" method="post" onsubmit="return validateRechargeForm();">
+                <input type="hidden" name="command" value="recharge">
+                <div class="input-group col-md-12" style="padding: 5px">
+                    <div class="input-group-prepend">
+                        <fmt:message key="client_page.jsp.button.recharge" var="recharge"/>
+                        <input class="btn btn-secondary" type="button" id="rechargeButton" value="${recharge}">
+                    </div>
+                    <label for="sum"></label>
+                    <fmt:message key="client_page.jsp.placeholder.enter_sum" var="enterSum"/>
+                    <input type="text" id="sum" class="form-control" placeholder="${enterSum}" name="sum" required
+                           pattern="\d*">
+                </div>
+
+                <!-- payment container -->
+                <div class="text-center col-md-12" id="paymentContainer" style="display: none; padding: 5px">
+                    <div class="card text-center">
+                        <div class="card-header">
+                            <strong><fmt:message key="client_page.jsp.label.credit_card"/></strong>
+                            <small><fmt:message key="client_page.jsp.label.enter_cc_details"/></small>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <label for="ccname"><fmt:message key="client_page.jsp.label.cc_name"/></label>
+                                        <fmt:message key="client_page.jsp.placeholder.enter_name" var="enterName"/>
+                                        <input class="form-control" id="ccname" type="text"
+                                               placeholder="${enterName}" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group">
+                                        <fmt:message key="client_page.jsp.label.cc_number" var="cc_number"/>
+                                        <label for="ccnumber"><c:out value="${cc_number}"/></label>
+                                        <div class="input-group">
+                                            <input class="form-control" id="ccnumber" type="text"
+                                                   placeholder="0000 0000 0000 0000" autocomplete="email" required>
+                                            <div class="input-group-append">
+                                                <span class="input-group-text"><i class="far fa-credit-card"></i></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group col-sm-4">
+                                    <label for="ccmonth"><fmt:message key="client_page.jsp.label.cc_month"/></label>
+                                    <select class="form-control" id="ccmonth" required>
+                                        <c:forEach begin="1" end="12" var="i">
+                                            <option><c:out value="${i}"/></option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-4">
+                                    <label for="ccyear"><fmt:message key="client_page.jsp.label.cc_year"/></label>
+                                    <select class="form-control" id="ccyear" required>
+                                        <c:forEach begin="2022" end="2030" var="i">
+                                            <option><c:out value="${i}"/></option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="form-group">
+                                        <label for="cvv"><c:out value="CVV/CVC"/></label>
+                                        <input class="form-control" id="cvv" type="text" placeholder="123"
+                                               pattern="\d*" maxlength="3" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer">
+                            <fmt:message key="client_page.jsp.button.send" var="send"/>
+                            <button class="btn btn-sm btn-success float-right" type="submit">
+                                <span class="far fa-check-circle"></span><c:out value="${send}"/>
+                            </button>
+                            <button class="btn btn-sm btn-danger float-left" id="resetButton"
+                                    onclick="HTMLFormElement.reset()" type="reset">
+                                <span class="fas fa-undo"></span><fmt:message key="client_page.jsp.button.reset"/>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+
+            <!-- change password form -->
+            <div id="changePassContainer" class="text-center col-md-12" style="padding: 5px; display: none">
+                <form action="<c:url value="/controller"/>" method="post">
+                    <input type="hidden" name="command" value="changePassword">
+                    <div class="card">
+                        <div class="card-header">
+                            <fmt:message key="client_page.jsp.text.change_pass_form"/>
+                        </div>
+                        <div class="card-body text-center">
+                            <div class="row" style="padding: 5px">
+                                <div class="col-md-12">
+                                    <label for="pass"></label>
+                                    <fmt:message key="client_page.jsp.placeholder.enter_old_pass" var="oldPass"/>
+                                    <input id="pass" name="pass" type="password" placeholder="${oldPass}"
+                                           class="form-control">
+                                </div>
+                            </div>
+                            <div class="row" style="padding: 5px">
+                                <div class="col-md-12">
+                                    <label for="newPass"></label>
+                                    <fmt:message key="client_page.jsp.placeholder.enter_new_pass" var="newPass"/>
+                                    <input id="newPass" name="newPass" type="password" placeholder="${newPass}"
+                                           class="form-control">
+                                </div>
+                            </div>
+                            <div class="row" style="padding: 5px">
+                                <div class="col-md-12">
+                                    <label for="newPassConf"></label>
+                                    <fmt:message key="client_page.jsp.placeholder.repeat_pass" var="repeatPass"/>
+                                    <input id="newPassConf" name="newPassConf" type="password"
+                                           placeholder="${repeatPass}" class="form-control">
+                                </div>
+                            </div>
+                            <div class="row" style="padding-top: 5px">
+                                <div class="col-md-3">
+                                    <fmt:message key="client_page.jsp.button.save_changes" var="saveButt"/>
+                                    <input id="subBut" name="subBut" type="submit" value="${saveButt}"
+                                           class="btn btn-sm btn-success float-left">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
 <script>
+    document.getElementById('editButton').addEventListener("click", editParam);
 
-    document.getElementById('editButton').addEventListener("click",editParam);
     function editParam() {
-        var editButton = document.getElementById('editButton');
-        var saveButton = document.getElementById("saveButton");
+        const editButton = document.getElementById('editButton');
+        const saveButton = document.getElementById("saveButton");
         const login = document.getElementById('login');
         const name = document.getElementById('name');
         const surname = document.getElementById('surname');
         const patronymic = document.getElementById('patronymic');
         const email = document.getElementById('email');
         const phone = document.getElementById('phone');
-        <fmt:message key="create_order.jsp.button.cancel" var="cancel"/>
-        if  (editButton.innerHTML === '${editButton}'){
+        <fmt:message key="client_page.jsp.button.cancel" var="cancel"/>
+
+        if (editButton.value === '${editButton}') {
             login.readOnly = false;
             name.readOnly = false;
             surname.readOnly = false;
             patronymic.readOnly = false;
             email.readOnly = false;
             phone.readOnly = false;
-            editButton.innerHTML = '${cancel}';
+            editButton.value = '${cancel}';
             editButton.className = 'btn btn-danger';
             saveButton.style.display = 'block';
         } else {
-            login.readOnly = true;
-            name.readOnly = true;
-            surname.readOnly = true;
-            patronymic.readOnly = true;
-            email.readOnly = true;
-            phone.readOnly = true;
-            editButton.innerHTML = '${editButton}';
-            editButton.className = 'btn btn-primary'
-            saveButton.style.display = 'none'
+            document.location.reload();
+        }
+    }
+
+    document.getElementById('rechargeButton').addEventListener("click", recharge);
+
+    function recharge() {
+        const paymentContainer = document.getElementById('paymentContainer');
+        const rechargeButton = document.getElementById('rechargeButton');
+        if (rechargeButton.value === '${recharge}') {
+            paymentContainer.style.display = 'block';
+            rechargeButton.value = '${cancel}';
+        } else {
+            paymentContainer.style.display = 'none';
+            rechargeButton.value = '${recharge}';
+        }
+    }
+
+    function validateRechargeForm() {
+        const ccnumber = document.getElementById('ccnumber').value;
+        const ccname = document.getElementById('ccname').value;
+        const ccnameRegEx = /([а-яєіїґА-ЯЄІЇҐ,.' -ʼ]{2,})|([a-zA-Z,.' -ʼ]{2,})/;
+        const ccNumRegEx = /\b(5[1-5][0-9]{14})\b|\b(4[0-9]{12}[0-9]{3})\b/;
+        <fmt:message key="client_page.jsp.text.enter_valid_cc_name" var="validName"/>
+        <fmt:message key="client_page.jsp.text.enter_valid_cc_numb" var="validNumber"/>
+
+        if (!ccNumRegEx.test(ccnumber)) {
+            alert("${validNumber}");
+            return false;
+        } else if (!ccnameRegEx.test(ccname)) {
+            alert("${validName}");
+            return false;
+        }
+    }
+
+    document.getElementById('changePassButton').addEventListener("click", changePass);
+
+    function changePass() {
+        const changePassContainer = document.getElementById('changePassContainer');
+        const changePassButton = document.getElementById('changePassButton');
+        if (changePassButton.value === '${changePass}') {
+            changePassContainer.style.display = 'block';
+            changePassButton.value = '${cancel}';
+        } else {
+            changePassContainer.style.display = 'none';
+            changePassButton.value = '${changePass}';
         }
     }
 </script>

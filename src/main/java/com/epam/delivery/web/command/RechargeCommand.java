@@ -33,8 +33,8 @@ public class RechargeCommand implements Command {
         Client client = (Client) session.getAttribute("client");
         logger.trace("Get session attribute: client --> " + client);
 
-        double plusBalance = Double.parseDouble(request.getParameter("balance"));
-        logger.trace("Get request parameter: balance --> " + plusBalance);
+        double plusBalance = Double.parseDouble(request.getParameter("sum"));
+        logger.trace("Get request parameter: sum --> " + plusBalance);
 
         String message;
         if (client != null) {
@@ -45,7 +45,7 @@ public class RechargeCommand implements Command {
 
 
             if (clientDao.update(client)) {
-                forward = Path.COMMAND_CLIENT_CABINET;
+                forward = Path.PAGE__CLIENT_EDIT_PAGE;
                 message = "successful";
                 request.getServletContext().setAttribute("message", message);
                 logger.trace("Set servlet context attribute: message --> " + message);

@@ -1,8 +1,10 @@
 package com.epam.delivery.web.command;
 
 import com.epam.delivery.Path;
+import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionPool;
 import com.epam.delivery.db.doa.impl.ClientDao;
+import com.epam.delivery.db.doa.impl.UserDao;
 import com.epam.delivery.db.entities.Client;
 import com.epam.delivery.db.entities.User;
 import org.apache.logging.log4j.LogManager;
@@ -29,7 +31,11 @@ public class EditUserCommand implements Command {
 
         logger.debug("start command");
 
-        String forward = Path.PAGE__EDIT_ORDER;
+        String forward = Path.PAGE__ERROR_PAGE;
+
+        String login = request.getParameter("login");
+        logger.trace("Request parameter: login --> " + login);
+
         String name = request.getParameter("name");
         logger.trace("Request parameter: name --> " + name);
 
@@ -54,8 +60,14 @@ public class EditUserCommand implements Command {
 
         if (name != null && surname != null && patronymic != null && email != null && phone != null &&
                 user != null && client != null) {
+            ConnectionBuilder builder = new ConnectionPool();
+            UserDao userDao = new UserDao(builder);
+            if (!user.getLogin().equals(login)) {
+                user.setLogin(login);
+                userDao.update(user);
+            }
 
-            ClientDao clientDao = new ClientDao(new ConnectionPool());
+            ClientDao clientDao = new ClientDao(builder);
             if (!client.getName().equals(name)) client.setName(name);
             if (!client.getSurname().equals(surname)) client.setSurname(surname);
             if (!client.getPatronymic().equals(patronymic)) client.setPatronymic(patronymic);
@@ -70,7 +82,7 @@ public class EditUserCommand implements Command {
                 request.getServletContext().setAttribute("message", message);
                 logger.trace("Set servlet context attribute: message --> " + "successful");
             }
-            forward = Path.COMMAND_CLIENT_CABINET;
+            forward = Path.PAGE__CLIENT_EDIT_PAGE;
         } else {
             String errorMessage = "can't find this user";
             request.getServletContext().setAttribute("message", errorMessage);

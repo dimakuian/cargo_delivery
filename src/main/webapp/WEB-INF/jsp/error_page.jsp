@@ -40,7 +40,7 @@
 
             <%-- this way we get the error information (error 404)--%>
             <c:set var="code" value="${requestScope['javax.servlet.error.status_code']}"/>
-            <c:set var="message" value="${requestScope['javax.servlet.error.message']}"/>
+<%--            <c:set var="message" value="${requestScope['javax.servlet.error.message']}"/>--%>
 
             <%-- this way we get the exception --%>
             <c:set var="exception" value="${requestScope['javax.servlet.error.exception']}"/>
