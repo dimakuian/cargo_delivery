@@ -29,6 +29,25 @@
         <url-pattern>/registration</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>COUNT_COAST</servlet-name>
+        <jsp-file>/WEB-INF/jsp/calculate_сost.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>COUNT_COAST</servlet-name>
+        <url-pattern>/calculate_coast</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>CREATE_ORDER</servlet-name>
+        <jsp-file>/WEB-INF/jsp/client/create_order.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CREATE_ORDER</servlet-name>
+        <url-pattern>/create_order</url-pattern>
+    </servlet-mapping>
+
+
 <!--    <servlet>-->
 <!--        <servlet-name>CLIENT_CABINET</servlet-name>-->
 <!--        <jsp-file>/WEB-INF/jsp/client/client_cabinet.jsp</jsp-file>-->
@@ -73,7 +92,7 @@
         </init-param>
         <init-param>
             <param-name>common</param-name>
-            <param-value>logout noCommand</param-value>
+            <param-value>logout noCommand changePassword</param-value>
         </init-param>
         <init-param>
             <param-name>out-of-control</param-name>

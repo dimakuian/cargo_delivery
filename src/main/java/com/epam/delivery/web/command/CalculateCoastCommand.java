@@ -67,7 +67,7 @@ public class CalculateCoastCommand implements Command {
             request.getServletContext().setAttribute("total", Math.round(total));
             logger.trace("Servlet context attribute: total --> " + total);
 
-            forward = Path.COMMAND__VIEW_CALCULATE_COAST;
+            forward = Path.PAGE__COUNT_COAST;
         }
         logger.debug("Command finished");
         return forward;

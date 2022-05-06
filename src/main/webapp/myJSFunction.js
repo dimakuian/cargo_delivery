@@ -64,7 +64,7 @@ function validform(lang) {
 
     } else if (!passwordRegex.test(password)) {
         if (lang == "ua") {
-            alert("Пароль повинен складатись з мінімум 8 літер, 1 цифру та 1 спеціального знаку.");
+            alert("Пароль повинен складатись з мінімум 8 літер, 1 цифри та 1 спеціальний знак.");
         } else if (lang == "en") {
             alert("The password must consist of at least 8 letters, 1 digit and 1 special character.");
         } else {

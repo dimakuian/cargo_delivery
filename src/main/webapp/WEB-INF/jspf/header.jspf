@@ -12,20 +12,20 @@ Header (top area).
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <fmt:message key="button.home" var="home"/>
-            <li class="nav-item active">
+            <li class="nav-item active" id="home">
+                <fmt:message key="header.jspf.button.home" var="home"/>
                 <a class="nav-link" id="home_page" href="<c:url value="/home"/>"><c:out value="${home}"/></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="#about"><fmt:message key="button.about"/></a>
+            <li class="nav-item" id="about">
+                <a class="nav-link" href="#about"><fmt:message key="header.jspf.button.about"/></a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="<c:url value="/controller?command=viewCalculateCost"/>">
-                    <fmt:message key="button.count_coast"/></a>
+            <li class="nav-item" id="calcCoast">
+                <a class="nav-link" href="<c:url value="/calculate_coast"/>">
+                    <fmt:message key="header.jspf.button.calc_coast"/></a>
             </li>
             <c:if test="${role.getName() eq 'client'}">
-                <li class="nav-item">
-                    <fmt:message key="button.create_order" var="create_order"/>
+                <li class="nav-item" id="createOrder">
+                    <fmt:message key="header.jspf.button.create_order" var="create_order"/>
                     <a class="nav-link" href="<c:url value="/controller?command=viewCreateOrderPage"/>">
                         <c:out value="${create_order}"/></a>
                 </li>
@@ -35,16 +35,16 @@ Header (top area).
             <c:when test="${empty user}">
                 <form class="form-inline my-2 my-lg-0" action="<c:url value="/controller"/>" method="post">
                     <input type="hidden" name="command" value="login"/>
-                    <fmt:message key="input.username" var="userName"/>
+                    <fmt:message key="header.jspf.input.username" var="userName"/>
                     <input class="form-control" type="text" placeholder="${userName}" name="login" required>
-                    <fmt:message key="input.password" var="pass"/>
+                    <fmt:message key="header.jspf.input.password" var="pass"/>
                     <input class="form-control" id="psw" type="password" placeholder="${pass}" name="password"
                            required>
                     <button class="btn btn-primary" type="submit"><fmt:message
-                            key="button.login"/></button>
+                            key="header.jspf.button.login"/></button>
                     <button class="btn btn-outline-success my-2 my-sm-0" id="register_button" type="button"
                             onclick="window.location.href='/controller?command=viewRegistrationPage'">
-                        <fmt:message key="button.register"/></button>
+                        <fmt:message key="header.jspf.button.register"/></button>
                 </form>
             </c:when>
             <c:when test="${not empty user}">
@@ -56,11 +56,12 @@ Header (top area).
                                 <c:out value="${user.getLogin()}"/></button>
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="<c:url value="/controller?command=clientCabinet"/>">
-                                    <fmt:message key="inner_text.my_orders"/></a>
+                                    <fmt:message key="header.jspf.button.my_orders"/></a>
                                 <a class="dropdown-item" href="<c:url value="/controller?command=clientViewInvoices"/>">
-                                    <fmt:message key="inner_text.my_invoices"/></a>
+                                    <fmt:message key="header.jspf.button.my_invoices"/></a>
                                 <a class="dropdown-item" href="<c:url value="/client_page.jsp"/>">
-                                    User details</a>
+                                    <fmt:message key="header.jspf.button.user_details"/>
+                                </a>
                             </div>
                         </div>
                     </c:when>
@@ -71,9 +72,38 @@ Header (top area).
                 </c:choose>
                 <button type="button" class="btn btn-danger"
                         onclick="window.location.href='/controller?command=logout'">
-                    <fmt:message key="button.logout"/></button>
+                    <fmt:message key="header.jspf.button.logout"/>
+                </button>
             </c:when>
         </c:choose>
     </div>
+    <script>
+        function navbarFunction() {
+            const home = document.getElementById('home');
+            const about = document.getElementById('about');
+            const calcCoast = document.getElementById('calcCoast');
+            const createOrder = document.getElementById('createOrder');
+            if (window.location.href === '/home') {
+                home.classList.add('active');
+                about.classList.remove('active');
+                calcCoast.classList.remove('active');
+                createOrder.classList.remove('active');
+            }else if (window.location.href === 'about'){
+                home.classList.remove('active');
+                about.classList.add('active');
+                calcCoast.classList.remove('active');
+                createOrder.classList.remove('active');
+            }else if (window.location.href === '/calculate_coast'){
+                home.classList.remove('active');
+                about.classList.remove('active');
+                calcCoast.classList.add('active');
+                createOrder.classList.remove('active');
+            }else if (window.location.href === '/create_order'){
+                home.classList.remove('active');
+                about.classList.remove('active');
+                calcCoast.classList.remove('active');
+                createOrder.classList.add('active');
+            }
+        }
+    </script>
 </nav>
-<%--<script src="myJSFunction.js"></script>--%>

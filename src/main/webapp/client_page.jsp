@@ -62,14 +62,16 @@
         <!-- edit form column -->
         <div class="col-md-7 personal-info">
             <h3><fmt:message key="client_page.jsp.text.personal_info"/></h3>
-            <form class="form-horizontal" role="form" action="<c:url value="/controller"/>" method="post">
+            <form class="form-horizontal" role="form" action="<c:url value="/controller"/>"
+                  onsubmit="return validateEditForm();" method="post">
                 <input type="hidden" name="command" value="editUser">
                 <div class="row" style="padding: 5px">
                     <label class="col-lg-4 control-label" for="login">
                         <strong><fmt:message key="client_page.jsp.label.login"/></strong>
                     </label>
                     <div class="col-lg-8">
-                        <input id="login" name="login" class="form-control" type="text" value="${user.login}" readonly>
+                        <input id="login" name="login" class="form-control" type="text" value="${user.login}" readonly
+                               required>
                     </div>
                 </div>
                 <div class="row" style="padding: 5px">
@@ -77,7 +79,8 @@
                         <strong><fmt:message key="client_page.jsp.label.name"/></strong>
                     </label>
                     <div class="col-lg-8">
-                        <input id="name" name="name" class="form-control" type="text" value="${client.name}" readonly>
+                        <input id="name" name="name" class="form-control" type="text" value="${client.name}" readonly
+                               required>
                     </div>
                 </div>
                 <div class="row" style="padding: 5px">
@@ -86,7 +89,7 @@
                     </label>
                     <div class="col-lg-8">
                         <input id="surname" name="surname" class="form-control" type="text" value="${client.surname}"
-                               readonly>
+                               readonly required>
                     </div>
                 </div>
                 <div class="row" style="padding: 5px">
@@ -95,7 +98,7 @@
                     </label>
                     <div class="col-lg-8">
                         <input id="patronymic" name="patronymic" class="form-control" type="text"
-                               value="${client.patronymic}" readonly>
+                               value="${client.patronymic}" readonly required>
                     </div>
                 </div>
                 <div class="row" style="padding: 5px">
@@ -104,7 +107,7 @@
                     </label>
                     <div class="col-lg-8">
                         <input id="email" name="email" class="form-control" type="text" value="${client.email}"
-                               readonly>
+                               readonly required>
                     </div>
                 </div>
                 <div class="row" style="padding: 5px">
@@ -113,7 +116,7 @@
                     </label>
                     <div class="col-lg-8">
                         <input id="phone" name="phone" class="form-control" type="text" value="${client.phone}"
-                               readonly>
+                               readonly required>
                     </div>
                 </div>
                 <div class="row" style="padding: 5px">
@@ -148,7 +151,6 @@
                 </div>
             </form>
         </div>
-
 
         <!-- left column -->
         <div class="col-md-5">
@@ -243,7 +245,7 @@
 
             <!-- change password form -->
             <div id="changePassContainer" class="text-center col-md-12" style="padding: 5px; display: none">
-                <form action="<c:url value="/controller"/>" method="post">
+                <form action="<c:url value="/controller"/>" method="post" onsubmit="return validateChangePassForm();">
                     <input type="hidden" name="command" value="changePassword">
                     <div class="card">
                         <div class="card-header">
@@ -255,7 +257,7 @@
                                     <label for="pass"></label>
                                     <fmt:message key="client_page.jsp.placeholder.enter_old_pass" var="oldPass"/>
                                     <input id="pass" name="pass" type="password" placeholder="${oldPass}"
-                                           class="form-control">
+                                           class="form-control" required>
                                 </div>
                             </div>
                             <div class="row" style="padding: 5px">
@@ -263,7 +265,7 @@
                                     <label for="newPass"></label>
                                     <fmt:message key="client_page.jsp.placeholder.enter_new_pass" var="newPass"/>
                                     <input id="newPass" name="newPass" type="password" placeholder="${newPass}"
-                                           class="form-control">
+                                           class="form-control" required>
                                 </div>
                             </div>
                             <div class="row" style="padding: 5px">
@@ -271,7 +273,7 @@
                                     <label for="newPassConf"></label>
                                     <fmt:message key="client_page.jsp.placeholder.repeat_pass" var="repeatPass"/>
                                     <input id="newPassConf" name="newPassConf" type="password"
-                                           placeholder="${repeatPass}" class="form-control">
+                                           placeholder="${repeatPass}" class="form-control" required>
                                 </div>
                             </div>
                             <div class="row" style="padding-top: 5px">
@@ -289,6 +291,8 @@
     </div>
 </div>
 <script>
+
+    //fields edit button function
     document.getElementById('editButton').addEventListener("click", editParam);
 
     function editParam() {
@@ -317,6 +321,53 @@
         }
     }
 
+    //fields edit validate function
+    function validateEditForm() {
+        const login = document.getElementById('login').value;
+        const loginRegEx = /(\w{4,15})/;
+        const nameRegEx = /(^[а-яєіїґА-ЯЄІЇҐ,.' -/\D]{2,}$)|(^[a-zA-Z,.' -/\D]{2,}$)/;
+        const name = document.getElementById('name').value;
+        const surname = document.getElementById('surname').value;
+        const patronymic = document.getElementById('patronymic').value;
+        const emailRegex = /[\w\-.]+@([\w-]+\.)+[a-z]{2,4}\b/;
+        const email = document.getElementById('email').value;
+        const phoneRegex = /(\+(380)[0-9]{9})\b/;
+        const phone = document.getElementById('phone').value;
+        <fmt:message key="client_page.jsp.message.valid_login" var="validLogin"/>
+        <fmt:message key="client_page.jsp.message.valid_name" var="validName"/>
+        <fmt:message key="client_page.jsp.message.valid_surname" var="validSurname"/>
+        <fmt:message key="client_page.jsp.message.valid_patronymic" var="validPatronymic"/>
+        <fmt:message key="client_page.jsp.message.valid_email" var="validEmail"/>
+        <fmt:message key="client_page.jsp.message.valid_phone" var="validPhone"/>
+
+        if (!loginRegEx.test(login)) {
+            alert("${validLogin}");
+            return false;
+
+        } else if (!nameRegEx.test(name)) {
+            alert("${validName}");
+            return false;
+
+        } else if (!nameRegEx.test(surname)) {
+            alert("${validSurname}");
+            return false;
+
+        } else if (!nameRegEx.test(patronymic)) {
+            alert("${validPatronymic}");
+            return false;
+
+        } else if (!emailRegex.test(email)) {
+            alert("${validEmail}");
+            return false;
+
+        } else if (!phoneRegex.test(phone)) {
+            alert("${validPhone}");
+            return false;
+        }
+    }
+
+
+    //recharge button function
     document.getElementById('rechargeButton').addEventListener("click", recharge);
 
     function recharge() {
@@ -331,13 +382,14 @@
         }
     }
 
+    //recharge validate fields
     function validateRechargeForm() {
         const ccnumber = document.getElementById('ccnumber').value;
         const ccname = document.getElementById('ccname').value;
-        const ccnameRegEx = /([а-яєіїґА-ЯЄІЇҐ,.' -ʼ]{2,})|([a-zA-Z,.' -ʼ]{2,})/;
+        const ccnameRegEx = /([а-яєіїґА-ЯЄІЇҐ,.' -]{2,})|([a-zA-Z,.' -]{2,})/;
         const ccNumRegEx = /\b(5[1-5][0-9]{14})\b|\b(4[0-9]{12}[0-9]{3})\b/;
-        <fmt:message key="client_page.jsp.text.enter_valid_cc_name" var="validName"/>
-        <fmt:message key="client_page.jsp.text.enter_valid_cc_numb" var="validNumber"/>
+        <fmt:message key="client_page.jsp.message.enter_valid_cc_name" var="validName"/>
+        <fmt:message key="client_page.jsp.message.enter_valid_cc_numb" var="validNumber"/>
 
         if (!ccNumRegEx.test(ccnumber)) {
             alert("${validNumber}");
@@ -348,6 +400,7 @@
         }
     }
 
+    //change password button function
     document.getElementById('changePassButton').addEventListener("click", changePass);
 
     function changePass() {
@@ -361,6 +414,23 @@
             changePassButton.value = '${changePass}';
         }
     }
+
+    //change password validate fields
+    function validateChangePassForm() {
+        const newPass = document.getElementById('newPass').value;
+        const newPassConf = document.getElementById('newPassConf').value;
+        const passwordRegEx = /(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,12}/;
+        <fmt:message key="client_page.jsp.message.valid_pass" var="validPass"/>
+        <fmt:message key="client_page.jsp.message.different_pass" var="differentPass"/>
+        if (!passwordRegEx.test(newPass)) {
+            alert("${validPass}");
+            return false;
+        } else if (newPass !== newPassConf) {
+            alert("${differentPass}");
+            return false;
+        }
+    }
+
 </script>
 </body>
 </html>

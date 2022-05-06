@@ -26,7 +26,7 @@ public class LogoutCommand implements Command {
 
         HttpSession session = request.getSession(false);
         if (session != null) session.invalidate();
-        String forward = "/index.jsp";
+        String forward = "/home";
 
         logger.debug("Command finished");
         return forward;

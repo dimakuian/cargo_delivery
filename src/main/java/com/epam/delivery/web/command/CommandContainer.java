@@ -21,6 +21,7 @@ public class CommandContainer {
         commands.put("viewCalculateCost", new ViewCalculateCostPageCommand());
         commands.put("setLocale", new SetLocaleCommand());
         commands.put("noCommand", new NoCommand());
+        commands.put("changePassword",new ChangeUserPasswordCommand());
 
         // client commands
         commands.put("clientCabinet", new ClientCabinetCommand());
