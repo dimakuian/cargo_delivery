@@ -22,7 +22,7 @@ public final class Path {
     public static final String PAGE__ADMIN_VIEW_ORDER = "/WEB-INF/jsp/admin/admin_view_order.jsp";
     public static final String PAGE__CLIENT_VIEW_ORDER = "/WEB-INF/jsp/client/client_view_order.jsp";
     public static final String PAGE__CLIENT_VIEW_INVOICES = "/WEB-INF/jsp/client/client_view_invoices.jsp";
-    public static final String PAGE__CLIENT_EDIT_PAGE = "/client_page.jsp";
+    public static final String PAGE__CLIENT_EDIT_PAGE = "/edit_client";
 
 
 

@@ -22,7 +22,7 @@
 
     <servlet>
         <servlet-name>REGISTRATION</servlet-name>
-        <jsp-file>/registration.jsp</jsp-file>
+        <jsp-file>/WEB-INF/jsp/registration.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
         <servlet-name>REGISTRATION</servlet-name>
@@ -45,6 +45,15 @@
     <servlet-mapping>
         <servlet-name>CREATE_ORDER</servlet-name>
         <url-pattern>/create_order</url-pattern>
+    </servlet-mapping>
+
+    <servlet>
+        <servlet-name>EDIT_CLIENT</servlet-name>
+        <jsp-file>/WEB-INF/jsp/client/edit_client.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EDIT_CLIENT</servlet-name>
+        <url-pattern>/edit_client</url-pattern>
     </servlet-mapping>
 
 

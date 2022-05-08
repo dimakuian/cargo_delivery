@@ -12,44 +12,64 @@ Header (top area).
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active" id="home">
+            <!-- main page button -->
+            <li class="nav-item" id="home">
                 <fmt:message key="header.jspf.button.home" var="home"/>
-                <a class="nav-link" id="home_page" href="<c:url value="/home"/>"><c:out value="${home}"/></a>
+                <a class="nav-link" id="home_page" href="<c:url value="/home"/>">
+                    <c:out value="${home}"/>
+                </a>
             </li>
+
+            <!-- about company page -->
             <li class="nav-item" id="about">
-                <a class="nav-link" href="#about"><fmt:message key="header.jspf.button.about"/></a>
+                <a class="nav-link" href="#about">
+                    <fmt:message key="header.jspf.button.about"/>
+                </a>
             </li>
+
+            <!-- calculate coast button -->
             <li class="nav-item" id="calcCoast">
-                <a class="nav-link" href="<c:url value="/calculate_coast"/>">
-                    <fmt:message key="header.jspf.button.calc_coast"/></a>
+                <a class="nav-link" id="calc_page" href="<c:url value="/calculate_coast"/>">
+                    <fmt:message key="header.jspf.button.calc_coast"/>
+                </a>
             </li>
+
             <c:if test="${role.getName() eq 'client'}">
+                <!-- create order button -->
                 <li class="nav-item" id="createOrder">
                     <fmt:message key="header.jspf.button.create_order" var="create_order"/>
-                    <a class="nav-link" href="<c:url value="/controller?command=viewCreateOrderPage"/>">
-                        <c:out value="${create_order}"/></a>
+                    <a class="nav-link" href="<c:url value="/create_order"/>">
+                        <c:out value="${create_order}"/>
+                    </a>
                 </li>
             </c:if>
         </ul>
         <c:choose>
             <c:when test="${empty user}">
+                <!-- login user form -->
                 <form class="form-inline my-2 my-lg-0" action="<c:url value="/controller"/>" method="post">
                     <input type="hidden" name="command" value="login"/>
                     <fmt:message key="header.jspf.input.username" var="userName"/>
-                    <input class="form-control" type="text" placeholder="${userName}" name="login" required>
+                    <label for="login"></label>
+                    <input class="form-control" id="login" type="text" placeholder="${userName}" name="login" required>
                     <fmt:message key="header.jspf.input.password" var="pass"/>
+                    <label for="psw"></label>
                     <input class="form-control" id="psw" type="password" placeholder="${pass}" name="password"
                            required>
                     <button class="btn btn-primary" type="submit"><fmt:message
                             key="header.jspf.button.login"/></button>
-                    <button class="btn btn-outline-success my-2 my-sm-0" id="register_button" type="button"
-                            onclick="window.location.href='/controller?command=viewRegistrationPage'">
-                        <fmt:message key="header.jspf.button.register"/></button>
+
+                    <!-- button for register user -->
+                    <a href="${pageContext.request.contextPath}/registration"
+                       class="btn btn-outline-success my-2 my-sm-0" id="register_button" role="button">
+                        <fmt:message key="header.jspf.button.register"/>
+                    </a>
                 </form>
             </c:when>
             <c:when test="${not empty user}">
                 <c:choose>
                     <c:when test="${role.getName() eq 'client'}">
+                        <!-- buttons for clients -->
                         <div class="btn-group dropleft">
                             <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
@@ -59,51 +79,33 @@ Header (top area).
                                     <fmt:message key="header.jspf.button.my_orders"/></a>
                                 <a class="dropdown-item" href="<c:url value="/controller?command=clientViewInvoices"/>">
                                     <fmt:message key="header.jspf.button.my_invoices"/></a>
-                                <a class="dropdown-item" href="<c:url value="/client_page.jsp"/>">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/edit_client">
                                     <fmt:message key="header.jspf.button.user_details"/>
                                 </a>
                             </div>
                         </div>
                     </c:when>
                     <c:when test="${role.getName() eq 'admin'}">
+                        <!-- buttons for admin -->
                         <button type="button" onclick="window.location.href='/controller?command=adminCabinet'"
-                                class="btn btn-light"><c:out value="${user.getLogin()}"/></button>
+                                class="btn btn-light"><c:out value="${user.getLogin()}"/>
+                        </button>
                     </c:when>
                 </c:choose>
-                <button type="button" class="btn btn-danger"
-                        onclick="window.location.href='/controller?command=logout'">
-                    <fmt:message key="header.jspf.button.logout"/>
-                </button>
+                <form action="${pageContext.request.contextPath}/controller" method="post"
+                      style="margin-bottom: auto; margin-top: auto">
+                    <input type="hidden" name="command" value="logout">
+                    <button type="submit" class="btn btn-danger" >
+                        <fmt:message key="header.jspf.button.logout"/>
+                    </button>
+                </form>
             </c:when>
         </c:choose>
     </div>
     <script>
-        function navbarFunction() {
-            const home = document.getElementById('home');
-            const about = document.getElementById('about');
-            const calcCoast = document.getElementById('calcCoast');
-            const createOrder = document.getElementById('createOrder');
-            if (window.location.href === '/home') {
-                home.classList.add('active');
-                about.classList.remove('active');
-                calcCoast.classList.remove('active');
-                createOrder.classList.remove('active');
-            }else if (window.location.href === 'about'){
-                home.classList.remove('active');
-                about.classList.add('active');
-                calcCoast.classList.remove('active');
-                createOrder.classList.remove('active');
-            }else if (window.location.href === '/calculate_coast'){
-                home.classList.remove('active');
-                about.classList.remove('active');
-                calcCoast.classList.add('active');
-                createOrder.classList.remove('active');
-            }else if (window.location.href === '/create_order'){
-                home.classList.remove('active');
-                about.classList.remove('active');
-                calcCoast.classList.remove('active');
-                createOrder.classList.add('active');
-            }
-        }
+        $(document).ready(function () {
+            $('li.active').removeClass('active');
+            $('a[href="' + location.pathname + '"]').closest('li').addClass('active');
+        });
     </script>
 </nav>

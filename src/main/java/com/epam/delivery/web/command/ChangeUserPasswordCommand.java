@@ -39,6 +39,7 @@ public class ChangeUserPasswordCommand implements Command {
         String currPass = request.getParameter("pass");
         String newPass = request.getParameter("newPass");
         String newPassConf = request.getParameter("newPassConf");
+        String page = request.getParameter("page");
         if (user != null) {
             if (currPass != null && !user.getPassword().equals(PasswordEncoder.getHash(currPass))) {
                 message = "you enter incorrect password";//replace
@@ -58,7 +59,7 @@ public class ChangeUserPasswordCommand implements Command {
             }
             request.getServletContext().setAttribute("message", message);
             logger.trace("Set servlet context attribute: message --> " + message);
-            forward = Path.PAGE__CLIENT_EDIT_PAGE;
+            forward = page;
 
         } else {
             message = "problem with user";

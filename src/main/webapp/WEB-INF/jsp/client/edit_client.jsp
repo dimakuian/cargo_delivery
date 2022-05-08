@@ -35,7 +35,7 @@
         <option value="en"><fmt:message key="language.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="/client_page.jsp">
+    <input type="hidden" name="page" value="/client_page">
 </form>
 <!-- end Language switcher -->
 
@@ -246,6 +246,7 @@
             <!-- change password form -->
             <div id="changePassContainer" class="text-center col-md-12" style="padding: 5px; display: none">
                 <form action="<c:url value="/controller"/>" method="post" onsubmit="return validateChangePassForm();">
+                    <input type="hidden" name="page" value="/edit_client">
                     <input type="hidden" name="command" value="changePassword">
                     <div class="card">
                         <div class="card-header">
