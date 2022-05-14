@@ -11,11 +11,10 @@ public class User extends Entity{
     private String password;
     private int roleID;
 
-    private User(String login) {
-        this.login = login;
+    public User() {
     }
 
-    private User(String login, String password, int roleID) {
+    public User(String login, String password, int roleID) {
         this.login = login;
         this.password = password;
         this.roleID = roleID;
@@ -43,10 +42,6 @@ public class User extends Entity{
 
     public void setRoleID(int roleID) {
         this.roleID = roleID;
-    }
-
-    public static User createUser(String login, String password, int roleID) {
-        return new User(login, password, roleID);
     }
 
     @Override

@@ -67,19 +67,20 @@ Header (top area).
                 </form>
             </c:when>
             <c:when test="${not empty user}">
+                <jsp:useBean id="user" scope="session" type="com.epam.delivery.db.entities.User"/>
                 <c:choose>
                     <c:when test="${role.getName() eq 'client'}">
                         <!-- buttons for clients -->
                         <div class="btn-group dropleft">
                             <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
-                                <c:out value="${user.getLogin()}"/></button>
+                                <c:out value="${user.login}"/></button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="<c:url value="/controller?command=clientCabinet"/>">
+                                <a class="dropdown-item" href="<c:url value="/controller?command=clientOrders"/>">
                                     <fmt:message key="header.jspf.button.my_orders"/></a>
                                 <a class="dropdown-item" href="<c:url value="/controller?command=clientViewInvoices"/>">
                                     <fmt:message key="header.jspf.button.my_invoices"/></a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/edit_client">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/client_page">
                                     <fmt:message key="header.jspf.button.user_details"/>
                                 </a>
                             </div>
@@ -87,9 +88,27 @@ Header (top area).
                     </c:when>
                     <c:when test="${role.getName() eq 'admin'}">
                         <!-- buttons for admin -->
-                        <button type="button" onclick="window.location.href='/controller?command=adminCabinet'"
-                                class="btn btn-light"><c:out value="${user.getLogin()}"/>
-                        </button>
+                        <!-- buttons for clients -->
+                        <div class="btn-group dropleft">
+                            <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
+                                    aria-haspopup="true" aria-expanded="false">
+                                <c:out value="${user.login}"/></button>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="<c:url value="/controller?command=adminCabinet"/>">
+                                    <fmt:message key="header.jspf.button.all_orders"/></a>
+                                <a class="dropdown-item" href="<c:url value="/controller?command=clientViewInvoices"/>">
+                                    <fmt:message key="header.jspf.button.all_invoices"/></a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/admin_page">
+                                    <fmt:message key="header.jspf.button.user_details"/>
+                                </a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/reports">
+                                    <fmt:message key="header.jspf.button.reports"/>
+                                </a>
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/register_new_admin">
+                                    <fmt:message key="header.jspf.button.register_new_admin"/>
+                                </a>
+                            </div>
+                        </div>
                     </c:when>
                 </c:choose>
                 <form action="${pageContext.request.contextPath}/controller" method="post"

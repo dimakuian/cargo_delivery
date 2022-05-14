@@ -17,6 +17,11 @@ import javax.servlet.http.HttpSession;
 public class ChangeUserPasswordCommand implements Command {
 
     private static final Logger logger = LogManager.getLogger();
+    public static final String ATTRIBUTE_USER = "user";
+    public static final String PARAM_PASS = "pass";
+    public static final String PARAM_NEW_PASS = "newPass";
+    public static final String PARAM_NEW_PASS_CONF = "newPassConf";
+    public static final String PARAM_PAGE = "page";
 
     /**
      * Execution method for command.
@@ -31,15 +36,19 @@ public class ChangeUserPasswordCommand implements Command {
         logger.debug("start command");
 
         HttpSession session = request.getSession();
-        User user = (User) session.getAttribute("user");
-        logger.trace("Get session attribute: user --> " + user);
+        User user = (User) session.getAttribute(ATTRIBUTE_USER);
+        logger.trace("Get session attribute: " + ATTRIBUTE_USER + "-- >" + user);
         String message;
 
         String forward = Path.PAGE__ERROR_PAGE;
-        String currPass = request.getParameter("pass");
-        String newPass = request.getParameter("newPass");
-        String newPassConf = request.getParameter("newPassConf");
-        String page = request.getParameter("page");
+
+        String currPass = request.getParameter(PARAM_PASS);
+
+        String newPass = request.getParameter(PARAM_NEW_PASS);
+
+        String newPassConf = request.getParameter(PARAM_NEW_PASS_CONF);
+
+        String page = request.getParameter(PARAM_PAGE);
         if (user != null) {
             if (currPass != null && !user.getPassword().equals(PasswordEncoder.getHash(currPass))) {
                 message = "you enter incorrect password";//replace
@@ -66,6 +75,7 @@ public class ChangeUserPasswordCommand implements Command {
             request.getServletContext().setAttribute("errorMessage", message);
             logger.trace("Set servlet context attribute: errorMessage --> " + message);
         }
+
         logger.debug("Command finished");
         return forward;
     }

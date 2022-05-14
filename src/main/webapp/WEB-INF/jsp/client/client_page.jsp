@@ -40,8 +40,6 @@
 <!-- end Language switcher -->
 
 <jsp:useBean id="client" scope="session" type="com.epam.delivery.db.entities.Client"/>
-<jsp:useBean id="user" scope="session" type="com.epam.delivery.db.entities.User"/>
-
 <div class="container" style="margin: auto">
 
     <c:if test="${not empty message}">
@@ -64,7 +62,7 @@
             <h3><fmt:message key="client_page.jsp.text.personal_info"/></h3>
             <form class="form-horizontal" role="form" action="<c:url value="/controller"/>"
                   onsubmit="return validateEditForm();" method="post">
-                <input type="hidden" name="command" value="editUser">
+                <input type="hidden" name="command" value="editClient">
                 <div class="row" style="padding: 5px">
                     <label class="col-lg-4 control-label" for="login">
                         <strong><fmt:message key="client_page.jsp.label.login"/></strong>
@@ -246,8 +244,8 @@
             <!-- change password form -->
             <div id="changePassContainer" class="text-center col-md-12" style="padding: 5px; display: none">
                 <form action="<c:url value="/controller"/>" method="post" onsubmit="return validateChangePassForm();">
-                    <input type="hidden" name="page" value="/edit_client">
-                    <input type="hidden" name="command" value="changePassword">
+                    <input name="page" type="hidden" value="/client_page">
+                    <input name="command" type="hidden" value="changePassword">
                     <div class="card">
                         <div class="card-header">
                             <fmt:message key="client_page.jsp.text.change_pass_form"/>

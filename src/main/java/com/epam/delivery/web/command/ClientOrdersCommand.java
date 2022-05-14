@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.IntStream;
 
-public class ClientCabinetCommand implements Command {
+public class ClientOrdersCommand implements Command {
 
     private static final Logger logger = LogManager.getLogger();
 
@@ -99,7 +99,7 @@ public class ClientCabinetCommand implements Command {
 
                 session.setAttribute("client", client);
 
-                forward = Path.PAGE__CLIENT_CABINET;
+                forward = Path.PAGE__CLIENT_ORDERS;
             } else {
                 errorMessage = "can't find this client";
                 request.getServletContext().setAttribute("message", errorMessage);

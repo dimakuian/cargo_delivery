@@ -32,18 +32,12 @@ public final class SqlQuery {
     public static final String SQL_QUERY__ORDER_DELETE = "DELETE FROM delivery.`order` WHERE id=?";
 
     public static final String SQL_QUERY__ORDER_SELECT_ALL_ORDER_BEAN = "SELECT o.id,\n" +
-            "       sa_ua.city          AS shipping_city_ua,\n" +
-            "       sa_ua.street        AS shipping_street_ua,\n" +
-            "       sa_ua.street_number AS shipping_street_number_ua,\n" +
-            "       sa_en.city          AS shipping_city_en,\n" +
-            "       sa_en.street        AS shipping_street_en,\n" +
-            "       sa_en.street_number AS shipping_street_number_en,\n" +
-            "       da_ua.city          AS delivery_city_ua,\n" +
-            "       da_ua.street        as delivery_street_ua,\n" +
-            "       da_ua.street_number AS delivery_street_number_ua,\n" +
-            "       da_en.city          AS delivery_city_en,\n" +
-            "       da_en.street        AS delivery_street_en,\n" +
-            "       da_en.street_number AS delivery_street_number_en,\n" +
+            "       shipping_address,\n" +
+            "       CONCAT_WS(' ', sa_ua.city, sa_ua.street, sa_ua.street_number) AS shipping_address_UA,\n" +
+            "       CONCAT_WS(' ', sa_en.city, sa_en.street, sa_en.street_number) AS shipping_address_EN,\n" +
+            "       delivery_address,\n" +
+            "       CONCAT_WS(' ', da_ua.city, da_ua.street, da_ua.street_number) AS delivery_address_UA,\n" +
+            "       CONCAT_WS(' ', da_en.city, da_en.street, da_en.street_number) AS delivery_address_EN,\n" +
             "       o.creation_time,\n" +
             "       o.client_id,\n" +
             "       c.name,\n" +
@@ -58,9 +52,9 @@ public final class SqlQuery {
             "       o.weight,\n" +
             "       o.volume,\n" +
             "       o.fare,\n" +
-            "       ssd_ua.shipping_status_id AS status_id,\n" +
-            "       ssd_ua.description  AS status_ua,\n" +
-            "       ssd_en.description  AS status_en,\n" +
+            "       ssd_ua.shipping_status_id                                     AS status_id,\n" +
+            "       ssd_ua.description                                            AS status_ua,\n" +
+            "       ssd_en.description                                            AS status_en,\n" +
             "       o.delivery_date\n" +
             "FROM `order` o\n" +
             "         JOIN description_locality sa_ua ON sa_ua.locality_id = o.shipping_address\n" +

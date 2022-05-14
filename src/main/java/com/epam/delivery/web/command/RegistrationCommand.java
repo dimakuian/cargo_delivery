@@ -161,7 +161,8 @@ public class RegistrationCommand implements Command {
                 return forward;
             }
 
-            User user = User.createUser(login, PasswordEncoder.getHash(password), Role.CLIENT.ordinal());
+            User user = new User(login,PasswordEncoder.getHash(password),Role.CLIENT.ordinal());
+
             if (!userDao.insert(user)) {
                 errorMessage = "problem while insert user";
                 request.getServletContext().setAttribute("message", errorMessage);
@@ -193,7 +194,7 @@ public class RegistrationCommand implements Command {
             request.getServletContext().setAttribute("message", "successful");
             logger.trace("Set servlet context attribute: message --> " + "successful");
 
-            forward = Path.COMMAND_CLIENT_CABINET;
+            forward = Path.COMMAND_CLIENT_ORDERS;
         } else {
             errorMessage = "problem with input type";
             request.getServletContext().setAttribute("message", errorMessage);

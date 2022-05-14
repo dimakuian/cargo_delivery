@@ -10,11 +10,13 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+@WebServlet("/logout")
 public class LoginCommand implements Command {
 
     private static final Logger logger = LogManager.getLogger();
@@ -63,7 +65,7 @@ public class LoginCommand implements Command {
                 forward = Path.COMMAND__ADMIN_CABINET;
 
             if (role == Role.CLIENT)
-                forward = Path.COMMAND_CLIENT_CABINET;
+                forward = Path.COMMAND_CLIENT_ORDERS;
 
             session.setAttribute("user", user);
             logger.trace("Set the session attribute: user --> " + user);

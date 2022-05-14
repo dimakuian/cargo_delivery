@@ -35,11 +35,19 @@
     <input type="hidden" name="page" value="/controller?command=clientViewInvoices">
 </form>
 <!-- end Language switcher -->
-<c:if test="${not empty message}">
-    <c:out value="${message}"/>
-    <c:remove var="message"/>
-</c:if>
+
 <div class="container-fluid">
+    <c:if test="${not empty message}">
+        <jsp:useBean id="message" scope="application" type="java.lang.String"/>
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>${message}</strong>
+            <!-- close message -->
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <c:remove var="message"/>
+        </div>
+    </c:if>
     <c:choose>
         <c:when test="${allInvoicesMap.size()==0}">
             <div class="text-center">
@@ -185,14 +193,14 @@
                                         </p>
                                     </c:when>
                                     <c:when test="${invoice.invoiceStatusID==1}">
-                                        <p style="margin-bottom: 0px;" class="text-right text-danger">
-                                            <span><small><fmt:message key="invoice_status.declined"/></small></span>
-                                        </p>
-                                    </c:when>
-                                    <c:when test="${invoice.invoiceStatusID==2}">
                                         <p style=" margin-bottom: 0px;"
                                            class="text-right text-success">
                                             <span><small><fmt:message key="invoice_status.paid"/></small></span>
+                                        </p>
+                                    </c:when>
+                                    <c:when test="${invoice.invoiceStatusID==2}">
+                                        <p style="margin-bottom: 0px;" class="text-right text-danger">
+                                            <span><small><fmt:message key="invoice_status.declined"/></small></span>
                                         </p>
                                     </c:when>
                                 </c:choose>
@@ -281,6 +289,5 @@
         </div>
     </c:if>
 </div>
-
 </body>
 </html>

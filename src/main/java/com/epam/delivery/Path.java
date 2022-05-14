@@ -14,16 +14,16 @@ public final class Path {
     // pages
     public static final String PAGE__ERROR_PAGE = "/WEB-INF/jsp/error_page.jsp";
     public static final String PAGE__CREATE_ORDER = "/WEB-INF/jsp/client/create_order.jsp";
-    public static final String PAGE__CLIENT_CABINET = "/WEB-INF/jsp/client/client_cabinet.jsp";
+    public static final String PAGE__CLIENT_ORDERS = "/client_orders";
     public static final String PAGE__COUNT_COAST = "/calculate_coast";
-    public static final String PAGE__REGISTRATION = "/WEB-INF/jsp/registration.jsp";
+    public static final String PAGE__REGISTRATION = "/registration";
     public static final String PAGE__EDIT_ORDER = "/edit_order.jsp";
     public static final String PAGE__ADMIN_CABINET = "/WEB-INF/jsp/admin/admin_cabinet.jsp";
     public static final String PAGE__ADMIN_VIEW_ORDER = "/WEB-INF/jsp/admin/admin_view_order.jsp";
     public static final String PAGE__CLIENT_VIEW_ORDER = "/WEB-INF/jsp/client/client_view_order.jsp";
     public static final String PAGE__CLIENT_VIEW_INVOICES = "/WEB-INF/jsp/client/client_view_invoices.jsp";
-    public static final String PAGE__CLIENT_EDIT_PAGE = "/edit_client";
-
+    public static final String PAGE__CLIENT_PAGE = "/client_page";
+    public static final String PAGE__ADMIN_PAGE = "/admin_page";
 
 
     // commands
@@ -35,7 +35,8 @@ public final class Path {
     public static final String COMMAND__VIEW_CALCULATE_COAST = "/controller?command=viewCalculateCost";
     public static final String COMMAND__SET_LOCALE = "/controller?command=setLocale";
 
-    public static final String COMMAND_CLIENT_CABINET = "/controller?command=clientCabinet";
+    public static final String COMMAND_CLIENT_ORDERS = "/controller?command=clientOrders";
+    public static final String COMMAND_CLIENT_INVOICES = "/controller?command=clientViewInvoices";
     public static final String COMMAND__EDIT_USER = "/controller?command=editUser";
     public static final String COMMAND__RECHARGE = "/controller?command=recharge";
     public static final String COMMAND__PAY_ORDER = "/controller?command=payOrder";

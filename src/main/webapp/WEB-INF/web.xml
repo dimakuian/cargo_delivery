@@ -48,23 +48,31 @@
     </servlet-mapping>
 
     <servlet>
-        <servlet-name>EDIT_CLIENT</servlet-name>
-        <jsp-file>/WEB-INF/jsp/client/edit_client.jsp</jsp-file>
+        <servlet-name>CLIENT_PAGE</servlet-name>
+        <jsp-file>/WEB-INF/jsp/client/client_page.jsp</jsp-file>
     </servlet>
     <servlet-mapping>
-        <servlet-name>EDIT_CLIENT</servlet-name>
-        <url-pattern>/edit_client</url-pattern>
+        <servlet-name>CLIENT_PAGE</servlet-name>
+        <url-pattern>/client_page</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>CLIENT_ORDERS</servlet-name>
+        <jsp-file>/WEB-INF/jsp/client/client_orders.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CLIENT_ORDERS</servlet-name>
+        <url-pattern>/client_orders</url-pattern>
+    </servlet-mapping>
 
-<!--    <servlet>-->
-<!--        <servlet-name>CLIENT_CABINET</servlet-name>-->
-<!--        <jsp-file>/WEB-INF/jsp/client/client_cabinet.jsp</jsp-file>-->
-<!--    </servlet>-->
-<!--    <servlet-mapping>-->
-<!--        <servlet-name>CLIENT_CABINET</servlet-name>-->
-<!--        <url-pattern>/home/client</url-pattern>-->
-<!--    </servlet-mapping>-->
+    <servlet>
+        <servlet-name>ADMIN_PAGE</servlet-name>
+        <jsp-file>/WEB-INF/jsp/admin/admin_page.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ADMIN_PAGE</servlet-name>
+        <url-pattern>/admin_page</url-pattern>
+    </servlet-mapping>
 
     <!--============================================================
 	Controller
@@ -93,11 +101,11 @@
         <filter-class>com.epam.delivery.web.filter.CommandAccessFilter</filter-class>
         <init-param>
             <param-name>admin</param-name>
-            <param-value>adminCabinet confirmOrder changeOrderStatus adminViewOrder</param-value>
+            <param-value>adminCabinet confirmOrder changeOrderStatus adminViewOrder editAdmin</param-value>
         </init-param>
         <init-param>
             <param-name>client</param-name>
-            <param-value>clientCabinet editUser recharge payInvoice editOrder createOrder viewCreateOrderPage clientViewOrder clientViewInvoices</param-value>
+            <param-value>clientOrders editClient recharge payInvoice editOrder createOrder viewCreateOrderPage clientViewOrder clientViewInvoices</param-value>
         </init-param>
         <init-param>
             <param-name>common</param-name>

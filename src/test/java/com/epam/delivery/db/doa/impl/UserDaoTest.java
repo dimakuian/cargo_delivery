@@ -2,7 +2,9 @@ package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionWithDriverManager;
+import com.epam.delivery.db.entities.Role;
 import com.epam.delivery.db.entities.User;
+import com.epam.delivery.service.PasswordEncoder;
 import org.junit.jupiter.api.*;
 
 import java.io.FileOutputStream;
@@ -78,7 +80,10 @@ class UserDaoTest {
 
     @Test
     void insert() {
-        User user = User.createUser("test1", "pass123", 0);
+        User user = new User();
+        user.setLogin("test1");
+        user.setPassword("pass123");
+        user.setRoleID(0);
         assertTrue(dao.insert(user));
         assertEquals(8, user.getId());
     }

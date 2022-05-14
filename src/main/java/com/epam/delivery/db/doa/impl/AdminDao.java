@@ -57,7 +57,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
         boolean result = false;
         Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
-            stat.setLong(1, entity.getId());
+            stat.setLong(1, entity.getUserID());
             stat.setString(2, entity.getName());
             stat.setString(3, entity.getSurname());
             stat.setLong(4, entity.getId());
@@ -154,11 +154,8 @@ public class AdminDao extends AbstractDao<Admin, Long> {
             stat.setLong(1, userID);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
-                    long id = rs.getLong("id");
-                    String name = rs.getString("name");
-                    String surname = rs.getString("surname");
-                    admin = Admin.createAdmin(userID, name, surname);
-                    admin.setId(id);
+                    AdminMapper mapper = new AdminMapper();
+                    admin = mapper.mapRow(rs);
                 }
             }
         } catch (SQLException exception) {
@@ -182,7 +179,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
                 long userID = rs.getLong("user_id");
                 String name = rs.getString("name");
                 String surname = rs.getString("surname");
-                Admin admin = Admin.createAdmin(userID, name, surname);
+                Admin admin = new Admin(userID,name,surname);
                 admin.setId(id);
                 return admin;
             } catch (SQLException exception) {

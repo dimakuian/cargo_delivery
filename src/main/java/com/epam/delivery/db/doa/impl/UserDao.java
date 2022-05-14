@@ -155,7 +155,7 @@ public class UserDao extends AbstractDao<User, Long> {
                     long id = rs.getLong("id");
                     String password = rs.getString("password");
                     int roleID = rs.getInt("role_id");
-                    user = User.createUser(login, password, roleID);
+                    user = new User(login, password, roleID);
                     user.setId(id);
                 }
             }
@@ -196,7 +196,7 @@ public class UserDao extends AbstractDao<User, Long> {
                 String login = rs.getString("login");
                 String password = rs.getString("password");
                 int roleID = rs.getInt("role_id");
-                User user = User.createUser(login, password, roleID);
+                User user = new User(login, password, roleID);
                 user.setId(id);
                 return user;
             } catch (SQLException exception) {

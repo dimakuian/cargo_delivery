@@ -76,7 +76,6 @@ public class PayInvoiceCommand implements Command {
                     break;
                 case "decline":
                     invoice.setInvoiceStatusID(2);
-                    System.out.println(invoice.getInvoiceStatusID());
                     order.setStatusID(7L);
                     invoiceDao.update(invoice);
                     break;
@@ -84,7 +83,7 @@ public class PayInvoiceCommand implements Command {
             orderDao.update(order);
             request.getServletContext().setAttribute("message", message);
             logger.trace("Set servlet context attribute: message --> " + message);
-            forward = "/controller?command=clientViewInvoices";
+            forward = Path.COMMAND_CLIENT_INVOICES;
 
         } else {
             request.getServletContext().setAttribute("errorMessage", "problem with user");

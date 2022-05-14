@@ -78,7 +78,10 @@ class AdminDaoTest {
 
     @Test
     void insert() {
-        Admin admin = Admin.createAdmin(5, "Test", "Surname");
+        Admin admin = new Admin();
+        admin.setUserID(5);
+        admin.setName("Test");
+        admin.setSurname("Surname");
         assertTrue(dao.insert(admin));
         assertEquals(3, admin.getId());
     }

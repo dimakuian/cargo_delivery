@@ -11,7 +11,10 @@ public class Admin  extends Entity{
     private String name;
     private String surname;
 
-    private Admin(long userID, String name, String surname) {
+    public Admin() {
+    }
+
+    public Admin(long userID, String name, String surname) {
         this.userID = userID;
         this.name = name;
         this.surname = surname;
@@ -39,10 +42,6 @@ public class Admin  extends Entity{
 
     public void setSurname(String surname) {
         this.surname = surname;
-    }
-
-    public static Admin createAdmin(long userID, String name, String surname) {
-        return new Admin(userID, name, surname);
     }
 
     @Override

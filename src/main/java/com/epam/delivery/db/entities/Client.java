@@ -15,6 +15,9 @@ public class Client extends Entity{
     private String phone;
     private double balance;
 
+    public Client() {
+    }
+
     private Client(long userID, String name, String surname) {
         this.userID = userID;
         this.name = name;

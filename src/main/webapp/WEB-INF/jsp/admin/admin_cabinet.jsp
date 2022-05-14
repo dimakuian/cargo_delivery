@@ -70,7 +70,6 @@
         <input type="hidden" name="command" value="adminCabinet">
         <input type="hidden" name="page_number" value="${currentPage}">
     </form>
-
     <!--main content-->
     <div class="container">
         <c:if test="${allOrders.size()>0}">
@@ -105,13 +104,13 @@
                                         <c:out value="${from}: "/>
                                         <c:choose>
                                             <c:when test="${locale=='en'}">
-                                                <c:out value="${order.shippingAddress.en}"/>
+                                                <c:out value="${order.shippingAddress.description.en}"/>
                                             </c:when>
                                             <c:when test="${locale=='ua'}">
-                                                <c:out value="${order.shippingAddress.ua}"/>
+                                                <c:out value="${order.shippingAddress.description.ua}"/>
                                             </c:when>
                                             <c:otherwise>
-                                                <c:out value="${order.shippingAddress.ua}"/>
+                                                <c:out value="${order.shippingAddress.description.ua}"/>
                                             </c:otherwise>
                                         </c:choose>
                                     </li>
@@ -120,13 +119,13 @@
                                         <c:out value="${to}: "/>
                                         <c:choose>
                                             <c:when test="${locale=='en'}">
-                                                <c:out value="${order.deliveryAddress.en}"/>
+                                                <c:out value="${order.deliveryAddress.description.en}"/>
                                             </c:when>
                                             <c:when test="${locale=='ua'}">
-                                                <c:out value="${order.deliveryAddress.ua}"/>
+                                                <c:out value="${order.deliveryAddress.description.ua}"/>
                                             </c:when>
                                             <c:otherwise>
-                                                <c:out value="${order.deliveryAddress.ua}"/>
+                                                <c:out value="${order.deliveryAddress.description.ua}"/>
                                             </c:otherwise>
                                         </c:choose>
                                     </li>
@@ -159,7 +158,6 @@
                                         </form>
                                     </c:when>
                                     <c:otherwise>
-                                        <c:set var="statuses" value="${applicationScope['status_description']}"/>
                                         <form action="/controller" method="post">
                                             <input type="hidden" name="command" value="changeOrderStatus">
                                             <input type="hidden" name="order" value="${order.getId()}">
@@ -195,7 +193,8 @@
                                     <input type="hidden" name="command" value="adminViewOrder">
                                     <input type="hidden" name="orderID" value="${order.id}">
                                     <fmt:message key="button.show" var="button_show"/>
-                                    <button class="btn btn-primary" type="submit"><c:out value="${button_show}"/>
+                                    <button class="btn btn-primary" type="submit">
+                                        <c:out value="${button_show}"/>
                                     </button>
                                 </form>
                             </div>
@@ -230,8 +229,6 @@
             </c:forEach>
         </ul>
     </nav>
-    <c:out value="${message}"/>
-    <c:remove var="message"/>
 </div>
 </body>
 </html>

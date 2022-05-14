@@ -35,6 +35,7 @@ public class AdminCabinetCommand implements Command {
         HttpSession session = request.getSession(false);
         User user = (User) session.getAttribute("user");
         logger.trace("Get session attribute: user --> " + user);
+        System.out.println(user.getId());
 
         Role role = (Role) session.getAttribute("role");
 

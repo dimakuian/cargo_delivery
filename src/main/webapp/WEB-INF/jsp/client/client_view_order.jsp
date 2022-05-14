@@ -120,7 +120,7 @@
                         </c:otherwise>
                     </c:choose>
                 </li>
-                <button class="btn btn-primary" onclick="window.location.href='/controller?command=clientCabinet'">
+                <button class="btn btn-primary" onclick="window.location.href='/controller?command=clientOrders'">
                     <fmt:message key="button.back_to_orders"/></button>
             </ul>
         </div>

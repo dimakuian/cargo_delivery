@@ -6,6 +6,8 @@ import java.io.Serializable;
  * Root of all entities which have identifier field.
  */
 public abstract class Entity implements Serializable {
+    public Entity() {
+    }
 
     private static final long serialVersionUID = 464786738590157269L;
 

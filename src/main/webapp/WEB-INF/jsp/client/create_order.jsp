@@ -40,6 +40,17 @@
 <%-- CONTENT --%>
 <main class="create_order-form">
     <div class="container">
+        <c:if test="${not empty message}">
+            <jsp:useBean id="message" scope="application" type="java.lang.String"/>
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                <strong>${message}</strong>
+                <!-- close message -->
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <c:remove var="message"/>
+            </div>
+        </c:if>
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
