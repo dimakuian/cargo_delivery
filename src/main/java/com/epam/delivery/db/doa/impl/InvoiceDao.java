@@ -13,8 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.epam.delivery.db.doa.SqlQuery.*;
+
 
 public class InvoiceDao extends AbstractDao<Invoice, Long> {
+
+    private static final long serialVersionUID = 978669972582963409L;
 
     public InvoiceDao(ConnectionBuilder builder) {
         super(builder);
@@ -128,6 +132,45 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
             builder.commitAndClose(connection);
         }
         return list;
+    }
+
+    public List<Invoice> findAll(int from, int limit) {
+        List<Invoice> list = new ArrayList<>();
+        Connection connection = builder.getConnection();
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__INVOICE_SELECT_ALL_WITH_PARAM)) {
+            stat.setInt(1,from);
+            stat.setInt(2,limit);
+            try (ResultSet rs = stat.executeQuery()) {
+                while (rs.next()) {
+                    EntityMapper<Invoice> mapper = new InvoiceMapper();
+                    Invoice invoice = mapper.mapRow(rs);
+                    list.add(invoice);
+                }
+            }
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Invoice findAll. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return list;
+    }
+
+    public int getNoOfAllInvoices() {
+        Connection connection = builder.getConnection();
+        try (Statement stat = connection.createStatement()) {
+            try (ResultSet rs = stat.executeQuery(SQL_QUERY__ORDER_COUNT_INVOICES)) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Order getNoOfRecords. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return 0;
     }
 
     @Override

@@ -191,9 +191,9 @@
                                 </c:choose>
                                 <form action="/controller" method="do">
                                     <input type="hidden" name="command" value="adminViewOrder">
-                                    <input type="hidden" name="orderID" value="${order.id}">
+                                    <input type="hidden" name="backPage" value="/controller?command=adminCabinet">
                                     <fmt:message key="button.show" var="button_show"/>
-                                    <button class="btn btn-primary" type="submit">
+                                    <button class="btn btn-primary" type="submit" name="orderID" value="${order.id}">
                                         <c:out value="${button_show}"/>
                                     </button>
                                 </form>

@@ -40,6 +40,7 @@ public class CommandContainer {
         commands.put("changeOrderStatus",new ChangeOrderStatusCommand());
         commands.put("adminViewOrder",new AdminViewOrderCommand());
         commands.put("editAdmin",new EditAdminCommand());
+        commands.put("adminInvoices",new AdminInvoicesCommand());
 
         logger.debug("Command container was successfully initialized");
         logger.trace("Number of commands --> " + commands.size());

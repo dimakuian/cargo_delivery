@@ -96,7 +96,7 @@ Header (top area).
                             <div class="dropdown-menu">
                                 <a class="dropdown-item" href="<c:url value="/controller?command=adminCabinet"/>">
                                     <fmt:message key="header.jspf.button.all_orders"/></a>
-                                <a class="dropdown-item" href="<c:url value="/controller?command=clientViewInvoices"/>">
+                                <a class="dropdown-item" href="<c:url value="/controller?command=adminInvoices"/>">
                                     <fmt:message key="header.jspf.button.all_invoices"/></a>
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/admin_page">
                                     <fmt:message key="header.jspf.button.user_details"/>

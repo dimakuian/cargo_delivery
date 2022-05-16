@@ -24,6 +24,7 @@ public final class Path {
     public static final String PAGE__CLIENT_VIEW_INVOICES = "/WEB-INF/jsp/client/client_view_invoices.jsp";
     public static final String PAGE__CLIENT_PAGE = "/client_page";
     public static final String PAGE__ADMIN_PAGE = "/admin_page";
+    public static final String PAGE__ADMIN_INVOICES = "/all_invoices";
 
 
     // commands

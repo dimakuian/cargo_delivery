@@ -74,6 +74,15 @@
         <url-pattern>/admin_page</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>ADMIN_INVOICES</servlet-name>
+        <jsp-file>/WEB-INF/jsp/admin/admin_invoices.jsp</jsp-file>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ADMIN_INVOICES</servlet-name>
+        <url-pattern>/all_invoices</url-pattern>
+    </servlet-mapping>
+
     <!--============================================================
 	Controller
 =============================================================-->
@@ -101,7 +110,7 @@
         <filter-class>com.epam.delivery.web.filter.CommandAccessFilter</filter-class>
         <init-param>
             <param-name>admin</param-name>
-            <param-value>adminCabinet confirmOrder changeOrderStatus adminViewOrder editAdmin</param-value>
+            <param-value>adminCabinet confirmOrder changeOrderStatus adminViewOrder editAdmin adminInvoices</param-value>
         </init-param>
         <init-param>
             <param-name>client</param-name>

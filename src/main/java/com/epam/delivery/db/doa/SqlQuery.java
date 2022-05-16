@@ -227,8 +227,11 @@ public final class SqlQuery {
 
     public static final String SQL_QUERY__INVOICE_EXIST_BY_ID = "SELECT id FROM `delivery`.`invoice` WHERE id=?";
 
-    public static final String SQL_QUERY__INVOICE_SELECT_ALL = "SELECT id, client_id, creation_datetime, order_id, " +
-            "sum, invoice_status_id FROM `delivery`.`invoice`";
+    public static final String SQL_QUERY__INVOICE_SELECT_ALL = "SELECT id, client_id, creation_datetime, order_id, sum, " +
+            "invoice_status_id FROM `delivery`.`invoice`";
+
+    public static final String SQL_QUERY__INVOICE_SELECT_ALL_WITH_PARAM = "SELECT id, client_id, creation_datetime, " +
+            "order_id, sum, invoice_status_id FROM `delivery`.`invoice` LIMIT ?,?";
 
     public static final String SQL_QUERY__INVOICE_DELETE_BY_ID = "DELETE FROM `delivery`.`invoice` WHERE id=?";
 
@@ -244,6 +247,8 @@ public final class SqlQuery {
     public static final String SQL_QUERY__INVOICE_SELECT_CLIENT_INVOICES_BY_STATUS_ID = "SELECT id, client_id, " +
             "creation_datetime, order_id, sum, invoice_status_id FROM `delivery`.`invoice` WHERE client_id=? AND " +
             "invoice_status_id=?";
+
+    public static final String SQL_QUERY__ORDER_COUNT_INVOICES = "SELECT COUNT(*) FROM `delivery`.`invoice`";
 
     private SqlQuery() {
     }
