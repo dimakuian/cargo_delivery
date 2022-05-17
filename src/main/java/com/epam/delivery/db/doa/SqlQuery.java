@@ -230,8 +230,12 @@ public final class SqlQuery {
     public static final String SQL_QUERY__INVOICE_SELECT_ALL = "SELECT id, client_id, creation_datetime, order_id, sum, " +
             "invoice_status_id FROM `delivery`.`invoice`";
 
-    public static final String SQL_QUERY__INVOICE_SELECT_ALL_WITH_PARAM = "SELECT id, client_id, creation_datetime, " +
-            "order_id, sum, invoice_status_id FROM `delivery`.`invoice` LIMIT ?,?";
+    public static final String SQL_QUERY__INVOICE_SELECT_ALL_WITH_STATUS = "SELECT id, client_id, creation_datetime, " +
+            "order_id, sum, invoice_status_id FROM `delivery`.`invoice`\n" +
+            "WHERE  (sum BETWEEN ? AND ?) AND invoice_status_id =? ORDER BY %s LIMIT ?,?";
+
+    public static final String SQL_QUERY__INVOICE_SELECT_ALL_WITH_FILTER = "SELECT id, client_id, creation_datetime, " +
+            "order_id, sum, invoice_status_id FROM `delivery`.`invoice`WHERE `sum` BETWEEN ? AND ? ORDER BY %s LIMIT ?,?";
 
     public static final String SQL_QUERY__INVOICE_DELETE_BY_ID = "DELETE FROM `delivery`.`invoice` WHERE id=?";
 
@@ -244,11 +248,17 @@ public final class SqlQuery {
     public static final String SQL_QUERY__INVOICE_COUNT_CLIENT_NOT_PAID_INVOICES = "SELECT COUNT(*) FROM `invoice` " +
             "WHERE client_id=? AND invoice_status_id=0";
 
+    public static final String SQL_QUERY__INVOICE_SELECT_MAX_SUM = "SELECT MAX(sum) FROM `delivery`.`invoice`";
+
     public static final String SQL_QUERY__INVOICE_SELECT_CLIENT_INVOICES_BY_STATUS_ID = "SELECT id, client_id, " +
             "creation_datetime, order_id, sum, invoice_status_id FROM `delivery`.`invoice` WHERE client_id=? AND " +
             "invoice_status_id=?";
 
     public static final String SQL_QUERY__ORDER_COUNT_INVOICES = "SELECT COUNT(*) FROM `delivery`.`invoice`";
+
+    public static final String SQL_QUERY__ORDER_COUNT_INVOICES_WITH_FILTER = "SELECT COUNT(*) FROM `delivery`.`invoice`" +
+            "WHERE invoice_status_id = ?";
+
 
     private SqlQuery() {
     }

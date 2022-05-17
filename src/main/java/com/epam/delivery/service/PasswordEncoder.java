@@ -9,6 +9,10 @@ public final class PasswordEncoder {
     private PasswordEncoder() {
     }
 
+    /**
+     * @param psw input password for encode
+     * @return md5 hex encoded password view
+     */
         public static String getHash(String psw) {
         if (psw == null) return "";
         byte[] bytesEncoded;

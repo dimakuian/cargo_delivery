@@ -34,7 +34,7 @@
         <option value="en"><fmt:message key="language.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="/all_invoices">
+    <input type="hidden" name="page" value="/controller?command=adminInvoices">
 </form>
 <!-- end Language switcher -->
 
@@ -46,85 +46,135 @@
 
         <!-- left column -->
         <div class="col-sm-3" style="width: 90%">
-            <div class="list-group" id="list-tab" role="tablist">
-                <div class="list-group-item">
-                    <div class="row">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">from</span>
+            <form action="/controller" method="get">
+                <input type="hidden" name="command" value="adminInvoices">
+                <input type="hidden" name="recordPerPage" value="${recordPerPage}">
+                <input type="hidden" name="sort" value="${sort}">
+                <div class="list-group" id="list-tab" role="tablist">
+                    <div class="list-group-item">
+                        <div class="row">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">from</span>
+                                </div>
+                                <input type="date" class="form-control" name="fromDate">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                </div>
                             </div>
-                            <input type="date" class="form-control">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                        </div>
+                        <div class="row">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">to</span>
+                                </div>
+                                <input type="date" class="form-control" name="toDate">
+                                <div class="input-group-append">
+                                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="row">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">to</span>
+                    <div class="list-group-item">
+                        <div class="col-sm-12">
+                            <span>Status:</span>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <c:choose>
+                                <c:when test="${statusID eq 0}">
+                                    <input class="form-check-input" type="radio" name="statusID" id="status1" value="0"
+                                           checked>
+                                </c:when>
+                                <c:otherwise>
+                                    <input class="form-check-input" type="radio" name="statusID" id="status1" value="0">
+                                </c:otherwise>
+                            </c:choose>
+                            <label class="form-check-label" for="status1">
+                                <fmt:message key="admin_invoices.jsp.invoice_status.new"/>
+                            </label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <c:choose>
+                                <c:when test="${statusID eq 1}">
+                                    <input class="form-check-input" type="radio" name="statusID" id="status2" value="1"
+                                           checked>
+                                </c:when>
+                                <c:otherwise>
+                                    <input class="form-check-input" type="radio" name="statusID" id="status2" value="1">
+                                </c:otherwise>
+                            </c:choose>
+                            <label class="form-check-label" for="status2">
+                                <fmt:message key="admin_invoices.jsp.invoice_status.paid"/>
+                            </label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <c:choose>
+                                <c:when test="${statusID eq 2}">
+                                    <input class="form-check-input" type="radio" name="statusID" id="status3" value="2"
+                                           checked>
+                                </c:when>
+                                <c:otherwise>
+                                    <input class="form-check-input" type="radio" name="statusID" id="status3" value="2">
+                                </c:otherwise>
+                            </c:choose>
+                            <label class="form-check-label" for="status3">
+                                <fmt:message key="admin_invoices.jsp.invoice_status.declined"/>
+                            </label>
+                        </div>
+                        <div class="form-check col-sm-12">
+                            <c:choose>
+                                <c:when test="${empty statusID}">
+                                    <input checked class="form-check-input" id="all" name="statusID" type="radio"
+                                           value="">
+                                </c:when>
+                                <c:otherwise>
+                                    <input class="form-check-input" id="all" name="statusID" type="radio" value="">
+                                </c:otherwise>
+                            </c:choose>
+                            <label class="form-check-label" for="all">
+                                <fmt:message key="admin_invoices.jsp.invoice_status.all"/>
+                            </label>
+                        </div>
+                    </div>
+                    <div class="list-group-item">
+                        <div class="row">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">from</span>
+                                </div>
+                                <c:choose>
+                                    <c:when test="${not empty fromSum}">
+                                        <input type="text" class="form-control" name="fromSum" value="${fromSum}">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <input type="text" class="form-control" name="fromSum" value="0">
+                                    </c:otherwise>
+                                </c:choose>
+                                <div class="input-group-append">
+                                    <span class="input-group-text">hrn</span>
+                                </div>
                             </div>
-                            <input type="date" class="form-control">
-                            <div class="input-group-append">
-                                <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                        </div>
+                        <div class="row">
+                            <div class="input-group mb-3">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text">to</span>
+                                </div>
+                                <input type="text" class="form-control" name="toSum" value="${toSum}">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">hrn</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="list-group-item">
-                    <div class="col-sm-12">
-                        <span>Status:</span>
-                    </div>
-                    <div class="form-check col-sm-12">
-                        <input class="form-check-input" type="radio" name="statusID" id="exampleRadios1" value="0"
-                               checked>
-                        <label class="form-check-label" for="exampleRadios1">
-                            <fmt:message key="admin_invoices.jsp.invoice_status.new"/>
-                        </label>
-                    </div>
-                    <div class="form-check col-sm-12">
-                        <input class="form-check-input" type="radio" name="statusID" id="exampleRadios2" value="1"
-                               checked>
-                        <label class="form-check-label" for="exampleRadios1">
-                            <fmt:message key="admin_invoices.jsp.invoice_status.paid"/>
-                        </label>
-                    </div>
-                    <div class="form-check col-sm-12">
-                        <input class="form-check-input" type="radio" name="statusID" id="exampleRadios3" value="2"
-                               checked>
-                        <label class="form-check-label" for="exampleRadios1">
-                            <fmt:message key="admin_invoices.jsp.invoice_status.declined"/>
-                        </label>
+                    <div class="list-group-item">
+                            <button type="submit" class="btn btn-info float-left">Ok</button>
+                            <a class="btn btn-danger float-right"
+                               href="${pageContext.request.contextPath}/controller?command=adminInvoices">Reset all
+                            </a>
                     </div>
                 </div>
-                <div class="list-group-item">
-                    <div class="row">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">from</span>
-                            </div>
-                            <input type="text" class="form-control">
-                            <div class="input-group-append">
-                                <span class="input-group-text">hrn</span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="input-group mb-3">
-                            <div class="input-group-prepend">
-                                <span class="input-group-text">to</span>
-                            </div>
-                            <input type="text" class="form-control">
-                            <div class="input-group-append">
-                                <span class="input-group-text">hrn</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="list-group-item text-center">
-                    <button type="button" class="btn btn-info">Ok</button>
-                </div>
-            </div>
+            </form>
         </div>
 
         <!-- right column -->
@@ -135,7 +185,7 @@
                 <div class="col-sm-6">
                     <div class="col-sm-6">
                         <div class="row">
-                            <form action="${pageContext.request.contextPath}/controller" method="post">
+                            <form action="${pageContext.request.contextPath}/controller" method="get">
                                 <input type="hidden" name="command" value="adminInvoices">
                                 <input type="hidden" name="recordPerPage" value="${recordPerPage}">
                                 <label for="sort" style="margin: auto;display: inline-block">
@@ -144,37 +194,60 @@
                                 <select name="sort" id="sort" class="form-control-sm" onchange="this.form.submit();">
                                     <option selected disabled>
                                         <c:choose>
-                                            <c:when test="${sort eq 'date ASC'}">
+                                            <c:when test="${sort eq 'id ASC'}">
+                                                <fmt:message key="admin_invoices.jsp.option.number_l"/>
+                                            </c:when>
+                                            <c:when test="${sort eq 'id DESC'}">
+                                                <fmt:message key="admin_invoices.jsp.option.number_h"/>
+                                            </c:when>
+                                            <c:when test="${sort eq 'creation_datetime ASC'}">
                                                 <fmt:message key="admin_invoices.jsp.option.date_l"/>
+                                            </c:when>
+                                            <c:when test="${sort eq 'creation_datetime DESC'}">
+                                                <fmt:message key="admin_invoices.jsp.option.date_h"/>
+                                            </c:when>
+                                            <c:when test="${sort eq 'sum ASC'}">
+                                                <fmt:message key="admin_invoices.jsp.option.sum_l"/>
+                                            </c:when>
+                                            <c:when test="${sort eq 'sum DESC'}">
+                                                <fmt:message key="admin_invoices.jsp.option.sum_h"/>
                                             </c:when>
                                             <c:otherwise>
                                                 <fmt:message key="admin_invoices.jsp.option.number_l"/>
                                             </c:otherwise>
                                         </c:choose>
                                     </option>
-                                    <option value="id ASC"><fmt:message key="admin_invoices.jsp.option.number_l"/></option>
-                                    <option value="id DESC"><fmt:message key="admin_invoices.jsp.option.number_h"/></option>
-                                    <option value="date ASC"><fmt:message key="admin_invoices.jsp.option.date_l"/></option>
-                                    <option value="date DESC"><fmt:message key="admin_invoices.jsp.option.date_h"/></option>
-                                    <option value="sum ASC"><fmt:message key="admin_invoices.jsp.option.sum_l"/></option>
-                                    <option value="sum DESC"><fmt:message key="admin_invoices.jsp.option.sum_h"/></option>
-                                    <option value="status ASC">
-                                        <fmt:message key="admin_invoices.jsp.option.status_l"/>
+                                    <option value="id ASC"><fmt:message
+                                            key="admin_invoices.jsp.option.number_l"/>
                                     </option>
-                                    <option value="status DESC">
-                                        <fmt:message key="admin_invoices.jsp.option.status_h"/>
+                                    <option value="id DESC"><fmt:message
+                                            key="admin_invoices.jsp.option.number_h"/>
+                                    </option>
+                                    <option value="creation_datetime ASC"><fmt:message
+                                            key="admin_invoices.jsp.option.date_l"/>
+                                    </option>
+                                    <option value="creation_datetime DESC"><fmt:message
+                                            key="admin_invoices.jsp.option.date_h"/>
+                                    </option>
+                                    <option value="sum ASC"><fmt:message
+                                            key="admin_invoices.jsp.option.sum_l"/>
+                                    </option>
+                                    <option value="sum DESC"><fmt:message
+                                            key="admin_invoices.jsp.option.sum_h"/>
                                     </option>
                                 </select>
                             </form>
                         </div>
                     </div>
                 </div>
+
                 <!-- change number invoice in 1 page -->
                 <div class="col-sm-6">
                     <div class="col-sm-6">
                         <div class="row">
-                            <form action="${pageContext.request.contextPath}/controller" method="post">
+                            <form action="${pageContext.request.contextPath}/controller" method="get">
                                 <input type="hidden" name="command" value="adminInvoices">
+                                <input type="hidden" name="sort" value="${sort}">
                                 <label for="recordPerPage" style="margin: auto;display: inline-block">
                                     <fmt:message key="admin_invoices.jsp.label.on_page"/>
                                 </label>
@@ -209,7 +282,7 @@
                 </div>
             </div>
 
-            <jsp:useBean id="allInvoices" scope="application" type="java.util.ArrayList"/>
+            <jsp:useBean id="allInvoices" scope="request" type="java.util.ArrayList"/>
             <table class="table table-hover" style="margin-top: 10px">
                 <thead class="thead-light">
                 <tr>
@@ -256,17 +329,17 @@
 
             <%--For displaying Page numbers.
                 The when condition does not display a link for the current page--%>
-<%--            <jsp:useBean id="noOfPages" scope="application" type="java.lang.Integer"/>--%>
+            <%--            <jsp:useBean id="noOfPages" scope="application" type="java.lang.Integer"/>--%>
             <c:if test="${noOfPages >1}">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
                         <c:forEach begin="1" end="${noOfPages}" var="i">
                             <c:choose>
-<%--                                <jsp:useBean id="currentPage" scope="application" type="java.lang.Integer"/>--%>
+                                <%--                                <jsp:useBean id="currentPage" scope="application" type="java.lang.Integer"/>--%>
                                 <c:when test="${currentPage eq i}">
                                     <li class="page-item disabled">
                                         <a class="page-link" href="${pageContext.request.contextPath}
-                                        /controller?command=adminInvoices&page_number=${i}&recordPerPage=${recordPerPage}">
+                                        /controller?command=adminInvoices&page_number=${i}&recordPerPage=${recordPerPage}&sort=${sort}">
                                             <c:out value="${i}"/>
                                         </a>
                                     </li>
@@ -274,7 +347,7 @@
                                 <c:otherwise>
                                     <li class="page-item">
                                         <a class="page-link" href="${pageContext.request.contextPath}
-                                        /controller?command=adminInvoices&page_number=${i}&recordPerPage=${recordPerPage}">
+                                        /controller?command=adminInvoices&page_number=${i}&recordPerPage=${recordPerPage}&sort=${sort}">
                                             <c:out value="${i}"/>
                                         </a>
                                     </li>

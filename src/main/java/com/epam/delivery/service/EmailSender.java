@@ -16,6 +16,11 @@ public final class EmailSender {
     private static final String PASSWORD = "gpcmhofbatgsyoye";
     private static final Logger logger = LogManager.getLogger();
 
+    /**
+     * @param to email address recipient
+     * @param subject email subject
+     * @param text email text message
+     */
     public static void sendMail(String to, String subject, String text) {
         logger.info("SendMail method start.");
 
