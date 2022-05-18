@@ -22,18 +22,14 @@ public final class Path {
     public static final String PAGE__ADMIN_VIEW_ORDER = "/WEB-INF/jsp/admin/admin_view_order.jsp";
     public static final String PAGE__CLIENT_VIEW_ORDER = "/WEB-INF/jsp/client/client_view_order.jsp";
     public static final String PAGE__CLIENT_VIEW_INVOICES = "/WEB-INF/jsp/client/client_view_invoices.jsp";
-    public static final String PAGE__CLIENT_PAGE = "/client_page";
-    public static final String PAGE__ADMIN_PAGE = "/admin_page";
-    public static final String PAGE__ADMIN_INVOICES = "/all_invoices";
-
+    public static final String PAGE__CLIENT_PAGE = "/WEB-INF/jsp/client/client_page.jsp";
+    public static final String PAGE__ADMIN_PAGE = "/WEB-INF/jsp/admin/admin_page.jsp";
+    public static final String PAGE__ADMIN_INVOICES = "/WEB-INF/jsp/admin/admin_invoices.jsp";
+    public static final String PAGE__REG_NEW_ADMIN = "/WEB-INF/jsp/admin/registration_new_admin.jsp";
 
     // commands
-    public static final String COMMAND__LOGIN = "/controller?command=login";
-    public static final String COMMAND__LOGOUT = "/controller?command=logout";
     public static final String COMMAND__VIEW_REGISTRATION_PAGE = "/controller?command=viewRegistrationPage";
-    public static final String COMMAND__REGISTRATION = "/controller?command=registration";
-    public static final String COMMAND__CALCULATE_COAST = "/controller?command=calculateCost";
-    public static final String COMMAND__VIEW_CALCULATE_COAST = "/controller?command=viewCalculateCost";
+    public static final String COMMAND__VIEW_ADMIN_PAGE = "/controller?command=viewAdminPage";
     public static final String COMMAND__SET_LOCALE = "/controller?command=setLocale";
 
     public static final String COMMAND_CLIENT_ORDERS = "/controller?command=clientOrders";
@@ -44,7 +40,6 @@ public final class Path {
     public static final String COMMAND__EDIT_ORDER = "/controller?command=editOrder";
     public static final String COMMAND__CREATE_ORDER = "/controller?command=createOrder";
     public static final String COMMAND__VIEW_CREATE_ORDER_PAGE = "/controller?command=viewCreateOrderPage";
-
     public static final String COMMAND__ADMIN_CABINET = "/controller?command=adminCabinet";
 
 }

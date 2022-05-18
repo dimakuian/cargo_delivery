@@ -234,6 +234,15 @@ public final class SqlQuery {
             "order_id, sum, invoice_status_id FROM `delivery`.`invoice`\n" +
             "WHERE  (sum BETWEEN ? AND ?) AND invoice_status_id =? ORDER BY %s LIMIT ?,?";
 
+    public static final String SQL_QUERY__INVOICE_SELECT_ALL_WITH_STATUS_AND_DATE = "SELECT id, client_id, creation_datetime, " +
+            "order_id, sum, invoice_status_id FROM `delivery`.`invoice` WHERE  (sum BETWEEN ? AND ?) " +
+            "AND invoice_status_id =? AND (DATE(`creation_datetime`) BETWEEN ? AND ?) ORDER BY %s LIMIT ?,?";
+
+    public static final String SQL_QUERY__INVOICE_SELECT_ALL_WITH_DATE = "SELECT id, client_id, " +
+            "creation_datetime, order_id, sum, invoice_status_id FROM `delivery`.`invoice`\n" +
+            "WHERE  (sum BETWEEN ? AND ?) AND (DATE(`creation_datetime`) BETWEEN ? AND ?) " +
+            "ORDER BY %s LIMIT ?,?";
+
     public static final String SQL_QUERY__INVOICE_SELECT_ALL_WITH_FILTER = "SELECT id, client_id, creation_datetime, " +
             "order_id, sum, invoice_status_id FROM `delivery`.`invoice`WHERE `sum` BETWEEN ? AND ? ORDER BY %s LIMIT ?,?";
 
@@ -256,8 +265,14 @@ public final class SqlQuery {
 
     public static final String SQL_QUERY__ORDER_COUNT_INVOICES = "SELECT COUNT(*) FROM `delivery`.`invoice`";
 
-    public static final String SQL_QUERY__ORDER_COUNT_INVOICES_WITH_FILTER = "SELECT COUNT(*) FROM `delivery`.`invoice`" +
-            "WHERE invoice_status_id = ?";
+    public static final String SQL_QUERY__ORDER_COUNT_INVOICES_WITH_STATUS = "SELECT COUNT(*) FROM `delivery`.`invoice` " +
+            "WHERE (`sum` BETWEEN ? AND ?) AND `invoice_status_id`=?";
+
+    public static final String SQL_QUERY__ORDER_COUNT_INVOICES_WITH_DATE = "SELECT COUNT(*) FROM `delivery`.`invoice` " +
+            "WHERE (`sum` BETWEEN ? AND ?) AND (DATE(`creation_datetime`) BETWEEN ? AND ?) ";
+
+    public static final String SQL_QUERY__ORDER_COUNT_INVOICES_WITH_STATUS_AND_DATE = "SELECT COUNT(*) FROM `delivery`.`invoice` " +
+            "WHERE (sum BETWEEN ? AND ?) AND invoice_status_id =? AND (DATE(`creation_datetime`) BETWEEN ? AND ?)";
 
 
     private SqlQuery() {

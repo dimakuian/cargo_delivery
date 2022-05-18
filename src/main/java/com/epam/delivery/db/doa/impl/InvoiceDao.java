@@ -138,8 +138,8 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
         List<Invoice> list = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(String.format(SQL_QUERY__INVOICE_SELECT_ALL_WITH_FILTER, sort))) {
-            stat.setDouble(1,sumStart);
-            stat.setDouble(2,sumEnd);
+            stat.setDouble(1, sumStart);
+            stat.setDouble(2, sumEnd);
             stat.setInt(3, startPosition);
             stat.setInt(4, limit);
             try (ResultSet rs = stat.executeQuery()) {
@@ -158,14 +158,14 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
         return list;
     }
 
-    public List<Invoice> findAll(String sort, int startPosition, int limit, double sumStart, double sumEnd, long statusID) {
+    public List<Invoice> findAll(String sort, int startPos, int limit, double sumStart, double sumEnd, long statusID) {
         List<Invoice> list = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(String.format(SQL_QUERY__INVOICE_SELECT_ALL_WITH_STATUS, sort))) {
-            stat.setDouble(1,sumStart);
-            stat.setDouble(2,sumEnd);
-            stat.setLong(3,statusID);
-            stat.setInt(4, startPosition);
+            stat.setDouble(1, sumStart);
+            stat.setDouble(2, sumEnd);
+            stat.setLong(3, statusID);
+            stat.setInt(4, startPos);
             stat.setInt(5, limit);
             try (ResultSet rs = stat.executeQuery()) {
                 while (rs.next()) {
@@ -183,6 +183,65 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
         return list;
     }
 
+    public List<Invoice> findAll(String sort, int startPosition, int limit, double sumStart, double sumEnd,
+                                 Timestamp startDate, Timestamp endDate) {
+
+        List<Invoice> list = new ArrayList<>();
+        Connection connection = builder.getConnection();
+        try (PreparedStatement stat = connection.
+                prepareStatement(String.format(SQL_QUERY__INVOICE_SELECT_ALL_WITH_DATE, sort))) {
+
+            stat.setDouble(1, sumStart);
+            stat.setDouble(2, sumEnd);
+            stat.setTimestamp(3,startDate);
+            stat.setTimestamp(4,endDate);
+            stat.setInt(5, startPosition);
+            stat.setInt(6, limit);
+            try (ResultSet rs = stat.executeQuery()) {
+                while (rs.next()) {
+                    EntityMapper<Invoice> mapper = new InvoiceMapper();
+                    Invoice invoice = mapper.mapRow(rs);
+                    list.add(invoice);
+                }
+            }
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Invoice findAll. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return list;
+    }
+
+    public List<Invoice> findAll(String sort, int startPos, int limit, double sumStart, double sumEnd, long statusID,
+                                 Timestamp startDate, Timestamp endDate) {
+        List<Invoice> list = new ArrayList<>();
+        Connection connection = builder.getConnection();
+        try (PreparedStatement stat = connection.
+                prepareStatement(String.format(SQL_QUERY__INVOICE_SELECT_ALL_WITH_STATUS_AND_DATE, sort))) {
+
+            stat.setDouble(1, sumStart);
+            stat.setDouble(2, sumEnd);
+            stat.setLong(3, statusID);
+            stat.setTimestamp(4,startDate);
+            stat.setTimestamp(5,endDate);
+            stat.setInt(6, startPos);
+            stat.setInt(7, limit);
+            try (ResultSet rs = stat.executeQuery()) {
+                while (rs.next()) {
+                    EntityMapper<Invoice> mapper = new InvoiceMapper();
+                    Invoice invoice = mapper.mapRow(rs);
+                    list.add(invoice);
+                }
+            }
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Invoice findAll. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return list;
+    }
 
     public int getNoOfAllInvoices() {
         Connection connection = builder.getConnection();
@@ -201,10 +260,55 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
         return 0;
     }
 
-    public int getNoOfAllInvoices(long statusID) {
+    public int getNoOfFilteredInvoices(double sumStart, double sumEnd, long statusID) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_COUNT_INVOICES_WITH_FILTER)) {
-            stat.setLong(1,statusID);
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_COUNT_INVOICES_WITH_STATUS)) {
+            stat.setDouble(1,sumStart);
+            stat.setDouble(2,sumEnd);
+            stat.setLong(3, statusID);
+            try (ResultSet rs = stat.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Order getNoOfRecords. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return 0;
+    }
+
+    public int getNoOfFilteredInvoices(double sumStart, double sumEnd, Timestamp startDate, Timestamp endDate) {
+        Connection connection = builder.getConnection();
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_COUNT_INVOICES_WITH_DATE)) {
+            stat.setDouble(1, sumStart);
+            stat.setDouble(2, sumEnd);
+            stat.setTimestamp(3,startDate);
+            stat.setTimestamp(4,endDate);
+            try (ResultSet rs = stat.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Order getNoOfRecords. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return 0;
+    }
+
+    public int getNoOfFilteredInvoices(double sumStart, double sumEnd, long statusID, Timestamp startDate, Timestamp endDate) {
+        Connection connection = builder.getConnection();
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_COUNT_INVOICES_WITH_STATUS_AND_DATE)) {
+            stat.setDouble(1, sumStart);
+            stat.setDouble(2, sumEnd);
+            stat.setLong(3,statusID);
+            stat.setTimestamp(4,startDate);
+            stat.setTimestamp(5,endDate);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1);

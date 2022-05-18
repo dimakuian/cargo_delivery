@@ -51,11 +51,11 @@ public class EditAdminCommand implements Command {
 
             Admin admin = (Admin) session.getAttribute(ATTRIBUTE_ADMIN);
             logger.trace("Get session attribute: admin --> " + admin);
-            if (admin.getName().equals(name) || admin.getSurname().equals(surname)) {
+            if (admin.getName().equals(name) && admin.getSurname().equals(surname)) {
                 String message = "nothing to change"; //replace
                 request.getServletContext().setAttribute("message", message);
                 logger.trace("Set servlet context attribute: message --> " + "successful");
-                return Path.PAGE__ADMIN_PAGE;
+                return Path.COMMAND__VIEW_ADMIN_PAGE;
             } else {
                 admin.setName(name);
                 admin.setSurname(surname);
@@ -74,7 +74,7 @@ public class EditAdminCommand implements Command {
                 request.getServletContext().setAttribute("message", message);
                 logger.trace("Set servlet context attribute: message --> " + "unknown error");
             }
-            forward = Path.PAGE__ADMIN_PAGE;
+            forward = Path.COMMAND__VIEW_ADMIN_PAGE;
         } catch (Exception exception) {
             logger.error(exception.getMessage());
         }

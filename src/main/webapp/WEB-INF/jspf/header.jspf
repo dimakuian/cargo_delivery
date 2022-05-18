@@ -88,23 +88,22 @@ Header (top area).
                     </c:when>
                     <c:when test="${role.getName() eq 'admin'}">
                         <!-- buttons for admin -->
-                        <!-- buttons for clients -->
                         <div class="btn-group dropleft">
                             <button type="button" class="btn btn-light dropdown-toggle" data-toggle="dropdown"
                                     aria-haspopup="true" aria-expanded="false">
                                 <c:out value="${user.login}"/></button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="<c:url value="/controller?command=adminCabinet"/>">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=adminCabinet">
                                     <fmt:message key="header.jspf.button.all_orders"/></a>
-                                <a class="dropdown-item" href="<c:url value="/controller?command=adminInvoices"/>">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=adminInvoices">
                                     <fmt:message key="header.jspf.button.all_invoices"/></a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/admin_page">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=viewAdminPage">
                                     <fmt:message key="header.jspf.button.user_details"/>
                                 </a>
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/reports">
                                     <fmt:message key="header.jspf.button.reports"/>
                                 </a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/register_new_admin">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=viewRegNewAdmin">
                                     <fmt:message key="header.jspf.button.register_new_admin"/>
                                 </a>
                             </div>

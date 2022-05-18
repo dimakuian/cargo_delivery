@@ -1,3 +1,7 @@
+<jsp:useBean id="allInvoices" scope="request" type="java.util.ArrayList"/>
+<jsp:useBean id="recordPerPage" scope="request" type="java.lang.Integer"/>
+<jsp:useBean id="sort" scope="request" type="java.lang.String"/>
+
 <%--
   Created by IntelliJ IDEA.
   User: dimakuian
@@ -38,15 +42,14 @@
 </form>
 <!-- end Language switcher -->
 
-
-<%--<jsp:useBean id="recordPerPage" scope="application" type="java.lang.Integer"/>--%>
 <!-- main content -->
 <div class="container-fluid">
     <div class="row">
 
         <!-- left column -->
         <div class="col-sm-3" style="width: 90%">
-            <form action="/controller" method="get">
+            <!-- form for filter content -->
+            <form action="${pageContext.request.contextPath}/controller" method="get">
                 <input type="hidden" name="command" value="adminInvoices">
                 <input type="hidden" name="recordPerPage" value="${recordPerPage}">
                 <input type="hidden" name="sort" value="${sort}">
@@ -55,9 +58,13 @@
                         <div class="row">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">from</span>
+                                    <span class="input-group-text">
+                                        <fmt:message key="admin_invoices.jsp.text.from"/>
+                                    </span>
                                 </div>
-                                <input type="date" class="form-control" name="fromDate">
+                                <label for="fromDate"></label>
+                                <input type="date" class="form-control" id="fromDate" name="fromDate"
+                                       value="${fromDate}">
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                                 </div>
@@ -66,9 +73,12 @@
                         <div class="row">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">to</span>
+                                    <span class="input-group-text">
+                                        <fmt:message key="admin_invoices.jsp.text.to"/>
+                                    </span>
                                 </div>
-                                <input type="date" class="form-control" name="toDate">
+                                <label for="toDate"></label>
+                                <input type="date" class="form-control" id="toDate" name="toDate" value="${toDate}">
                                 <div class="input-group-append">
                                     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                                 </div>
@@ -77,7 +87,7 @@
                     </div>
                     <div class="list-group-item">
                         <div class="col-sm-12">
-                            <span>Status:</span>
+                            <span><fmt:message key="admin_invoices.jsp.text.status"/></span>
                         </div>
                         <div class="form-check col-sm-12">
                             <c:choose>
@@ -140,38 +150,52 @@
                         <div class="row">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">from</span>
+                                    <span class="input-group-text">
+                                        <fmt:message key="admin_invoices.jsp.text.from"/>
+                                    </span>
                                 </div>
+                                <label for="fromSum"></label>
                                 <c:choose>
                                     <c:when test="${not empty fromSum}">
-                                        <input type="text" class="form-control" name="fromSum" value="${fromSum}">
+                                        <input type="text" class="form-control" id="fromSum" name="fromSum"
+                                               value="${fromSum}">
                                     </c:when>
                                     <c:otherwise>
-                                        <input type="text" class="form-control" name="fromSum" value="0">
+                                        <input type="text" class="form-control" id="fromSum" name="fromSum" value="0">
                                     </c:otherwise>
                                 </c:choose>
                                 <div class="input-group-append">
-                                    <span class="input-group-text">hrn</span>
+                                    <span class="input-group-text">
+                                        <fmt:message key="admin_invoices.jsp.text.hrn"/>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                         <div class="row">
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend">
-                                    <span class="input-group-text">to</span>
+                                    <span class="input-group-text">
+                                        <fmt:message key="admin_invoices.jsp.text.to"/>
+                                    </span>
                                 </div>
-                                <input type="text" class="form-control" name="toSum" value="${toSum}">
+                                <label for="toSum"></label>
+                                <input type="text" class="form-control" id="toSum" name="toSum" value="${toSum}">
                                 <div class="input-group-append">
-                                    <span class="input-group-text">hrn</span>
+                                    <span class="input-group-text">
+                                        <fmt:message key="admin_invoices.jsp.text.hrn"/>
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="list-group-item">
-                            <button type="submit" class="btn btn-info float-left">Ok</button>
-                            <a class="btn btn-danger float-right"
-                               href="${pageContext.request.contextPath}/controller?command=adminInvoices">Reset all
-                            </a>
+                        <button type="submit" class="btn btn-info float-left">
+                            <fmt:message key="admin_invoices.jsp.button.ok"/>
+                        </button>
+                        <a class="btn btn-danger float-right"
+                           href="${pageContext.request.contextPath}/controller?command=adminInvoices">
+                            <fmt:message key="admin_invoices.jsp.button.reset_all"/>
+                        </a>
                     </div>
                 </div>
             </form>
@@ -188,6 +212,21 @@
                             <form action="${pageContext.request.contextPath}/controller" method="get">
                                 <input type="hidden" name="command" value="adminInvoices">
                                 <input type="hidden" name="recordPerPage" value="${recordPerPage}">
+                                <c:if test="${not empty fromDate}">
+                                    <input type="hidden" name="fromDate" value="${fromDate}">
+                                </c:if>
+                                <c:if test="${not empty toDate}">
+                                    <input type="hidden" name="toDate" value="${toDate}">
+                                </c:if>
+                                <c:if test="${not empty statusID}">
+                                    <input type="hidden" name="statusID" value="${statusID}">
+                                </c:if>
+                                <c:if test="${not empty fromSum}">
+                                    <input type="hidden" name="fromSum" value="${fromSum}">
+                                </c:if>
+                                <c:if test="${not empty toSum}">
+                                    <input type="hidden" name="toSum" value="${toSum}">
+                                </c:if>
                                 <label for="sort" style="margin: auto;display: inline-block">
                                     <fmt:message key="admin_invoices.jsp.label.sort"/>
                                 </label>
@@ -217,23 +256,23 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </option>
-                                    <option value="id ASC"><fmt:message
-                                            key="admin_invoices.jsp.option.number_l"/>
+                                    <option value="id ASC">
+                                        <fmt:message key="admin_invoices.jsp.option.number_l"/>
                                     </option>
-                                    <option value="id DESC"><fmt:message
-                                            key="admin_invoices.jsp.option.number_h"/>
+                                    <option value="id DESC">
+                                        <fmt:message key="admin_invoices.jsp.option.number_h"/>
                                     </option>
-                                    <option value="creation_datetime ASC"><fmt:message
-                                            key="admin_invoices.jsp.option.date_l"/>
+                                    <option value="creation_datetime ASC">
+                                        <fmt:message key="admin_invoices.jsp.option.date_l"/>
                                     </option>
-                                    <option value="creation_datetime DESC"><fmt:message
-                                            key="admin_invoices.jsp.option.date_h"/>
+                                    <option value="creation_datetime DESC">
+                                        <fmt:message key="admin_invoices.jsp.option.date_h"/>
                                     </option>
-                                    <option value="sum ASC"><fmt:message
-                                            key="admin_invoices.jsp.option.sum_l"/>
+                                    <option value="sum ASC">
+                                        <fmt:message key="admin_invoices.jsp.option.sum_l"/>
                                     </option>
-                                    <option value="sum DESC"><fmt:message
-                                            key="admin_invoices.jsp.option.sum_h"/>
+                                    <option value="sum DESC">
+                                        <fmt:message key="admin_invoices.jsp.option.sum_h"/>
                                     </option>
                                 </select>
                             </form>
@@ -282,7 +321,6 @@
                 </div>
             </div>
 
-            <jsp:useBean id="allInvoices" scope="request" type="java.util.ArrayList"/>
             <table class="table table-hover" style="margin-top: 10px">
                 <thead class="thead-light">
                 <tr>
@@ -302,7 +340,7 @@
                         <td>
                             <form action="${pageContext.request.contextPath}/controller" method="get">
                                 <input type="hidden" name="command" value="adminViewOrder">
-                                <input type="hidden" name="backPage" value="/all_invoices">
+                                <input type="hidden" name="backPage" value="/controller?command=adminInvoices">
                                 <button type="submit" class="btn btn-link" name="orderID" value="${invoice.orderID}">
                                         ${invoice.orderID}
                                 </button>
@@ -329,17 +367,15 @@
 
             <%--For displaying Page numbers.
                 The when condition does not display a link for the current page--%>
-            <%--            <jsp:useBean id="noOfPages" scope="application" type="java.lang.Integer"/>--%>
+            <jsp:useBean id="noOfPages" scope="request" type="java.lang.Integer"/>
             <c:if test="${noOfPages >1}">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
                         <c:forEach begin="1" end="${noOfPages}" var="i">
                             <c:choose>
-                                <%--                                <jsp:useBean id="currentPage" scope="application" type="java.lang.Integer"/>--%>
-                                <c:when test="${currentPage eq i}">
+                                <c:when test="${page eq i}">
                                     <li class="page-item disabled">
-                                        <a class="page-link" href="${pageContext.request.contextPath}
-                                        /controller?command=adminInvoices&page_number=${i}&recordPerPage=${recordPerPage}&sort=${sort}">
+                                        <a class="page-link" href="#">
                                             <c:out value="${i}"/>
                                         </a>
                                     </li>
