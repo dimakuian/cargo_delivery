@@ -43,6 +43,7 @@ public class CommandContainer {
         commands.put("adminInvoices",new AdminInvoicesCommand());
         commands.put("viewRegNewAdmin", new ViewRegNewAdminPageCommand());
         commands.put("viewAdminPage", new ViewAdminPageCommand());
+        commands.put("regNewAdmin",new RegNewAdminCommand());
 
 
         logger.debug("Command container was successfully initialized");

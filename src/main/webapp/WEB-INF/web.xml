@@ -65,7 +65,7 @@
         <filter-class>com.epam.delivery.web.filter.CommandAccessFilter</filter-class>
         <init-param>
             <param-name>admin</param-name>
-            <param-value>adminCabinet confirmOrder changeOrderStatus adminViewOrder editAdmin adminInvoices viewRegNewAdmin viewAdminPage</param-value>
+            <param-value>adminCabinet confirmOrder changeOrderStatus adminViewOrder editAdmin adminInvoices viewRegNewAdmin viewAdminPage regNewAdmin</param-value>
         </init-param>
         <init-param>
             <param-name>client</param-name>

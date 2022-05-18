@@ -4,11 +4,15 @@ package com.epam.delivery.db.doa.impl;
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.db.entities.Admin;
+import com.epam.delivery.db.entities.User;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.epam.delivery.db.doa.SqlQuery.SQL_QUERY__USER_INSERT;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class AdminDao extends AbstractDao<Admin, Long> {
     private static final long serialVersionUID = 3048949702578419905L;
@@ -30,7 +34,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
     public boolean insert(Admin entity) {
         boolean result = false;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stat = connection.prepareStatement(INSERT, RETURN_GENERATED_KEYS)) {
             stat.setLong(1, entity.getUserID());
             stat.setString(2, entity.getName());
             stat.setString(3, entity.getSurname());
@@ -39,6 +43,44 @@ public class AdminDao extends AbstractDao<Admin, Long> {
                     if (rs.next()) {
                         long genID = rs.getLong(1);
                         entity.setId(genID);
+                        result = true;
+                    }
+                }
+            }
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Admin insert. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return result;
+    }
+
+    public boolean insert(User user, Admin admin) {
+        boolean result = false;
+        Connection connection = builder.getConnection();
+        try (PreparedStatement adminStat = connection.prepareStatement(INSERT, RETURN_GENERATED_KEYS);
+             PreparedStatement userStat = connection.prepareStatement(SQL_QUERY__USER_INSERT, RETURN_GENERATED_KEYS)) {
+            userStat.setString(1, user.getLogin());
+            userStat.setString(2, user.getPassword());
+            userStat.setInt(3, user.getRoleID());
+            if (userStat.executeUpdate() > 0) {
+                try (ResultSet userRs = userStat.getGeneratedKeys()) {
+                    if (userRs.next()) {
+                        long genUserId = userRs.getLong(1);
+                        user.setId(genUserId);
+                    }
+                }
+            }
+            admin.setUserID(user.getId());
+            adminStat.setLong(1, admin.getUserID());
+            adminStat.setString(2, admin.getName());
+            adminStat.setString(3, admin.getSurname());
+            if (adminStat.executeUpdate() > 0) {
+                try (ResultSet adminRs = adminStat.getGeneratedKeys()) {
+                    if (adminRs.next()) {
+                        long genAdminId = adminRs.getLong(1);
+                        admin.setId(genAdminId);
                         result = true;
                     }
                 }
@@ -179,7 +221,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
                 long userID = rs.getLong("user_id");
                 String name = rs.getString("name");
                 String surname = rs.getString("surname");
-                Admin admin = new Admin(userID,name,surname);
+                Admin admin = new Admin(userID, name, surname);
                 admin.setId(id);
                 return admin;
             } catch (SQLException exception) {

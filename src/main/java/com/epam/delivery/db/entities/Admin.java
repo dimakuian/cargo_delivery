@@ -14,6 +14,11 @@ public class Admin  extends Entity{
     public Admin() {
     }
 
+    public Admin(String name, String surname) {
+        this.name = name;
+        this.surname = surname;
+    }
+
     public Admin(long userID, String name, String surname) {
         this.userID = userID;
         this.name = name;

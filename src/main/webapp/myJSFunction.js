@@ -1,18 +1,3 @@
-const homePage = document.getElementById("home_page");
-if (document.URL.indexOf('http://localhost:8080/home') !== -1 || window.location.href.indexOf("/index.jsp") !== -1) {
-    homePage.style.display = "none";
-} else {
-    homePage.style.display = "block";
-}
-
-function showPsw(id) {
-    var x = document.getElementById(id);
-    if (x.type === "password") {
-        x.type = "text";
-    } else {
-        x.type = "password";
-    }
-}
 
 function validform(lang) {
     var login = document.forms["my-form"]["login"].value;

@@ -37,7 +37,7 @@
         <option value="en"><fmt:message key="language.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="/admin_page">
+    <input type="hidden" name="page" value="/controller?command=viewAdminPage">
 </form>
 <!-- end Language switcher -->
 <jsp:useBean id="admin" scope="session" type="com.epam.delivery.db.entities.Admin"/>

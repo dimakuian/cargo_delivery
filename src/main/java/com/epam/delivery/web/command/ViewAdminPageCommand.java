@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ViewAdminPageCommand implements Command{
+public class ViewAdminPageCommand implements Command {
 
     private static final Logger logger = LogManager.getLogger();
 

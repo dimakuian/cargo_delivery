@@ -1,6 +1,15 @@
 package com.epam.delivery.db.doa;
 
 public final class SqlQuery {
+    //USER
+    public static final String SQL_QUERY__USER_INSERT = "INSERT INTO delivery.`user` (id,login,password,role_id) VALUES (DEFAULT,?,?,?)";
+    public static final String SQL_QUERY__USER_UPDATE = "UPDATE delivery.`user` SET login = ?, password = ?, role_id = ? WHERE id = ?";
+    public static final String SQL_QUERY__USER_SELECT_BY_ID = "SELECT id, login, password, role_id FROM delivery.`user` WHERE id = ?";
+    public static final String SQL_QUERY__USER_SELECT_BY_LOGIN = "SELECT id, login, password, role_id FROM delivery.`user` WHERE login = ?";
+    public static final String SQL_QUERY__USER_EXIST = "SELECT id FROM delivery.`user` WHERE id=?";
+    public static final String SQL_QUERY__USER_EXIST_BY_LOGIN = "SELECT login FROM delivery.`user` WHERE login=?";
+    public static final String SQL_QUERY__USER_SELECT_ALL = "SELECT id, login, password, role_id FROM delivery.`user`";
+    public static final String SQL_QUERY__USER_DELETE = "DELETE FROM delivery.`user` WHERE id =?";
 
     //CLIENT
     public static final String SQL_QUERY__CLIENT_UPDATE_BALANCE = "UPDATE delivery.`client` SET balance=? WHERE id=?";

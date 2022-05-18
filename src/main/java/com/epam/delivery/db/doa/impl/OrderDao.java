@@ -3,13 +3,15 @@ package com.epam.delivery.db.doa.impl;
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.Fields;
 import com.epam.delivery.db.doa.EntityMapper;
-import com.epam.delivery.db.doa.SqlQuery;
 import com.epam.delivery.db.entities.Order;
 import com.epam.delivery.db.entities.bean.LocalityBean;
 import com.epam.delivery.db.entities.bean.OrderBean;
 
 import java.sql.*;
 import java.util.*;
+
+import static com.epam.delivery.db.doa.SqlQuery.*;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class OrderDao extends AbstractDao<Order, Long> {
     private static final long serialVersionUID = 7139334124441683412L;
@@ -23,8 +25,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
         boolean result = false;
         Connection connection = builder.getConnection();
         try {
-            try (PreparedStatement stat = connection.prepareStatement(SqlQuery.SQL_QUERY__ORDER_INSERT,
-                    Statement.RETURN_GENERATED_KEYS)) {
+            try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_INSERT, RETURN_GENERATED_KEYS)) {
                 putDataToStatement(entity, stat);
                 if (stat.executeUpdate() > 0) {
                     try (ResultSet rs = stat.getGeneratedKeys()) {
@@ -48,7 +49,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     @Override
     public boolean update(Order entity) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SqlQuery.SQL_QUERY__ORDER_UPDATE)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_UPDATE)) {
             putDataToStatement(entity, stat);
             stat.setLong(16, entity.getId());
             if (stat.executeUpdate() > 0) return true;
@@ -65,7 +66,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     public Optional<Order> findById(Long id) {
         Order order = null;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SqlQuery.SQL_QUERY__ORDER_SELECT_BY_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_SELECT_BY_ID)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
@@ -85,7 +86,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     @Override
     public boolean existsById(Long id) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SqlQuery.SQL_QUERY__ORDER_EXIST)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_EXIST)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) return true;
@@ -104,7 +105,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
         List<Order> list = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
-            try (ResultSet rs = stat.executeQuery(SqlQuery.SQL_QUERY__ORDER_SELECT_ALL)) {
+            try (ResultSet rs = stat.executeQuery(SQL_QUERY__ORDER_SELECT_ALL)) {
                 while (rs.next()) {
                     OrderMapper mapper = new OrderMapper();
                     Order order = mapper.mapRow(rs);
@@ -123,7 +124,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     @Override
     public boolean deleteById(Long id) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SqlQuery.SQL_QUERY__ORDER_DELETE)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_DELETE)) {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
@@ -138,7 +139,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     public List<Order> findAllByUserID(Long id) {
         List<Order> list = new ArrayList<>();
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SqlQuery.SQL_QUERY__ORDER_SELECT_ALL_FOR_CLIENT)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_SELECT_ALL_FOR_CLIENT)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 while (rs.next()) {
@@ -180,7 +181,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     public List<OrderBean> findAllOrderBean(int from, int limit, String sort) {
         List<OrderBean> list = new ArrayList<>();
         Connection connection = builder.getConnection();
-        String sqlQuery = String.format(SqlQuery.SQL_QUERY__ORDER_SELECT_ALL_ORDER_BEAN, sort);
+        String sqlQuery = String.format(SQL_QUERY__ORDER_SELECT_ALL_ORDER_BEAN, sort);
         try (PreparedStatement stat = connection.prepareStatement(sqlQuery)) {
             stat.setInt(1, from);
             stat.setInt(2, limit);
@@ -203,7 +204,7 @@ public class OrderDao extends AbstractDao<Order, Long> {
     public Optional<OrderBean> findOrderBeanById(Long orderID) {
         OrderBean orderBean = null;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SqlQuery.SQL_QUERY__SELECT_ORDER_BEAN_BY_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__SELECT_ORDER_BEAN_BY_ID)) {
             stat.setLong(1, orderID);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
@@ -222,8 +223,8 @@ public class OrderDao extends AbstractDao<Order, Long> {
 
     public List<OrderBean> findClientOrdersBean(int from, int limit, String sort, long clientId, String filter) {
         String sqlQuery;
-        if (filter.isEmpty()) sqlQuery = String.format(SqlQuery.SQL_QUERY__SELECT_USER_ORDERS_BEAN, sort);
-        else sqlQuery = String.format(SqlQuery.SQL_QUERY__SELECT_USER_ORDERS_BEAN_FILTER, filter, sort);
+        if (filter.isEmpty()) sqlQuery = String.format(SQL_QUERY__SELECT_USER_ORDERS_BEAN, sort);
+        else sqlQuery = String.format(SQL_QUERY__SELECT_USER_ORDERS_BEAN_FILTER, filter, sort);
         List<OrderBean> list = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(sqlQuery)) {
@@ -249,8 +250,8 @@ public class OrderDao extends AbstractDao<Order, Long> {
 
     public int getNoOfAllOrders(String filter) {
         String sqlQuery;
-        if (filter == null) sqlQuery = SqlQuery.SQL_QUERY__ORDER_COUNT_ALL_ORDERS;
-        else sqlQuery = String.format(SqlQuery.SQL_QUERY__ORDER_COUNT_ALL_ORDERS_FILTER, filter);
+        if (filter == null) sqlQuery = SQL_QUERY__ORDER_COUNT_ALL_ORDERS;
+        else sqlQuery = String.format(SQL_QUERY__ORDER_COUNT_ALL_ORDERS_FILTER, filter);
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
             try (ResultSet rs = stat.executeQuery(sqlQuery)) {
@@ -269,8 +270,8 @@ public class OrderDao extends AbstractDao<Order, Long> {
 
     public int getNoOfUserOrders(long clientId, String filter) {
         String sqlQuery;
-        if (filter.isEmpty()) sqlQuery = SqlQuery.SQL_QUERY__ORDER_COUNT_USER_ORDERS;
-        else sqlQuery = String.format(SqlQuery.SQL_QUERY__ORDER_COUNT_USER_ORDERS_FILTER, filter);
+        if (filter.isEmpty()) sqlQuery = SQL_QUERY__ORDER_COUNT_USER_ORDERS;
+        else sqlQuery = String.format(SQL_QUERY__ORDER_COUNT_USER_ORDERS_FILTER, filter);
         Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(sqlQuery)) {
             stat.setLong(1, clientId);

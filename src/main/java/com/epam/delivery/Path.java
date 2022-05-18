@@ -18,7 +18,7 @@ public final class Path {
     public static final String PAGE__COUNT_COAST = "/calculate_coast";
     public static final String PAGE__REGISTRATION = "/registration";
     public static final String PAGE__EDIT_ORDER = "/edit_order.jsp";
-    public static final String PAGE__ADMIN_CABINET = "/WEB-INF/jsp/admin/admin_cabinet.jsp";
+    public static final String PAGE__ADMIN_CABINET = "/WEB-INF/jsp/admin/admin_orders.jsp";
     public static final String PAGE__ADMIN_VIEW_ORDER = "/WEB-INF/jsp/admin/admin_view_order.jsp";
     public static final String PAGE__CLIENT_VIEW_ORDER = "/WEB-INF/jsp/client/client_view_order.jsp";
     public static final String PAGE__CLIENT_VIEW_INVOICES = "/WEB-INF/jsp/client/client_view_invoices.jsp";
@@ -29,6 +29,7 @@ public final class Path {
 
     // commands
     public static final String COMMAND__VIEW_REGISTRATION_PAGE = "/controller?command=viewRegistrationPage";
+    public static final String COMMAND__VIEW_REG_NEW_ADMIN = "/controller?command=viewRegNewAdmin";
     public static final String COMMAND__VIEW_ADMIN_PAGE = "/controller?command=viewAdminPage";
     public static final String COMMAND__SET_LOCALE = "/controller?command=setLocale";
 

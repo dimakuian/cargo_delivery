@@ -9,17 +9,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.epam.delivery.db.doa.SqlQuery.*;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+
 public class UserDao extends AbstractDao<User, Long> {
     private static final long serialVersionUID = -6256490762577543035L;
-
-    private static final String INSERT = "INSERT INTO delivery.`user` (id,login,password,role_id) VALUES (DEFAULT,?,?,?)";
-    private static final String UPDATE = "UPDATE delivery.`user` SET login = ?, password = ?, role_id = ? WHERE id = ?";
-    private static final String SELECT_BY_ID = "SELECT id, login, password, role_id FROM delivery.`user` WHERE id = ?";
-    private static final String SELECT_BY_LOGIN = "SELECT id, login, password, role_id FROM delivery.`user` WHERE login = ?";
-    private static final String EXIST = "SELECT id FROM delivery.`user` WHERE id=?";
-    private static final String EXIST_BY_LOGIN = "SELECT login FROM delivery.`user` WHERE login=?";
-    private static final String SELECT_ALL = "SELECT id, login, password, role_id FROM delivery.`user`";
-    private static final String DELETE = "DELETE FROM delivery.`user` WHERE id =?";
 
     public UserDao(ConnectionBuilder builder) {
         super(builder);
@@ -29,7 +23,7 @@ public class UserDao extends AbstractDao<User, Long> {
     public boolean insert(User entity) {
         boolean result = false;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__USER_INSERT, RETURN_GENERATED_KEYS)) {
             stat.setString(1, entity.getLogin());
             stat.setString(2, entity.getPassword());
             stat.setInt(3, entity.getRoleID());
@@ -55,7 +49,7 @@ public class UserDao extends AbstractDao<User, Long> {
     public boolean update(User entity) {
         boolean result = false;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__USER_UPDATE)) {
             stat.setString(1, entity.getLogin());
             stat.setString(2, entity.getPassword());
             stat.setInt(3, entity.getRoleID());
@@ -73,7 +67,7 @@ public class UserDao extends AbstractDao<User, Long> {
     public Optional<User> findById(Long id) {
         User user = null;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__USER_SELECT_BY_ID)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
@@ -94,7 +88,7 @@ public class UserDao extends AbstractDao<User, Long> {
     public boolean existsById(Long id) {
         boolean result = false;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__USER_EXIST)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) result = true;
@@ -113,7 +107,7 @@ public class UserDao extends AbstractDao<User, Long> {
         List<User> users = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
-            try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
+            try (ResultSet rs = stat.executeQuery(SQL_QUERY__USER_SELECT_ALL)) {
                 while (rs.next()) {
                     UserMapper mapper = new UserMapper();
                     User user = mapper.mapRow(rs);
@@ -133,7 +127,7 @@ public class UserDao extends AbstractDao<User, Long> {
     public boolean deleteById(Long id) {
         boolean result = false;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__USER_DELETE)) {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) result = true;
         } catch (SQLException exception) {
@@ -148,7 +142,7 @@ public class UserDao extends AbstractDao<User, Long> {
     public Optional<User> getByLogin(String login) {
         User user = null;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_LOGIN)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__USER_SELECT_BY_LOGIN)) {
             stat.setString(1, login);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
@@ -171,7 +165,7 @@ public class UserDao extends AbstractDao<User, Long> {
     public boolean existsByLogin(String userName) {
         boolean result = false;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(EXIST_BY_LOGIN)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__USER_EXIST_BY_LOGIN)) {
             stat.setString(1, userName);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) result = true;
