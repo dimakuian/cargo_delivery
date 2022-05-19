@@ -14,7 +14,7 @@ public final class Path {
     // pages
     public static final String PAGE__ERROR_PAGE = "/WEB-INF/jsp/error_page.jsp";
     public static final String PAGE__CREATE_ORDER = "/WEB-INF/jsp/client/create_order.jsp";
-    public static final String PAGE__CLIENT_ORDERS = "/client_orders";
+    public static final String PAGE__CLIENT_ORDERS = "/WEB-INF/jsp/client/client_orders.jsp";
     public static final String PAGE__COUNT_COAST = "/calculate_coast";
     public static final String PAGE__REGISTRATION = "/registration";
     public static final String PAGE__EDIT_ORDER = "/edit_order.jsp";
@@ -31,16 +31,12 @@ public final class Path {
     public static final String COMMAND__VIEW_REGISTRATION_PAGE = "/controller?command=viewRegistrationPage";
     public static final String COMMAND__VIEW_REG_NEW_ADMIN = "/controller?command=viewRegNewAdmin";
     public static final String COMMAND__VIEW_ADMIN_PAGE = "/controller?command=viewAdminPage";
-    public static final String COMMAND__SET_LOCALE = "/controller?command=setLocale";
+    public static final String COMMAND__VIEW_CLIENT_PAGE = "/controller?command=viewClientPage";
 
     public static final String COMMAND_CLIENT_ORDERS = "/controller?command=clientOrders";
     public static final String COMMAND_CLIENT_INVOICES = "/controller?command=clientViewInvoices";
-    public static final String COMMAND__EDIT_USER = "/controller?command=editUser";
-    public static final String COMMAND__RECHARGE = "/controller?command=recharge";
-    public static final String COMMAND__PAY_ORDER = "/controller?command=payOrder";
-    public static final String COMMAND__EDIT_ORDER = "/controller?command=editOrder";
     public static final String COMMAND__CREATE_ORDER = "/controller?command=createOrder";
     public static final String COMMAND__VIEW_CREATE_ORDER_PAGE = "/controller?command=viewCreateOrderPage";
-    public static final String COMMAND__ADMIN_CABINET = "/controller?command=adminCabinet";
+    public static final String COMMAND__ADMIN_ORDERS = "/controller?command=adminOrders";
 
 }

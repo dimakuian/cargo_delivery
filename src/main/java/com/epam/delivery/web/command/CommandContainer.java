@@ -33,9 +33,10 @@ public class CommandContainer {
         commands.put("viewCreateOrderPage", new ViewCreateOrderPageCommand());
         commands.put("clientViewOrder",new ClientViewOrderCommand());
         commands.put("clientViewInvoices",new ClientInvoicesCommand());
+        commands.put("viewClientPage",new ViewClientPageCommand());
 
         // admin commands
-        commands.put("adminCabinet", new AdminCabinetCommand());
+        commands.put("adminOrders", new AdminOrdersCommand());
         commands.put("confirmOrder",new ConfirmOrderCommand());
         commands.put("changeOrderStatus",new ChangeOrderStatusCommand());
         commands.put("adminViewOrder",new AdminViewOrderCommand());

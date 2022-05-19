@@ -1,6 +1,5 @@
 package com.epam.delivery.web.command;
 
-import com.epam.delivery.Path;
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionPool;
 import com.epam.delivery.db.doa.impl.ClientDao;
@@ -12,6 +11,9 @@ import org.apache.logging.log4j.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import static com.epam.delivery.Path.COMMAND__VIEW_CLIENT_PAGE;
+import static com.epam.delivery.Path.PAGE__ERROR_PAGE;
 
 
 public class EditClientCommand implements Command {
@@ -37,7 +39,7 @@ public class EditClientCommand implements Command {
 
         logger.debug("start command");
 
-        String forward = Path.PAGE__ERROR_PAGE;
+        String forward = PAGE__ERROR_PAGE;
 
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(ATTRIBUTE_USER);
@@ -81,12 +83,11 @@ public class EditClientCommand implements Command {
                 request.getServletContext().setAttribute("message", message);
                 logger.trace("Set servlet context attribute: message --> " + "unknown error");
             }
-            forward = Path.PAGE__CLIENT_PAGE;
+            forward = COMMAND__VIEW_CLIENT_PAGE;
 
         } catch (Exception exception) {
             logger.error(exception.getMessage());
         }
-
         logger.debug("Command finished");
         return forward;
     }

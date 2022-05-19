@@ -45,7 +45,7 @@ public class RechargeCommand implements Command {
 
 
             if (clientDao.update(client)) {
-                forward = Path.PAGE__CLIENT_PAGE;
+                forward = Path.COMMAND__VIEW_CLIENT_PAGE;
                 message = "successful";
                 request.getServletContext().setAttribute("message", message);
                 logger.trace("Set servlet context attribute: message --> " + message);

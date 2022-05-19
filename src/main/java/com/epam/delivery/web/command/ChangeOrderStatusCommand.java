@@ -85,7 +85,7 @@ public class ChangeOrderStatusCommand implements Command {
             request.getServletContext().setAttribute("message", message);
             logger.trace("Set servlet context attribute: message --> " + message);
 
-            forward = Path.COMMAND__ADMIN_CABINET;
+            forward = Path.COMMAND__ADMIN_ORDERS;
         } else {
             request.getServletContext().setAttribute("errorMessage", "problem with user");
             logger.trace("Set servlet context attribute: errorMessage --> " + "problem with user");

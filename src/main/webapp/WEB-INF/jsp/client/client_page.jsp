@@ -35,7 +35,7 @@
         <option value="en"><fmt:message key="language.en"/></option>
     </select>
     <input type="hidden" name="command" value="setLocale">
-    <input type="hidden" name="page" value="/client_page">
+    <input type="hidden" name="page" value="/controller?command=viewClientPage">
 </form>
 <!-- end Language switcher -->
 
@@ -243,8 +243,8 @@
 
             <!-- change password form -->
             <div id="changePassContainer" class="text-center col-md-12" style="padding: 5px; display: none">
-                <form action="<c:url value="/controller"/>" method="post" onsubmit="return validateChangePassForm();">
-                    <input name="page" type="hidden" value="/client_page">
+                <form action="${pageContext.request.contextPath}/controller" method="post" onsubmit="return validateChangePassForm();">
+                    <input name="page" type="hidden" value="/controller?command=viewClientPage">
                     <input name="command" type="hidden" value="changePassword">
                     <div class="card">
                         <div class="card-header">

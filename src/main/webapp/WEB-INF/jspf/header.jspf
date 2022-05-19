@@ -29,7 +29,7 @@ Header (top area).
 
             <!-- calculate coast button -->
             <li class="nav-item" id="calcCoast">
-                <a class="nav-link" id="calc_page" href="<c:url value="/calculate_coast"/>">
+                <a class="nav-link" id="calc_page" href="${pageContext.request.contextPath}/calculate_coast">
                     <fmt:message key="header.jspf.button.calc_coast"/>
                 </a>
             </li>
@@ -38,7 +38,7 @@ Header (top area).
                 <!-- create order button -->
                 <li class="nav-item" id="createOrder">
                     <fmt:message key="header.jspf.button.create_order" var="create_order"/>
-                    <a class="nav-link" href="<c:url value="/create_order"/>">
+                    <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=viewCreateOrderPage">
                         <c:out value="${create_order}"/>
                     </a>
                 </li>
@@ -47,7 +47,7 @@ Header (top area).
         <c:choose>
             <c:when test="${empty user}">
                 <!-- login user form -->
-                <form class="form-inline my-2 my-lg-0" action="<c:url value="/controller"/>" method="post">
+                <form class="form-inline my-2 my-lg-0" action="${pageContext.request.contextPath}/controller" method="post">
                     <input type="hidden" name="command" value="login"/>
                     <fmt:message key="header.jspf.input.username" var="userName"/>
                     <label for="login"></label>
@@ -76,11 +76,11 @@ Header (top area).
                                     aria-haspopup="true" aria-expanded="false">
                                 <c:out value="${user.login}"/></button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="<c:url value="/controller?command=clientOrders"/>">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=clientOrders">
                                     <fmt:message key="header.jspf.button.my_orders"/></a>
-                                <a class="dropdown-item" href="<c:url value="/controller?command=clientViewInvoices"/>">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=clientViewInvoices">
                                     <fmt:message key="header.jspf.button.my_invoices"/></a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/client_page">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=viewClientPage">
                                     <fmt:message key="header.jspf.button.user_details"/>
                                 </a>
                             </div>
@@ -93,7 +93,7 @@ Header (top area).
                                     aria-haspopup="true" aria-expanded="false">
                                 <c:out value="${user.login}"/></button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=adminCabinet">
+                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=adminOrders">
                                     <fmt:message key="header.jspf.button.all_orders"/></a>
                                 <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=adminInvoices">
                                     <fmt:message key="header.jspf.button.all_invoices"/></a>

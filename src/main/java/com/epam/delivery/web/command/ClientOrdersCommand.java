@@ -52,7 +52,7 @@ public class ClientOrdersCommand implements Command {
             if (client != null) {
                 int page = 1;
                 int recordsPerPage = 6;
-                if (request.getParameter("page_number") != null)
+                if (request.getParameter("page_number") != null && !request.getParameter("page_number").isEmpty())
                     page = Integer.parseInt(request.getParameter("page_number"));
 
                 String sort = "id";
@@ -128,11 +128,9 @@ public class ClientOrdersCommand implements Command {
 
         //shipping address filter
         IntStream.range(1, 16).forEach(i -> filterMap.put("shipping_department" + i, "shipping_address=" + i));
-        System.out.println(filterMap);
 
         //delivery address filter
         IntStream.range(1, 16).forEach(i -> filterMap.put("delivery_department" + i, "delivery_address=" + i));
-        System.out.println(filterMap);
 
         return filterMap.containsKey(name) ? filterMap.get(name) : "";
     }

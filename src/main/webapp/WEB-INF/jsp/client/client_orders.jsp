@@ -309,15 +309,17 @@ The when condition does not display a link for the current page--%>
                             <c:when test="${not empty currentFilter}">
                                 <li class="page-item">
                                     <a class="page-link"
-                                       href="<c:url value="/controller?command=clientOrders&page_number=${i}
-                                       &sort=${currentSort}&filter=${currentFilter}"/>"><c:out value="${i}"/></a>
+                                       href="${pageContext.request.contextPath}/controller?command=clientOrders&page_number=${i}&sort=${currentSort}&filter=${currentFilter}"/>
+                                        <c:out value="${i}"/>
+                                    </a>
                                 </li>
                             </c:when>
                             <c:otherwise>
                                 <li class="page-item">
                                     <a class="page-link"
-                                       href="<c:url value="/controller?command=clientOrders&page_number=${i}
-                                       &sort=${currentSort}"/>"><c:out value="${i}"/></a>
+                                       href="${pageContext.request.contextPath}/controller?command=clientOrders&page_number=${i}&sort=${currentSort}">
+                                        <c:out value="${i}"/>
+                                    </a>
                                 </li>
                             </c:otherwise>
                         </c:choose>

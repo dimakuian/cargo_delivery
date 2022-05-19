@@ -62,7 +62,7 @@ public class LoginCommand implements Command {
             logger.trace("userRole --> " + role);
 
             if (role == Role.ADMIN)
-                forward = Path.COMMAND__ADMIN_CABINET;
+                forward = Path.COMMAND__ADMIN_ORDERS;
 
             if (role == Role.CLIENT)
                 forward = Path.COMMAND_CLIENT_ORDERS;
