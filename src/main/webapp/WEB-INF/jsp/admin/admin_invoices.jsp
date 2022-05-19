@@ -157,11 +157,12 @@
                                 <label for="fromSum"></label>
                                 <c:choose>
                                     <c:when test="${not empty fromSum}">
-                                        <input type="text" class="form-control" id="fromSum" name="fromSum"
-                                               value="${fromSum}">
+                                        <input class="form-control" id="fromSum" name="fromSum" pattern="^\d*(\.\d{0,2})?$"
+                                               type="text" value="${fromSum}">
                                     </c:when>
                                     <c:otherwise>
-                                        <input type="text" class="form-control" id="fromSum" name="fromSum" value="0">
+                                        <input type="text" class="form-control" id="fromSum" name="fromSum" value="0"
+                                               pattern="^\d*(\.\d{0,2})?$">
                                     </c:otherwise>
                                 </c:choose>
                                 <div class="input-group-append">
@@ -179,7 +180,8 @@
                                     </span>
                                 </div>
                                 <label for="toSum"></label>
-                                <input type="text" class="form-control" id="toSum" name="toSum" value="${toSum}">
+                                <input type="text" class="form-control" id="toSum" name="toSum" value="${toSum}"
+                                       pattern="^\d*(\.\d{0,2})?$">
                                 <div class="input-group-append">
                                     <span class="input-group-text">
                                         <fmt:message key="admin_invoices.jsp.text.hrn"/>

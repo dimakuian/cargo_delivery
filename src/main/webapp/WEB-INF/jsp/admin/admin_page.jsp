@@ -43,7 +43,6 @@
 <jsp:useBean id="admin" scope="session" type="com.epam.delivery.db.entities.Admin"/>
 <div class="container" style="margin: auto">
     <c:if test="${not empty message}">
-        <jsp:useBean id="message" scope="application" class="java.lang.String"/>
         <div class="alert alert-warning alert-dismissible fade show" role="alert">
             <strong>${message}</strong>
             <!-- close message -->

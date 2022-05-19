@@ -178,13 +178,15 @@ public class OrderDao extends AbstractDao<Order, Long> {
         stat.setNull(15, 0);
     }
 
-    public List<OrderBean> findAllOrderBean(int from, int limit, String sort) {
+    public List<OrderBean> findAllOrderBean(int from, int limit, String sort, double fromSum, double toSum) {
         List<OrderBean> list = new ArrayList<>();
         Connection connection = builder.getConnection();
         String sqlQuery = String.format(SQL_QUERY__ORDER_SELECT_ALL_ORDER_BEAN, sort);
         try (PreparedStatement stat = connection.prepareStatement(sqlQuery)) {
-            stat.setInt(1, from);
-            stat.setInt(2, limit);
+            stat.setDouble(1, fromSum);
+            stat.setDouble(2, toSum);
+            stat.setInt(3, from);
+            stat.setInt(4, limit);
             try (ResultSet rs = stat.executeQuery()) {
                 while (rs.next()) {
                     OrderBeanMapper mapper = new OrderBeanMapper();
@@ -200,6 +202,32 @@ public class OrderDao extends AbstractDao<Order, Long> {
         }
         return list;
     }
+
+    public List<OrderBean> findAllOrderBean(int from, int limit, String sort, double fromSum, double toSum, String filter) {
+        List<OrderBean> list = new ArrayList<>();
+        Connection connection = builder.getConnection();
+        String sqlQuery = String.format(SQL_QUERY__ORDER_BEAN_SELECT_ALL_WITH_ALL_FILTER, filter, sort);
+        try (PreparedStatement stat = connection.prepareStatement(sqlQuery)) {
+            stat.setDouble(1, fromSum);
+            stat.setDouble(2, toSum);
+            stat.setInt(3, from);
+            stat.setInt(4, limit);
+            try (ResultSet rs = stat.executeQuery()) {
+                while (rs.next()) {
+                    OrderBeanMapper mapper = new OrderBeanMapper();
+                    OrderBean order = mapper.mapRow(rs);
+                    list.add(order);
+                }
+            }
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Order findAllOrderBean. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return list;
+    }
+
 
     public Optional<OrderBean> findOrderBeanById(Long orderID) {
         OrderBean orderBean = null;
@@ -248,13 +276,12 @@ public class OrderDao extends AbstractDao<Order, Long> {
         return list;
     }
 
-    public int getNoOfAllOrders(String filter) {
-        String sqlQuery;
-        if (filter == null) sqlQuery = SQL_QUERY__ORDER_COUNT_ALL_ORDERS;
-        else sqlQuery = String.format(SQL_QUERY__ORDER_COUNT_ALL_ORDERS_FILTER, filter);
+    public int getNoOfAllOrders(double fromSum, double toSum) {
         Connection connection = builder.getConnection();
-        try (Statement stat = connection.createStatement()) {
-            try (ResultSet rs = stat.executeQuery(sqlQuery)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_COUNT_ALL_ORDERS)) {
+            stat.setDouble(1, fromSum);
+            stat.setDouble(2, toSum);
+            try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1);
                 }
@@ -267,6 +294,44 @@ public class OrderDao extends AbstractDao<Order, Long> {
         }
         return 0;
     }
+
+    public int getNoOfAllOrders(double fromSum, double toSum, String filter) {
+        Connection connection = builder.getConnection();
+        String query = String.format(SQL_QUERY__ORDER_COUNT_ALL_ORDERS_WITH_FILTER, filter);
+        try (PreparedStatement stat = connection.prepareStatement(query)) {
+            stat.setDouble(1, fromSum);
+            stat.setDouble(2, toSum);
+            try (ResultSet rs = stat.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1);
+                }
+            }
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Order getNoOfRecords. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return 0;
+    }
+
+    public double getMaxOrdersFare() {
+        Connection connection = builder.getConnection();
+        try (Statement stat = connection.createStatement()) {
+            try (ResultSet rs = stat.executeQuery(SQL_QUERY__ORDER_SELECT_MAX_FARE)) {
+                if (rs.next()) {
+                    return rs.getDouble(1);
+                }
+            }
+        } catch (SQLException exception) {
+            builder.rollbackAndClose(connection);
+            logger.error("SQLException while Order getMaxOrdersFare. " + exception.getMessage());
+        } finally {
+            builder.commitAndClose(connection);
+        }
+        return 0;
+    }
+
 
     public int getNoOfUserOrders(long clientId, String filter) {
         String sqlQuery;

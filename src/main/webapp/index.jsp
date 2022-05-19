@@ -38,54 +38,91 @@
     <input type="hidden" name="page" value="index.jsp">
 </form>
 <!-- end Language switcher -->
-<c:out value="${message}"/>
-<c:remove var="message"/>
-<h1><c:out value="Some description about our company"/></h1>
-<hr>
-<h1><fmt:message key="index.our_department"/></h1>
-<div class="tariff_table">
-    <c:set var="localitiesBean" value="${applicationScope['localities']}"/>
-    <table>
-        <tr>
-            <th><fmt:message key="index.department"/></th>
-        </tr>
-        <c:forEach items="${localitiesBean}" var="local">
-            <tr>
-                <c:choose>
-                    <c:when test="${locale=='en'}">
-                        <td><c:out value="${local.description.en}"/></td>
-                    </c:when>
-                    <c:when test="${locale=='ua'}">
-                        <td><c:out value="${local.description.ua}"/></td>
-                    </c:when>
-                    <c:otherwise>
-                        <td><c:out value="${local.description.ua}"/></td>
-                    </c:otherwise>
-                </c:choose>
-            </tr>
-        </c:forEach>
-    </table>
-    <h1><fmt:message key="index.tariffs"/></h1>
-    <%--    <table>--%>
-    <%--        <tr>--%>
-    <%--            <th>Weight, including up to ...kg.</th> <!--replace to fmt:-->--%>
-    <%--            <th>including up to 500km, hrn.</th> <!--replace to fmt:-->--%>
-    <%--            <th>including up to 700km, hrn.</th> <!--replace to fmt:-->--%>
-    <%--            <th>including up to 900km, hrn.</th> <!--replace to fmt:-->--%>
-    <%--            <th>including up to 1200km, hrn.</th> <!--replace to fmt:-->--%>
-    <%--            <th>including up to 1500km, hrn.</th> <!--replace to fmt:-->--%>
-    <%--        </tr>--%>
-    <%--        <c:forEach items="${tariffs}" var="tarif">--%>
-    <%--            <tr>--%>
-    <%--                <td>${tarif.weight}</td>--%>
-    <%--                <td>${tarif.priceUpTo500km}</td>--%>
-    <%--                <td>${tarif.priceUpTo700km}</td>--%>
-    <%--                <td>${tarif.priceUpTo900km}</td>--%>
-    <%--                <td>${tarif.priceUpTo1200km}</td>--%>
-    <%--                <td>${tarif.priceUpTo1500km}</td>--%>
-    <%--            </tr>--%>
-    <%--        </c:forEach>--%>
-    <%--    </table>--%>
+
+<div class="container-fluid">
+    <div class="jumbotron jumbotron-fluid">
+        <div class="container">
+            <h1 class="display-4"><fmt:message key="index.jsp.text.description"/></h1>
+            <h1 class="display-4"><fmt:message key="index.jsp.text.description2"/></h1>
+            <p class="lead"><fmt:message key="index.jsp.text.description_p"/></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <p><fmt:message key="index.jsp.text.description_principles"/></p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.professionalism"/></strong></li>
+                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.prompt"/></strong></li>
+                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.constant"/></strong></li>
+                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.strict"/></strong></li>
+                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.clear"/></strong></li>
+            </ul>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6">
+            <div id="accordion2">
+                <div class="card">
+                    <div class="card-header" id="headingThree">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+                                <fmt:message key="index.jsp.text.tariff"/>
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseThree" class="collapse" aria-labelledby="headingThree" data-parent="#accordion">
+                        <div class="container">
+                            <h4><fmt:message key="index.jsp.text.tariff_description"/></h4>
+                            <p><fmt:message key="index.jsp.text.all_types"/></p>
+                            <p><fmt:message key="index.jsp.text.peculiarity"/></p>
+                            <p><strong><fmt:message key="index.jsp.text.example_title"/></strong></p>
+                            <p><fmt:message key="index.jsp.text.example"/></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div id="accordion">
+                <div class="card">
+                    <div class="card-header" id="headingOne">
+                        <h5 class="mb-0">
+                            <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+                                    aria-controls="collapseOne">
+                                <fmt:message key="index.jsp.text.our_department"/>
+                            </button>
+                        </h5>
+                    </div>
+                    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+                        <div class="card-body">
+                            <ul class="list-group list-group-flush">
+                                <c:forEach var="depart" items="${localities}">
+                                    <jsp:useBean id="depart" type="com.epam.delivery.db.entities.bean.LocalityBean"/>
+                                    <li class="list-group-item">
+                                        <c:choose>
+                                            <c:when test="${locale=='en'}">
+                                                <c:out value="${depart.description.en}"/>
+                                            </c:when>
+                                            <c:when test="${locale=='ua'}">
+                                                <c:out value="${depart.description.ua}"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:out value="${depart.description.ua}"/>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </li>
+                                </c:forEach>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
+
+<script>
+    $('.collapse').collapse()
+</script>
 </body>
 </html>

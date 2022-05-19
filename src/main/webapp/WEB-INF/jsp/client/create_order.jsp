@@ -19,15 +19,17 @@
 </c:choose>
 <fmt:setBundle basename="resource"/>
 <html>
-<c:set var="title" value="create order" scope="page"/>
+<fmt:message key="create_order.jsp.title" var="title"/>
+<c:set var="title" value="${title}" scope="page"/>
 <%@include file="/WEB-INF/jspf/head.jspf" %>
 <body>
 <%-- CONTENT --%>
 <%@include file="/WEB-INF/jspf/header.jspf" %>
 
 <!-- Language switcher begin -->
-<form name="locales" action="<c:url value="/controller"/>" method="post">
-    <select name="lang" onchange="this.form.submit()">
+<form action="${pageContext.request.contextPath}/controller" method="post" name="locales">
+    <label for="lang"></label>
+    <select id="lang" name="lang" onchange="this.form.submit()">
         <option selected disabled><fmt:message key="language.chooseLang"/></option>
         <option value="ua"><fmt:message key="language.ua"/></option>
         <option value="en"><fmt:message key="language.en"/></option>
@@ -37,6 +39,7 @@
 </form>
 <!-- end Language switcher -->
 <c:set var="localitiesBeanList" value="${applicationScope['localities']}"/>
+
 <%-- CONTENT --%>
 <main class="create_order-form">
     <div class="container">
@@ -54,17 +57,16 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header"><fmt:message key="button.create_order"/></div>
+                    <div class="card-header"><fmt:message key="create_order.jsp.button.create_order"/></div>
                     <div class="card-body">
-                        <form name="create_order-form" onsubmit="return validformCreateOrder()" action="/controller"
-                              method="post"
-                              oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)">
+                        <form action="${pageContext.request.contextPath}/controller" method="post"
+                              name="create_order-form" oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)"
+                              onsubmit="return validformCreateOrder()">
                             <input type="hidden" name="command" value="createOrder">
-
                             <!-- field for delivery shipping address -->
                             <div class="form-group row">
                                 <label for="ship" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.shipping_address"/></label>
+                                    <fmt:message key="create_order.jsp.text.shipping_address"/></label>
                                 <div class="col-md-6">
                                     <select id="ship" list="shipping" name="shipping_address" class="form-control"
                                             required>
@@ -90,7 +92,7 @@
                             <!-- field for delivery delivery address -->
                             <div class="form-group row">
                                 <label for="deliv" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.delivery_address"/></label>
+                                    <fmt:message key="create_order.jsp.text.delivery_address"/></label>
                                 <div class="col-md-6">
                                     <select id="deliv" list="shipping" name="delivery_address" class="form-control"
                                             required>
@@ -116,7 +118,7 @@
                             <!-- field for delivery length -->
                             <div class="form-group row">
                                 <label for="length" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.length_cm"/></label>
+                                    <fmt:message key="create_order.jsp.text.length_cm"/></label>
                                 <div class="col-md-6">
                                     <input type="number" id="length" name="length" class="form-control" required
                                            min="0.1" max="70" step="any" value="1">
@@ -126,7 +128,7 @@
                             <!-- field for delivery height -->
                             <div class="form-group row">
                                 <label for="height" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.height_cm"/></label>
+                                    <fmt:message key="create_order.jsp.text.height_cm"/></label>
                                 <div class="col-md-6">
                                     <input type="number" id="height" name="height" class="form-control" required
                                            min="0.1" max="70" step="any" value="1">
@@ -136,7 +138,7 @@
                             <!-- field for delivery width -->
                             <div class="form-group row">
                                 <label for="width" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.width_cm"/></label>
+                                    <fmt:message key="create_order.jsp.text.width_cm"/></label>
                                 <div class="col-md-6">
                                     <input type="number" id="width" name="width" class="form-control" required
                                            min="0.1" max="70" step="any" value="1">
@@ -146,7 +148,7 @@
                             <!-- field for delivery volume -->
                             <div class="form-group row">
                                 <label for="volume" class="col-md-4 col-form-label text-md-right">
-                                    <span><fmt:message key="inner_text.volume_cc"/><sup>3</sup></span>
+                                    <span><fmt:message key="create_order.jsp.text.volume_cc"/><sup>3</sup></span>
                                 </label>
                                 <div class="col-md-6">
                                     <input type="text" id="volume" name="volume" value="1" class="form-control"
@@ -157,7 +159,7 @@
                             <!-- field for delivery weight -->
                             <div class="form-group row">
                                 <label for="weight" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.weight_kg"/></label>
+                                    <fmt:message key="create_order.jsp.text.weight_kg"/></label>
                                 <div class="col-md-6">
                                     <input id="weight" name="weight" type="number" class="form-control" required
                                            min="0.1" max="100" step="any" value="1">
@@ -167,7 +169,7 @@
                             <!-- field for delivery consignee -->
                             <div class="form-group row">
                                 <label for="consignee" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.consignee"/></label>
+                                    <fmt:message key="create_order.jsp.text.consignee"/></label>
                                 <div class="col-md-6">
                                     <input id="consignee" name="consignee" type="text" class="form-control" required>
                                 </div>
@@ -176,7 +178,7 @@
                             <!-- field for delivery description -->
                             <div class="form-group row">
                                 <label for="description" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.description"/></label>
+                                    <fmt:message key="create_order.jsp.text.description"/></label>
                                 <div class="col-md-6">
                                     <input type="text" id="description" class="form-control" name="description"
                                            required>
@@ -186,7 +188,7 @@
                             <!-- button for count coast -->
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary md">
-                                    <fmt:message key="button.create_order"/></button>
+                                    <fmt:message key="create_order.jsp.button.create_order"/></button>
                             </div>
                         </form>
                     </div>
@@ -198,16 +200,16 @@
 <script>
 
     function validformCreateOrder() {
-        var consignee = document.forms["create_order-form"]["consignee"].value;
-        var consigneeRegex = /([а-яєіїґА-ЯЄІЇҐ,.' -ʼ]{2,})|([a-zA-Z,.' -ʼ]{2,})((\+38)?[0-9]{10}){1}/;
-        var description = document.forms["create_order-form"]["description"].value;
-        var descriptionRegex = /([0-9a-zA-Zа-яА-Я,.'\-]{3,}\s?)+/;
-        var shipping_address = document.forms["create_order-form"]["shipping_address"].value;
-        var delivery_address = document.forms["create_order-form"]["delivery_address"].value;
+        const consignee = document.forms["create_order-form"]["consignee"].value;
+        const consigneeRegex = /([а-яєіїґА-ЯЄІЇҐ,.' -ʼ]{2,})|([a-zA-Z,.' -ʼ]{2,})((\+38)?[0-9]{10})/;
+        const description = document.forms["create_order-form"]["description"].value;
+        const descriptionRegex = /([0-9a-zA-Zа-яА-Я,.'\-]{3,}\s?)+/;
+        const shipping_address = document.forms["create_order-form"]["shipping_address"].value;
+        const delivery_address = document.forms["create_order-form"]["delivery_address"].value;
 
-        <fmt:message key="message.not_validate_consignee" var="validate_consignee"/>
-        <fmt:message key="message.not_validate_description" var="validate_description"/>
-        <fmt:message key="message.address_mast_be_different" var="similar_address"/>
+        <fmt:message key="create_order.jsp.message.not_validate_consignee" var="validate_consignee"/>
+        <fmt:message key="create_order.jsp.message.not_validate_description" var="validate_description"/>
+        <fmt:message key="create_order.jsp.message.address_mast_be_different" var="similar_address"/>
         //check consignee
 
          if (!consigneeRegex.test(consignee)) {
@@ -218,7 +220,7 @@
             alert("${validate_description}");
             return false;
 
-        } else if (shipping_address == delivery_address) {
+        } else if (shipping_address === delivery_address) {
             alert("${similar_address}");
             return false;
         }

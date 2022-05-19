@@ -20,17 +20,17 @@
 <fmt:setBundle basename="resource"/>
 
 <html>
-<head>
-    <c:set var="title" value="Count cost" scope="page"/>
-    <%@include file="/WEB-INF/jspf/head.jspf" %>
-</head>
+<fmt:message key="calculate_сost.jsp.title" var="title"/>
+<c:set var="title" value="${title}" scope="page"/>
+<%@include file="/WEB-INF/jspf/head.jspf" %>
 <body>
 <%-- CONTENT --%>
 <%@include file="/WEB-INF/jspf/header.jspf" %>
 
 <!-- Language switcher begin -->
-<form name="locales" action="/controller" method="post">
-    <select name="lang" onchange="this.form.submit()">
+<form action="${pageContext.request.contextPath}/controller" method="post" name="locales">
+    <label for="lang"></label>
+    <select id="lang" name="lang" onchange="this.form.submit()">
         <option selected disabled><fmt:message
                 key="language.chooseLang"/></option>
         <option value="ua"><fmt:message key="language.ua"/></option>
@@ -48,16 +48,17 @@
         <div class="row justify-content-center">
             <div class="col-md-8">
                 <div class="card">
-                    <div class="card-header"><fmt:message key="button.count_coast"/></div>
+                    <div class="card-header"><fmt:message key="calculate_сost.jsp.button.count_coast"/></div>
                     <div class="card-body">
-                        <form action="/controller" method="post" onsubmit="return myFunction()"
+                        <form action="${pageContext.request.contextPath}/controller" method="post"
+                              onsubmit="return myFunction()"
                               oninput="volume.value=(parseFloat(length.value)*parseFloat(height.value)*parseFloat(width.value)).toFixed(2)">
                             <input type="hidden" name="command" value="calculateCost">
 
                             <!-- field for delivery shipping address -->
                             <div class="form-group row">
                                 <label for="ship" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.shipping_address"/></label>
+                                    <fmt:message key="calculate_сost.jsp.text.shipping_address"/></label>
                                 <div class="col-md-6">
                                     <select id="ship" list="shipping" name="shipping_address" class="form-control"
                                             required>
@@ -83,7 +84,7 @@
                             <!-- field for delivery delivery address -->
                             <div class="form-group row">
                                 <label for="deliv" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.delivery_address"/></label>
+                                    <fmt:message key="calculate_сost.jsp.text.delivery_address"/></label>
                                 <div class="col-md-6">
                                     <select id="deliv" list="shipping" name="delivery_address" class="form-control"
                                             required>
@@ -109,7 +110,7 @@
                             <!-- field for delivery length -->
                             <div class="form-group row">
                                 <label for="length" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.length_cm"/></label>
+                                    <fmt:message key="calculate_сost.jsp.text.length_cm"/></label>
                                 <div class="col-md-6">
                                     <input type="number" id="length" name="length" class="form-control" required
                                            min="0.1" max="70" step="any" value="1">
@@ -119,7 +120,7 @@
                             <!-- field for delivery height -->
                             <div class="form-group row">
                                 <label for="height" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.height_cm"/></label>
+                                    <fmt:message key="calculate_сost.jsp.text.height_cm"/></label>
                                 <div class="col-md-6">
                                     <input type="number" id="height" name="height" class="form-control" required
                                            min="0.1" max="70" step="any" value="1">
@@ -129,7 +130,7 @@
                             <!-- field for delivery width -->
                             <div class="form-group row">
                                 <label for="width" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.width_cm"/></label>
+                                    <fmt:message key="calculate_сost.jsp.text.width_cm"/></label>
                                 <div class="col-md-6">
                                     <input type="number" id="width" name="width" class="form-control" required
                                            min="0.1" max="70" step="any" value="1">
@@ -139,7 +140,7 @@
                             <!-- field for delivery volume -->
                             <div class="form-group row">
                                 <label for="volume" class="col-md-4 col-form-label text-md-right">
-                                    <span><fmt:message key="inner_text.volume_cc"/><sup>3</sup></span>
+                                    <span><fmt:message key="calculate_сost.jsp.text.volume_cc"/><sup>3</sup></span>
                                 </label>
                                 <div class="col-md-6">
                                     <input type="text" id="volume" name="volume" value="1" class="form-control"
@@ -150,7 +151,7 @@
                             <!-- field for delivery weight -->
                             <div class="form-group row">
                                 <label for="weight" class="col-md-4 col-form-label text-md-right">
-                                    <fmt:message key="inner_text.weight_kg"/></label>
+                                    <fmt:message key="calculate_сost.jsp.text.weight_kg"/></label>
                                 <div class="col-md-6">
                                     <input id="weight" name="weight" type="number" class="form-control" required
                                            min="0.1" max="100" step="any" value="1">
@@ -160,14 +161,13 @@
                             <!-- button for count coast -->
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary md">
-                                    <fmt:message key="button.count"/></button>
+                                    <fmt:message key="calculate_сost.jsp.button.count"/></button>
 
                                 <c:if test="${not empty total}">
                                     <!-- show delivery coast -->
                                     <div class="alert alert-warning alert-dismissible fade show" role="alert">
-                                        <strong><fmt:message key="countCost.total_to_pay"/></strong>
-                                        <c:out value=" ${total} "/><fmt:message key="inner_text.currency"/>
-
+                                        <strong><fmt:message key="calculate_сost.jsp.message.total_to_pay"/></strong>
+                                        <c:out value=" ${total} "/><fmt:message key="calculate_сost.jsp.text.hrn"/>
                                         <!-- close message -->
                                         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
@@ -185,10 +185,10 @@
 </main>
 <script charset="utf-8">
     function myFunction() {
-        var ship = document.getElementById("ship").value;
-        var deliv = document.getElementById("deliv").value;
-        <fmt:message key="message.address_mast_be_different" var="similar_address"/>
-        if (ship == deliv) {
+        const ship = document.getElementById("ship").value;
+        const deliv = document.getElementById("deliv").value;
+        <fmt:message key="calculate_сost.jsp.message.address_mast_be_different" var="similar_address"/>
+        if (ship === deliv) {
             alert("${similar_address}");
             return false;
         }

@@ -24,6 +24,7 @@ public class Listener implements ServletContextListener {
         List<LocalityBean> localities = localityDao.getAllTranslate();
         ServletContext context = sce.getServletContext();
         context.setAttribute("localities", localities);
+        System.out.println(localities);
         ShippingStatusDao descriptionDAO = new ShippingStatusDao(builder);
         List<StatusDescriptionBean> descriptions = descriptionDAO.getAllTranslate();
         descriptions.sort(Comparator.comparingLong(StatusDescriptionBean::getStatusID));

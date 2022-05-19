@@ -21,7 +21,7 @@
 </c:choose>
 <fmt:setBundle basename="resource"/>
 <html>
-<fmt:message key="userCabinet.title" var="user_cabinet_title"/>
+<fmt:message key="client_orders.jsp.title" var="user_cabinet_title"/>
 <c:set var="title" value="${user_cabinet_title}" scope="page"/>
 <%@include file="/WEB-INF/jspf/head.jspf" %>
 
@@ -32,7 +32,7 @@
 <jsp:useBean id="currentSort" scope="request" type="java.lang.String"/>
 <div>
     <!-- Language switcher begin -->
-    <form name="locales" action="<c:url value="/controller"/>" method="post">
+    <form name="locales" action="${pageContext.request.contextPath}/controller" method="post">
         <label for="local"></label>
         <select id="local" name="lang" onchange="this.form.submit()">
             <option selected disabled><fmt:message key="language.chooseLang"/></option>
@@ -81,7 +81,7 @@
                         <select id="filter" name="filter" class="selectpicker form-control" title="Choose one of the following..."
                                 onchange="this.form.submit()">
                             <option selected disabled><fmt:message key="inner_text.filter_by"/></option>
-                            <fmt:message key="inner_text.shipping_status" var="status"/>
+                            <fmt:message key="client_orders.jsp.label.status" var="status"/>
                             <optgroup label="${status}">
                                 <c:forEach var="status" items="${statuses}">
                                     <option value="${status.description.en}">
@@ -99,7 +99,7 @@
                                     </option>
                                 </c:forEach>
                             </optgroup>
-                            <fmt:message key="inner_text.shipping_address" var="shipping_address"/>
+                            <fmt:message key="client_orders.jsp.text.shipping_address" var="shipping_address"/>
                             <optgroup label="${shipping_address}">
                                 <c:forEach items="${localities}" var="department">
                                     <option value="shipping_department${department.localityID}">
@@ -117,7 +117,7 @@
                                     </option>
                                 </c:forEach>
                             </optgroup>
-                            <fmt:message key="inner_text.delivery_address" var="delivery_address"/>
+                            <fmt:message key="client_orders.jsp.text.delivery_address" var="delivery_address"/>
                             <optgroup label="${delivery_address}">
                                 <c:forEach items="${localities}" var="department">
                                     <option value="delivery_department${department.localityID}">
@@ -144,41 +144,41 @@
                 
                 <!--button for sort content -->
                 <div class="col-sm-2">
-                    <form action="<c:url value="/controller"/> " method="get">
-                        <select id="sort" name="sort" class="selectpicker form-control" onchange="this.form.submit()">
-                            <option selected disabled><fmt:message key="inner_text.sort_by"/></option>
-                            <option value="id ASC"><fmt:message key="sort_type.number_lowest"/></option>
-                            <option value="id DESC"><fmt:message key="sort_type.number_highest"/></option>
+                    <form action="${pageContext.request.contextPath}/controller" method="get">
+                        <select class="selectpicker form-control" id="sort" name="sort" onchange="this.form.submit()">
+                            <option selected disabled><fmt:message key="client_orders.jsp.text.sort_by"/></option>
+                            <option value="id ASC"><fmt:message key="client_orders.jsp.sort.number_lowest"/></option>
+                            <option value="id DESC"><fmt:message key="client_orders.jsp.sort.number_highest"/></option>
                             <c:choose>
                                 <c:when test="${locale=='en'}">
                                     <option value="shipping_address_EN ASC"><fmt:message
-                                            key="sort_type.shipping_address_A_Z"/></option>
+                                            key="client_orders.jsp.sort.shipping_address_A_Z"/></option>
                                     <option value="shipping_address_EN DESC"><fmt:message
-                                            key="sort_type.shipping_address_Z_A"/></option>
+                                            key="client_orders.jsp.sort.shipping_address_Z_A"/></option>
                                     <option value="delivery_address_EN ASC"><fmt:message
-                                            key="sort_type.delivery_address_A_Z"/></option>
+                                            key="client_orders.jsp.sort.delivery_address_A_Z"/></option>
                                     <option value="delivery_address_EN DESC"><fmt:message
-                                            key="sort_type.delivery_address_Z_A"/></option>
+                                            key="client_orders.jsp.sort.delivery_address_Z_A"/></option>
                                 </c:when>
                                 <c:when test="${locale=='ua'}">
                                     <option value="shipping_address_UA ASC"><fmt:message
-                                            key="sort_type.shipping_address_A_Z"/></option>
+                                            key="client_orders.jsp.sort.shipping_address_A_Z"/></option>
                                     <option value="shipping_address_UA DESC"><fmt:message
-                                            key="sort_type.shipping_address_Z_A"/></option>
+                                            key="client_orders.jsp.sort.shipping_address_Z_A"/></option>
                                     <option value="delivery_address_UA ASC"><fmt:message
-                                            key="sort_type.delivery_address_A_Z"/></option>
+                                            key="client_orders.jsp.sort.delivery_address_A_Z"/></option>
                                     <option value="delivery_address_UA DESC"><fmt:message
-                                            key="sort_type.delivery_address_Z_A"/></option>
+                                            key="client_orders.jsp.sort.delivery_address_Z_A"/></option>
                                 </c:when>
                                 <c:otherwise>
                                     <option value="shipping_address_UA ASC"><fmt:message
-                                            key="sort_type.shipping_address_A_Z"/></option>
+                                            key="client_orders.jsp.sort.shipping_address_A_Z"/></option>
                                     <option value="shipping_address_UA DESC"><fmt:message
-                                            key="sort_type.shipping_address_Z_A"/></option>
+                                            key="client_orders.jsp.sort.shipping_address_Z_A"/></option>
                                     <option value="delivery_address_UA ASC"><fmt:message
-                                            key="sort_type.delivery_address_A_Z"/></option>
+                                            key="client_orders.jsp.sort.delivery_address_A_Z"/></option>
                                     <option value="delivery_address_UA DESC"><fmt:message
-                                            key="sort_type.delivery_address_Z_A"/></option>
+                                            key="client_orders.jsp.sort.delivery_address_Z_A"/></option>
                                 </c:otherwise>
                             </c:choose>
                         </select>
@@ -192,7 +192,7 @@
                 <jsp:useBean id="notPaidInvoices" scope="request" type="java.lang.Integer"/>
                 <c:if test="${notPaidInvoices > 0}">
                     <div class="col-sm-8">
-                        <fmt:message key="inner_text.invoices_to_pay" var="invoices_to_pay"/>
+                        <fmt:message key="client_orders.jsp.text.invoices_to_pay" var="invoices_to_pay"/>
                         <button type="button" class="btn btn-primary float-right"
                                 onclick="window.location.href='/controller?command=clientViewInvoices'">
                             <c:out value="${invoices_to_pay}"/><span class="badge badge-light">
@@ -206,9 +206,9 @@
                     <div class="col-sm-4">
                         <div class="card" style="margin: 3px">
                             <div class="card-header">
-                                <fmt:message key="inner_text.order_number" var="order_number"/>
+                                <fmt:message key="client_orders.jsp.text.order_number" var="order_number"/>
                                 <h5 class="card-title"><c:out value="${order_number}: ${order.id}"/></h5>
-                                <fmt:message key="inner_text.shipping_status" var="status"/>
+                                <fmt:message key="client_orders.jsp.text.shipping_status" var="status"/>
                                 <c:out value="${status}: "/>
                                 <c:choose>
                                     <c:when test="${locale=='en'}">
@@ -224,7 +224,7 @@
                             </div>
                             <div class="card-body">
                                 <ul class="list-group list-group-flush">
-                                    <li class="list-group-item"><fmt:message key="inner_text.from" var="from"/>
+                                    <li class="list-group-item"><fmt:message key="client_orders.jsp.text.from" var="from"/>
                                         <c:out value="${from}: "/>
                                         <c:choose>
                                             <c:when test="${locale=='en'}">
@@ -239,7 +239,7 @@
                                         </c:choose>
                                     </li>
                                     <li class="list-group-item">
-                                        <fmt:message key="inner_text.to" var="to"/>
+                                        <fmt:message key="client_orders.jsp.text.to" var="to"/>
                                         <c:out value="${to}: "/>
                                         <c:choose>
                                             <c:when test="${locale=='en'}">
@@ -254,24 +254,24 @@
                                         </c:choose>
                                     </li>
                                     <li class="list-group-item">
-                                        <fmt:message key="inner_text.create_date" var="create_date"/>
+                                        <fmt:message key="client_orders.jsp.text.create_date" var="create_date"/>
                                         <fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${order.creationTime}"
                                                         var="time"/>
                                         <c:out value="${create_date}: ${time}"/>
                                     </li>
                                     <li class="list-group-item">
-                                        <fmt:message key="inner_text.consignee" var="consignee"/>
+                                        <fmt:message key="client_orders.jsp.text.consignee" var="consignee"/>
                                         <c:out value="${consignee}: ${order.consignee}"/>
                                     </li>
                                     <li class="list-group-item">
-                                        <fmt:message key="inner_text.fare" var="fare"/>
+                                        <fmt:message key="client_orders.jsp.text.fare" var="fare"/>
                                         <c:out value="${fare}: ${order.fare}"/>
                                     </li>
                                 </ul>
                                 <form action="<c:url value="/controller"/>" method="get">
                                     <input type="hidden" name="command" value="clientViewOrder">
                                     <input type="hidden" name="orderID" value="${order.id}">
-                                    <fmt:message key="button.show" var="button_show"/>
+                                    <fmt:message key="client_orders.jsp.button.show" var="button_show"/>
                                     <button class="btn btn-primary" type="submit"><c:out value="${button_show}"/>
                                     </button>
                                 </form>
@@ -283,7 +283,9 @@
         </c:when>
         <c:otherwise>
             <div class="text-center">
-                <p class="mb-0"><span class="text-muted"><fmt:message key="message.empty_orders_list"/></span></p>
+                <p class="mb-0">
+                    <span class="text-muted"><fmt:message key="client_orders.jsp.message.empty_orders_list"/></span>
+                </p>
             </div>
         </c:otherwise>
     </c:choose>
@@ -309,7 +311,7 @@ The when condition does not display a link for the current page--%>
                             <c:when test="${not empty currentFilter}">
                                 <li class="page-item">
                                     <a class="page-link"
-                                       href="${pageContext.request.contextPath}/controller?command=clientOrders&page_number=${i}&sort=${currentSort}&filter=${currentFilter}"/>
+                                       href="${pageContext.request.contextPath}/controller?command=clientOrders&page_number=${i}&sort=${currentSort}&filter=${currentFilter}">
                                         <c:out value="${i}"/>
                                     </a>
                                 </li>

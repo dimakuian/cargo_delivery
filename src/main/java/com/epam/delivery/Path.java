@@ -18,7 +18,7 @@ public final class Path {
     public static final String PAGE__COUNT_COAST = "/calculate_coast";
     public static final String PAGE__REGISTRATION = "/registration";
     public static final String PAGE__EDIT_ORDER = "/edit_order.jsp";
-    public static final String PAGE__ADMIN_CABINET = "/WEB-INF/jsp/admin/admin_orders.jsp";
+    public static final String PAGE__ADMIN_ORDERS = "/WEB-INF/jsp/admin/admin_orders.jsp";
     public static final String PAGE__ADMIN_VIEW_ORDER = "/WEB-INF/jsp/admin/admin_view_order.jsp";
     public static final String PAGE__CLIENT_VIEW_ORDER = "/WEB-INF/jsp/client/client_view_order.jsp";
     public static final String PAGE__CLIENT_VIEW_INVOICES = "/WEB-INF/jsp/client/client_view_invoices.jsp";

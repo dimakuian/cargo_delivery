@@ -79,12 +79,55 @@ public final class SqlQuery {
             "  AND da_en.language_id = 1\n" +
             "  AND ssd_ua.language_id = 2\n" +
             "  AND ssd_en.language_id = 1\n" +
+            "  AND (fare BETWEEN ? AND ?)\n" +
             "ORDER BY %s\n" +
             "LIMIT ?,?";
 
+    public static final String SQL_QUERY__ORDER_BEAN_SELECT_ALL_WITH_ALL_FILTER = "SELECT o.id,\n" +
+            "       shipping_address,\n" +
+            "       CONCAT_WS(' ', sa_ua.city, sa_ua.street, sa_ua.street_number) AS shipping_address_UA,\n" +
+            "       CONCAT_WS(' ', sa_en.city, sa_en.street, sa_en.street_number) AS shipping_address_EN,\n" +
+            "       delivery_address,\n" +
+            "       CONCAT_WS(' ', da_ua.city, da_ua.street, da_ua.street_number) AS delivery_address_UA,\n" +
+            "       CONCAT_WS(' ', da_en.city, da_en.street, da_en.street_number) AS delivery_address_EN,\n" +
+            "       o.creation_time,\n" +
+            "       o.client_id,\n" +
+            "       c.name,\n" +
+            "       c.surname,\n" +
+            "       c.patronymic,\n" +
+            "       o.consignee,\n" +
+            "       o.description,\n" +
+            "       o.distance,\n" +
+            "       o.length,\n" +
+            "       o.height,\n" +
+            "       o.width,\n" +
+            "       o.weight,\n" +
+            "       o.volume,\n" +
+            "       o.fare,\n" +
+            "       ssd_ua.shipping_status_id                                     AS status_id,\n" +
+            "       ssd_ua.description                                            AS status_ua,\n" +
+            "       ssd_en.description                                            AS status_en,\n" +
+            "       o.delivery_date\n" +
+            "FROM `order` o\n" +
+            "         JOIN description_locality sa_ua ON sa_ua.locality_id = o.shipping_address\n" +
+            "         JOIN description_locality sa_en ON sa_en.locality_id = o.shipping_address\n" +
+            "         JOIN description_locality da_ua ON da_ua.locality_id = o.delivery_address\n" +
+            "         JOIN description_locality da_en ON da_en.locality_id = o.delivery_address\n" +
+            "         JOIN client c on o.client_id = c.id\n" +
+            "         JOIN shipping_status_description ssd_ua on o.shipping_status_id = ssd_ua.shipping_status_id\n" +
+            "         JOIN shipping_status_description ssd_en on o.shipping_status_id = ssd_en.shipping_status_id\n" +
+            "WHERE sa_ua.language_id = 2\n" +
+            "  AND sa_en.language_id = 1\n" +
+            "  AND da_ua.language_id = 2\n" +
+            "  AND da_en.language_id = 1\n" +
+            "  AND ssd_ua.language_id = 2\n" +
+            "  AND ssd_en.language_id = 1\n" +
+            "  AND (fare BETWEEN ? AND ?)\n" +
+            "%s\n" +
+            "ORDER BY %s\n" +
+            "LIMIT ?,?";
 
-    public static final String SQL_QUERY__ORDER_UPDATE_PAY_STATUS_BY_ID =
-            "UPDATE delivery.`order` SET shipping_status_id=2 WHERE id=?";
+    public static final String SQL_QUERY__ORDER_SELECT_MAX_FARE = "SELECT MAX(fare) FROM `delivery`.`order`";
 
     public static final String SQL_QUERY__SELECT_USER_ORDERS_BEAN = "SELECT o.id,\n" +
             "       shipping_address,\n" +
@@ -214,9 +257,14 @@ public final class SqlQuery {
             "  AND ssd_en.language_id = 1\n" +
             "  AND o.id = ?";
 
-    public static final String SQL_QUERY__ORDER_COUNT_ALL_ORDERS = "SELECT COUNT(*) FROM `order`";
+    public static final String SQL_QUERY__ORDER_COUNT_ALL_ORDERS = "SELECT COUNT(*) FROM `order` " +
+            "WHERE (fare BETWEEN ? AND ?)";
 
-    public static final String SQL_QUERY__ORDER_COUNT_ALL_ORDERS_FILTER = "SELECT COUNT(*) FROM `order` WHERE %s";
+    public static final String SQL_QUERY__ORDER_COUNT_ALL_ORDERS_WITH_FILTER = "SELECT COUNT(*)\n" +
+            "FROM `order`\n" +
+            "WHERE (fare BETWEEN ? AND ?) \n" +
+            " %s";
+
 
     public static final String SQL_QUERY__ORDER_COUNT_USER_ORDERS = "SELECT COUNT(*) FROM `order` WHERE client_id=?";
 
