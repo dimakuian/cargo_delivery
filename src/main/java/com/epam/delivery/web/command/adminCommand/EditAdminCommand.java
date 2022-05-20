@@ -1,4 +1,4 @@
-package com.epam.delivery.web.command;
+package com.epam.delivery.web.command.adminCommand;
 
 import com.epam.delivery.Path;
 import com.epam.delivery.db.ConnectionBuilder;
@@ -6,12 +6,15 @@ import com.epam.delivery.db.ConnectionPool;
 import com.epam.delivery.db.doa.impl.AdminDao;
 import com.epam.delivery.db.entities.Admin;
 import com.epam.delivery.db.entities.User;
+import com.epam.delivery.web.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import static com.epam.delivery.service.MessageBuilder.getLocaleMessage;
 
 
 public class EditAdminCommand implements Command {
@@ -25,8 +28,8 @@ public class EditAdminCommand implements Command {
     /**
      * Execution method for command.
      *
-     * @param request
-     * @param response
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
      * @return Address to go once the command is executed.
      */
     @Override
@@ -35,9 +38,10 @@ public class EditAdminCommand implements Command {
         logger.debug("start command");
 
         String forward = Path.PAGE__ERROR_PAGE;
+        String message;
+        HttpSession session = request.getSession();
 
         try {
-            HttpSession session = request.getSession();
             User user = (User) session.getAttribute(ATTRIBUTE_USER);
             logger.trace("Get session attribute: user --> " + user);
 
@@ -51,10 +55,11 @@ public class EditAdminCommand implements Command {
 
             Admin admin = (Admin) session.getAttribute(ATTRIBUTE_ADMIN);
             logger.trace("Get session attribute: admin --> " + admin);
+
             if (admin.getName().equals(name) && admin.getSurname().equals(surname)) {
-                String message = "nothing to change"; //replace
+                message = getLocaleMessage(session, "info_message_nothing_to_change");
                 request.getServletContext().setAttribute("message", message);
-                logger.trace("Set servlet context attribute: message --> " + "successful");
+                logger.trace("Set servlet context attribute: message --> " + message);
                 return Path.COMMAND__VIEW_ADMIN_PAGE;
             } else {
                 admin.setName(name);
@@ -66,17 +71,26 @@ public class EditAdminCommand implements Command {
                 session.setAttribute(ATTRIBUTE_ADMIN, admin);
                 logger.trace("Set session attribute: admin --> " + admin);
 
-                String message = "successful"; //replace
+                message = getLocaleMessage(session,"successful_change_user_parameter");
                 request.getServletContext().setAttribute("message", message);
-                logger.trace("Set servlet context attribute: message --> " + "successful");
+                logger.trace("Set servlet context attribute: message --> " + message);
             } else {
-                String message = "unknown error"; //replace
+                message = getLocaleMessage(session, "error_message_unknown");
                 request.getServletContext().setAttribute("message", message);
                 logger.trace("Set servlet context attribute: message --> " + "unknown error");
             }
             forward = Path.COMMAND__VIEW_ADMIN_PAGE;
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
+        } catch (NullPointerException nullPointerException) {
+            message = getLocaleMessage(session, "error_message_can_not_read_data");
+            request.setAttribute("message", nullPointerException);
+            logger.error("errorMessage --> " + message);
+            logger.error("Exception --> " + nullPointerException);
+
+        } catch (Exception cannotRedoException) {
+            message = getLocaleMessage(session, "error_message_unknown");
+            request.setAttribute("message", message);
+            logger.error("errorMessage --> " + message);
+            logger.error("Exception --> " + cannotRedoException);
         }
 
         logger.debug("Command finished");

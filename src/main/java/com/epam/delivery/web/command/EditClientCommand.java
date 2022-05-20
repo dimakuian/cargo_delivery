@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import static com.epam.delivery.Path.COMMAND__VIEW_CLIENT_PAGE;
 import static com.epam.delivery.Path.PAGE__ERROR_PAGE;
+import static com.epam.delivery.service.MessageBuilder.getLocaleMessage;
 
 
 public class EditClientCommand implements Command {
@@ -30,8 +31,8 @@ public class EditClientCommand implements Command {
     /**
      * Execution method for command.
      *
-     * @param request
-     * @param response
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
      * @return Address to go once the command is executed.
      */
     @Override
@@ -44,6 +45,7 @@ public class EditClientCommand implements Command {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute(ATTRIBUTE_USER);
         logger.trace("Get session attribute: user --> " + user);
+        String message;
 
         try {
             String name = request.getParameter(PARAM_NAME);
@@ -66,6 +68,15 @@ public class EditClientCommand implements Command {
 
             ConnectionBuilder builder = new ConnectionPool();
             ClientDao clientDao = new ClientDao(builder);
+
+            if (client.getName().equals(name) && client.getPatronymic().equals(patronymic)
+                    && client.getEmail().equals(email) && client.getPhone().equals(phone)) {
+                message = getLocaleMessage(session, "info_message_nothing_to_change");
+                request.getServletContext().setAttribute("message", message);
+                logger.trace("Set servlet context attribute: message --> " + message);
+                return COMMAND__VIEW_CLIENT_PAGE;
+            }
+
             if (!client.getName().equals(name)) client.setName(name);
             if (patronymic != null && !client.getPatronymic().equals(patronymic)) client.setPatronymic(patronymic);
             if (!client.getEmail().equals(email)) client.setEmail(email);
@@ -75,18 +86,27 @@ public class EditClientCommand implements Command {
                 session.setAttribute(ATTRIBUTE_CLIENT, client);
                 logger.trace("Set session attribute: client --> " + client);
 
-                String message = "successful"; //replace
+                message = getLocaleMessage(session, "successful_change_user_parameter");
                 request.getServletContext().setAttribute("message", message);
                 logger.trace("Set servlet context attribute: message --> " + "successful");
             } else {
-                String message = "unknown error"; //replace
+                message = getLocaleMessage(session, "error_message_unknown");
                 request.getServletContext().setAttribute("message", message);
                 logger.trace("Set servlet context attribute: message --> " + "unknown error");
             }
             forward = COMMAND__VIEW_CLIENT_PAGE;
 
-        } catch (Exception exception) {
-            logger.error(exception.getMessage());
+        } catch (NullPointerException nullPointerException) {
+            message = getLocaleMessage(session, "error_message_can_not_read_data");
+            request.setAttribute("message", nullPointerException);
+            logger.error("errorMessage --> " + message);
+            logger.error("Exception --> " + nullPointerException);
+
+        } catch (Exception cannotRedoException) {
+            message = getLocaleMessage(session, "error_message_unknown");
+            request.setAttribute("message", message);
+            logger.error("errorMessage --> " + message);
+            logger.error("Exception --> " + cannotRedoException);
         }
         logger.debug("Command finished");
         return forward;

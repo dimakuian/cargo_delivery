@@ -1,10 +1,11 @@
-package com.epam.delivery.web.command;
+package com.epam.delivery.web.command.outOfControl;
 
 import com.epam.delivery.Path;
 import com.epam.delivery.db.ConnectionPool;
 import com.epam.delivery.db.doa.impl.LocalityDao;
 import com.epam.delivery.db.entities.Locality;
 import com.epam.delivery.service.MessageBuilder;
+import com.epam.delivery.web.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

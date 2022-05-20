@@ -1,6 +1,7 @@
-package com.epam.delivery.web.command;
+package com.epam.delivery.web.command.clientCommand;
 
 import com.epam.delivery.Path;
+import com.epam.delivery.web.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,8 +17,8 @@ public class ViewClientPageCommand implements Command {
     /**
      * Execution method for command.
      *
-     * @param request
-     * @param response
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
      * @return Address to go once the command is executed.
      */
     @Override

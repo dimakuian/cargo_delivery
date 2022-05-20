@@ -1,4 +1,4 @@
-package com.epam.delivery.web.command;
+package com.epam.delivery.web.command.clientCommand;
 
 import com.epam.delivery.Path;
 import com.epam.delivery.db.ConnectionBuilder;
@@ -10,6 +10,7 @@ import com.epam.delivery.db.entities.Invoice;
 import com.epam.delivery.db.entities.InvoiceStatus;
 import com.epam.delivery.db.entities.bean.OrderBean;
 import com.epam.delivery.service.MessageBuilder;
+import com.epam.delivery.web.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

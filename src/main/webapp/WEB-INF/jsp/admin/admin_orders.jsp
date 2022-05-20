@@ -483,8 +483,7 @@
                                 <button type="submit" class="btn btn-success" name="procedure" value="confirm">
                                     <fmt:message key="admin_orders.jsp.button.confirm"/>
                                 </button>
-                                <button type="submit" name="procedure"
-                                        class="btn btn-danger" value="cancel">
+                                <button type="submit" name="procedure" class="btn btn-danger" value="cancel">
                                     <fmt:message key="admin_orders.jsp.button.cancel"/>
                                 </button>
                             </form>

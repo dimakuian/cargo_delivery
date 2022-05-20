@@ -1,8 +1,5 @@
 package com.epam.delivery;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 public final class Path {
 
     /*
@@ -13,6 +10,7 @@ public final class Path {
 
     // pages
     public static final String PAGE__ERROR_PAGE = "/WEB-INF/jsp/error_page.jsp";
+    public static final String PAGE__HOME_PAGE = "/home";
     public static final String PAGE__CREATE_ORDER = "/WEB-INF/jsp/client/create_order.jsp";
     public static final String PAGE__CLIENT_ORDERS = "/WEB-INF/jsp/client/client_orders.jsp";
     public static final String PAGE__COUNT_COAST = "/calculate_coast";

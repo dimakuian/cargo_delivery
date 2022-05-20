@@ -1,4 +1,4 @@
-package com.epam.delivery.web.command;
+package com.epam.delivery.web.command.adminCommand;
 
 import com.epam.delivery.Path;
 import com.epam.delivery.db.ConnectionBuilder;
@@ -10,6 +10,7 @@ import com.epam.delivery.db.entities.Role;
 import com.epam.delivery.db.entities.User;
 import com.epam.delivery.service.PasswordEncoder;
 import com.epam.delivery.service.ValidateInput;
+import com.epam.delivery.web.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -45,10 +46,11 @@ public class RegNewAdminCommand implements Command {
     /**
      * Execution method for command.
      *
-     * @param request
-     * @param response
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
      * @return Address to go once the command is executed.
      */
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("start command");
@@ -56,7 +58,7 @@ public class RegNewAdminCommand implements Command {
         String forward = COMMAND__VIEW_REG_NEW_ADMIN;
         HttpSession session = request.getSession(false);
         ServletContext context = request.getServletContext();
-
+        String message;
         try {
             ConnectionBuilder connectionBuilder = new ConnectionPool();
 
@@ -118,15 +120,21 @@ public class RegNewAdminCommand implements Command {
                 return forward;
             }
 
-            String message = getLocaleMessage(session, MESSAGE_SUCCESSFUL);
+            message = getLocaleMessage(session, MESSAGE_SUCCESSFUL);
             context.setAttribute(PARAM_MESSAGE, message);
             logger.trace("Set servlet context attribute: message --> " + message);
 
-        } catch (Exception exception) {
-            errorMessage = "problem with input type";
-            context.setAttribute(PARAM_MESSAGE, errorMessage);
-            logger.trace("Set servlet context attribute: message --> " + errorMessage);
-            forward = Path.PAGE__ERROR_PAGE;
+        } catch (NullPointerException nullPointerException) {
+            message = getLocaleMessage(session, "error_message_can_not_read_data");
+            request.setAttribute("message", nullPointerException);
+            logger.error("errorMessage --> " + message);
+            logger.error("Exception --> " + nullPointerException);
+
+        } catch (Exception cannotRedoException) {
+            message = getLocaleMessage(session, "error_message_unknown");
+            request.setAttribute("message", message);
+            logger.error("errorMessage --> " + message);
+            logger.error("Exception --> " + cannotRedoException);
         }
 
         logger.debug("Command finished");

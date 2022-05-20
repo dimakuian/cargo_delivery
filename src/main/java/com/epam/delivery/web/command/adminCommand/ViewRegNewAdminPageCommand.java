@@ -1,6 +1,6 @@
-package com.epam.delivery.web.command;
+package com.epam.delivery.web.command.adminCommand;
 
-import com.epam.delivery.Path;
+import com.epam.delivery.web.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -9,23 +9,25 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-public class ViewRegistrationPageCommand implements Command{
+import static com.epam.delivery.Path.PAGE__REG_NEW_ADMIN;
+
+public class ViewRegNewAdminPageCommand implements Command {
 
     private static final Logger logger = LogManager.getLogger();
 
     /**
      * Execution method for command.
      *
-     * @param request
-     * @param response
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
      * @return Address to go once the command is executed.
      */
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("start command");
 
-        String forward = Path.PAGE__REGISTRATION;
         logger.debug("Command finished");
-        return forward;
+        return PAGE__REG_NEW_ADMIN;
     }
 }

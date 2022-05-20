@@ -1,9 +1,11 @@
 package com.epam.delivery.web.command;
 
-import com.epam.delivery.web.command.adminCommand.AdminInvoicesCommand;
-import com.epam.delivery.web.command.adminCommand.AdminOrdersCommand;
-import com.epam.delivery.web.command.adminCommand.AdminViewOrderCommand;
+import com.epam.delivery.web.command.adminCommand.*;
+import com.epam.delivery.web.command.clientCommand.*;
 import com.epam.delivery.web.command.common.ChangeUserPasswordCommand;
+import com.epam.delivery.web.command.common.LogoutCommand;
+import com.epam.delivery.web.command.common.NoCommand;
+import com.epam.delivery.web.command.outOfControl.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
