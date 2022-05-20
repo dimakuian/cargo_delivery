@@ -7,11 +7,17 @@ import java.util.ResourceBundle;
 
 public final class MessageBuilder {
 
-    public static final String PARAM_LOCALE = "locale";
-    public static final String PROPERTY_NAME = "resource";
+    private static final String PARAM_LOCALE = "locale";
+    private static final String PROPERTY_NAME = "resource";
 
     private MessageBuilder() {
     }
+
+    /**
+     * @param session HttpSession session
+     * @param key key for resources bundle
+     * @return localization message
+     */
 
     public static String getLocaleMessage (HttpSession session, String key) {
         String locale = (String) session.getAttribute(PARAM_LOCALE);

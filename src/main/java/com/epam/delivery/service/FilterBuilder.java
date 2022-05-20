@@ -13,6 +13,11 @@ public class FilterBuilder {
     private static final String PARAM_DELIVERY_ADDRESS = "delivery_address";
     private static final String PARAM_SHIPPING_ADDRESS = "shipping_address";
 
+
+    /**
+     * @param request HttpServletRequest request
+     * @return String presentation of filter
+     */
     public static String buildFilter(HttpServletRequest request) {
         StringBuilder sb = new StringBuilder();
         if (notEmpty(request, PARAM_STATUS_ID)) {

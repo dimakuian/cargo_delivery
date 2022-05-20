@@ -99,7 +99,7 @@ public class AdminInvoicesCommand implements Command {
                 String endDayStr = request.getParameter(PARAM_TO_DATE);
                 logger.trace("Request parameter: toDate --> " + endDayStr);
 
-                Timestamp endDay = StringToTimestampConverter.beginTimestampConverter(endDayStr);
+                Timestamp endDay = StringToTimestampConverter.endTimestampConverter(endDayStr);
 
                 long statusID = Long.parseLong(request.getParameter(PARAM_STATUS_ID));
                 logger.trace("Request parameter: statusID --> " + statusID);
@@ -141,7 +141,7 @@ public class AdminInvoicesCommand implements Command {
                 String endDayStr = request.getParameter(PARAM_TO_DATE);
                 logger.trace("Request parameter: toDate --> " + endDayStr);
 
-                Timestamp endDay = StringToTimestampConverter.beginTimestampConverter(endDayStr);
+                Timestamp endDay = StringToTimestampConverter.endTimestampConverter(endDayStr);
 
                 allInvoices = invoiceDao.findAll(sortType, startPosition, recordsPerPage,
                         fromSum, toSum, startDay, endDay);

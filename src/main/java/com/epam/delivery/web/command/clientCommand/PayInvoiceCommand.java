@@ -18,33 +18,40 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static com.epam.delivery.service.MessageBuilder.getLocaleMessage;
+
 public class PayInvoiceCommand implements Command {
 
     private static final Logger logger = LogManager.getLogger();
+    private static final String PARAM_CLIENT = "client";
+    private static final String PARAM_ORDER = "order";
+    private static final String PARAM_INVOICE = "invoice";
+    private static final String PARAM_PROCEDURE = "procedure";
 
     /**
      * Execution method for command.
      *
-     * @param request
-     * @param response
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
      * @return Address to go once the command is executed.
      */
+
     @Override
     public String execute(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         logger.debug("start command");
 
         String forward = Path.PAGE__ERROR_PAGE;
         HttpSession session = request.getSession();
-        Client client = (Client) session.getAttribute("client");
+        Client client = (Client) session.getAttribute(PARAM_CLIENT);
         logger.trace("Get session attribute: client --> " + client);
 
-        long orderID = Long.parseLong(request.getParameter("order"));
+        long orderID = Long.parseLong(request.getParameter(PARAM_ORDER));
         logger.trace("Request parameter: order --> " + orderID);
 
-        Long invoiceID = Long.parseLong(request.getParameter("invoice"));
+        Long invoiceID = Long.parseLong(request.getParameter(PARAM_INVOICE));
         logger.trace("Request parameter: invoiceID --> " + invoiceID);
 
-        String procedure = request.getParameter("procedure");
+        String procedure = request.getParameter(PARAM_PROCEDURE);
         logger.trace("Request parameter: procedure --> " + procedure);
 
         ConnectionBuilder connectionBuilder = new ConnectionPool();
@@ -63,13 +70,14 @@ public class PayInvoiceCommand implements Command {
             switch (procedure.trim().toLowerCase()) {
                 case "pay":
                     if (currentBalance < invoice.getSum()) {
-                        message = "you don't have enough money";
+                        message = getLocaleMessage(session, "message_info_enough_money");
 
                     } else if (invoiceDao.payClientInvoice(invoice, client)) {
                         order.setStatusID(2L);
-                        message = "successful";
+                        message = getLocaleMessage(session, "registration_new_admin.jsp.message.successful");
+
                     } else {
-                        message = "unknown error";
+                        message = getLocaleMessage(session, "error_message_unknown");
                         request.getServletContext().setAttribute("message", message);
                         logger.trace("Set servlet context attribute: message --> " + message);
                         return forward;

@@ -30,11 +30,7 @@ public final class Path {
     public static final String COMMAND__VIEW_REG_NEW_ADMIN = "/controller?command=viewRegNewAdmin";
     public static final String COMMAND__VIEW_ADMIN_PAGE = "/controller?command=viewAdminPage";
     public static final String COMMAND__VIEW_CLIENT_PAGE = "/controller?command=viewClientPage";
-
     public static final String COMMAND_CLIENT_ORDERS = "/controller?command=clientOrders";
     public static final String COMMAND_CLIENT_INVOICES = "/controller?command=clientViewInvoices";
-    public static final String COMMAND__CREATE_ORDER = "/controller?command=createOrder";
-    public static final String COMMAND__VIEW_CREATE_ORDER_PAGE = "/controller?command=viewCreateOrderPage";
     public static final String COMMAND__ADMIN_ORDERS = "/controller?command=adminOrders";
-
 }

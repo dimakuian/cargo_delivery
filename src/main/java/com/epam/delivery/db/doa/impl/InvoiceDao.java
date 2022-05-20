@@ -1,7 +1,6 @@
 package com.epam.delivery.db.doa.impl;
 
 import com.epam.delivery.db.ConnectionBuilder;
-import com.epam.delivery.db.Fields;
 import com.epam.delivery.db.doa.EntityMapper;
 import com.epam.delivery.db.doa.SqlQuery;
 import com.epam.delivery.db.entities.Client;
@@ -13,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.epam.delivery.db.Fields.*;
 import static com.epam.delivery.db.doa.SqlQuery.*;
 
 
@@ -193,8 +193,8 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
 
             stat.setDouble(1, sumStart);
             stat.setDouble(2, sumEnd);
-            stat.setTimestamp(3,startDate);
-            stat.setTimestamp(4,endDate);
+            stat.setTimestamp(3, startDate);
+            stat.setTimestamp(4, endDate);
             stat.setInt(5, startPosition);
             stat.setInt(6, limit);
             try (ResultSet rs = stat.executeQuery()) {
@@ -223,8 +223,8 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
             stat.setDouble(1, sumStart);
             stat.setDouble(2, sumEnd);
             stat.setLong(3, statusID);
-            stat.setTimestamp(4,startDate);
-            stat.setTimestamp(5,endDate);
+            stat.setTimestamp(4, startDate);
+            stat.setTimestamp(5, endDate);
             stat.setInt(6, startPos);
             stat.setInt(7, limit);
             try (ResultSet rs = stat.executeQuery()) {
@@ -263,8 +263,8 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
     public int getNoOfFilteredInvoices(double sumStart, double sumEnd, long statusID) {
         Connection connection = builder.getConnection();
         try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_COUNT_INVOICES_WITH_STATUS)) {
-            stat.setDouble(1,sumStart);
-            stat.setDouble(2,sumEnd);
+            stat.setDouble(1, sumStart);
+            stat.setDouble(2, sumEnd);
             stat.setLong(3, statusID);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
@@ -285,8 +285,8 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
         try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_COUNT_INVOICES_WITH_DATE)) {
             stat.setDouble(1, sumStart);
             stat.setDouble(2, sumEnd);
-            stat.setTimestamp(3,startDate);
-            stat.setTimestamp(4,endDate);
+            stat.setTimestamp(3, startDate);
+            stat.setTimestamp(4, endDate);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1);
@@ -306,9 +306,9 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
         try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ORDER_COUNT_INVOICES_WITH_STATUS_AND_DATE)) {
             stat.setDouble(1, sumStart);
             stat.setDouble(2, sumEnd);
-            stat.setLong(3,statusID);
-            stat.setTimestamp(4,startDate);
-            stat.setTimestamp(5,endDate);
+            stat.setLong(3, statusID);
+            stat.setTimestamp(4, startDate);
+            stat.setTimestamp(5, endDate);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
                     return rs.getInt(1);
@@ -440,12 +440,12 @@ public class InvoiceDao extends AbstractDao<Invoice, Long> {
         @Override
         public Invoice mapRow(ResultSet rs) {
             try {
-                long id = rs.getLong(Fields.ENTITY__ID);
-                long clientID = rs.getLong(Fields.INVOICE__CLIENT_ID);
-                Timestamp creationDatetime = rs.getTimestamp(Fields.INVOICE__CREATION_DATETIME);
-                long orderID = rs.getLong(Fields.INVOICE__ORDER_ID);
-                double sum = rs.getDouble(Fields.INVOICE__SUM);
-                int statusID = rs.getInt(Fields.INVOICE__STATUS_ID);
+                long id = rs.getLong(ENTITY__ID);
+                long clientID = rs.getLong(INVOICE__CLIENT_ID);
+                Timestamp creationDatetime = rs.getTimestamp(INVOICE__CREATION_DATETIME);
+                long orderID = rs.getLong(INVOICE__ORDER_ID);
+                double sum = rs.getDouble(INVOICE__SUM);
+                int statusID = rs.getInt(INVOICE__STATUS_ID);
                 Invoice invoice = new Invoice(clientID, creationDatetime, orderID, sum, statusID);
                 invoice.setId(id);
                 return invoice;

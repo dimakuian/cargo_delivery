@@ -8,38 +8,12 @@ import com.epam.delivery.db.entities.bean.LocalityBean;
 import java.sql.*;
 import java.util.*;
 
+import static com.epam.delivery.db.Fields.*;
+import static com.epam.delivery.db.doa.SqlQuery.*;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+
 public class LocalityDao extends AbstractDao<Locality, Long> {
     private static final long serialVersionUID = -5714557877277572823L;
-
-    private static final String INSERT = "INSERT INTO delivery.`locality` VALUES (DEFAULT,?,?,?)";
-
-    private static final String UPDATE = "UPDATE delivery.`locality` SET name=?,lat=?,lng=? WHERE id=?";
-
-    private static final String SELECT_BY_ID = "SELECT id, name, lat, lng FROM delivery.`locality` WHERE id =?";
-
-    private static final String EXIST = "SELECT id FROM delivery.`locality` WHERE id =?";
-
-    private static final String SELECT_ALL = "SELECT id, name, lat, lng FROM delivery.`locality`";
-
-    private static final String DELETE = "DELETE FROM delivery.`locality` WHERE id=?";
-
-    public static final String CALC_DISTANCE = "SELECT a.name AS from_city,\n" +
-            "       b.name AS to_city,\n" +
-            "       ROUND(\n" +
-            "                   111.111 *\n" +
-            "                   DEGREES(ACOS(LEAST(1.0, COS(RADIANS(a.lat))\n" +
-            "                   * COS(RADIANS(b.lat))\n" +
-            "                   * COS(RADIANS(a.lng - b.lng))\n" +
-            "                   + SIN(RADIANS(a.lat))\n" +
-            "                   * SIN(RADIANS(b.lat)))))) + 40 AS distance_in_km\n" +
-            "FROM delivery.`locality` AS a\n" +
-            "         JOIN delivery.`locality` AS b ON a.id <> b.id\n" +
-            "WHERE a.id = ?\n" +
-            "  AND b.id = ?";
-
-    private static final String SELECT_TRANSLATE_BY_STATUS_ID =
-            "SELECT locality_id, language_id, city, street, street_number FROM description_locality " +
-                    "WHERE locality_id=? AND language_id=?;\n";
 
     public LocalityDao(ConnectionBuilder builder) {
         super(builder);
@@ -48,7 +22,7 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
     @Override
     public boolean insert(Locality entity) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__LOCALITY_INSERT, RETURN_GENERATED_KEYS)) {
             stat.setString(1, entity.getName());
             stat.setDouble(2, entity.getLatitude());
             stat.setDouble(3, entity.getLongitude());
@@ -73,7 +47,7 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
     @Override
     public boolean update(Locality entity) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__LOCALITY_UPDATE)) {
             stat.setString(1, entity.getName());
             stat.setDouble(2, entity.getLatitude());
             stat.setDouble(3, entity.getLongitude());
@@ -92,7 +66,7 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
     public Optional<Locality> findById(Long id) {
         Locality locality = null;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__LOCALITY_SELECT_BY_ID)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 while (rs.next()) {
@@ -112,7 +86,7 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
     @Override
     public boolean existsById(Long id) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__LOCALITY_EXIST)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) return true;
@@ -131,7 +105,7 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
         List<Locality> list = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
-            try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
+            try (ResultSet rs = stat.executeQuery(SQL_QUERY__LOCALITY_SELECT_ALL)) {
                 while (rs.next()) {
                     LocalityMapper mapper = new LocalityMapper();
                     Locality locality = mapper.mapRow(rs);
@@ -150,7 +124,7 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
     @Override
     public boolean deleteById(Long id) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__LOCALITY_DELETE)) {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
@@ -165,12 +139,12 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
     public Optional<Double> calcDistanceBetweenTwoLocality(Locality from, Locality to) {
         Double distance_in_km = null;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(CALC_DISTANCE)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__LOCALITY_CALC_DISTANCE)) {
             stat.setLong(1, from.getId());
             stat.setLong(2, to.getId());
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
-                    distance_in_km = rs.getDouble("distance_in_km");
+                    distance_in_km = rs.getDouble(LOCALITY__DISTANCE_IN_KM);
                 }
             }
         } catch (SQLException exception) {
@@ -199,7 +173,7 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
 
     private String getTranslateByLocalityIdAndLangId(Long statusID, Long langID) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SELECT_TRANSLATE_BY_STATUS_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__LOCALITY_SELECT_TRANSLATE_BY_STATUS_ID)) {
             stat.setLong(1, statusID);
             stat.setLong(2, langID);
             try (ResultSet rs = stat.executeQuery()) {
@@ -239,10 +213,10 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
         @Override
         public Locality mapRow(ResultSet rs) {
             try {
-                long locID = rs.getLong("id");
-                String name = rs.getString("name");
-                double lat = rs.getDouble("lat");
-                double lng = rs.getDouble("lng");
+                long locID = rs.getLong(LOCALITY__ID);
+                String name = rs.getString(LOCALITY__NAME);
+                double lat = rs.getDouble(LOCALITY__LAT);
+                double lng = rs.getDouble(LOCALITY__LNG);
                 Locality locality = Locality.createLocality(name, lat, lng);
                 locality.setId(locID);
                 return locality;
@@ -258,9 +232,9 @@ public class LocalityDao extends AbstractDao<Locality, Long> {
         @Override
         public String mapRow(ResultSet rs) {
             try {
-                String city = rs.getString("city");
-                String street = rs.getString("street");
-                String streetNumber = rs.getString("street_number");
+                String city = rs.getString(LOCALITY__BEAN_CITY);
+                String street = rs.getString(LOCALITY__BEAN_STREET);
+                String streetNumber = rs.getString(LOCALITY__BEAN_STREET_NUMBER);
                 return String.format("%s %s №%s", city, street, streetNumber);
             } catch (SQLException exception) {
                 logger.error("SQLException while Locality mapRow. " + exception.getMessage());

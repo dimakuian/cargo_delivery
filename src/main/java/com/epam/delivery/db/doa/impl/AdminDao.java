@@ -11,19 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-import static com.epam.delivery.db.doa.SqlQuery.SQL_QUERY__USER_INSERT;
+import static com.epam.delivery.db.Fields.*;
+import static com.epam.delivery.db.doa.SqlQuery.*;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
 public class AdminDao extends AbstractDao<Admin, Long> {
     private static final long serialVersionUID = 3048949702578419905L;
-
-    private static final String INSERT = "INSERT INTO delivery.`admin` (id, user_id, name, surname) VALUES (DEFAULT,?,?,?)";
-    private static final String UPDATE = "UPDATE delivery.`admin` SET user_id = ?, name = ?, surname = ? WHERE id = ?";
-    private static final String SELECT_BY_ID = "SELECT id, user_id, name, surname FROM delivery.`admin` WHERE id = ?";
-    private static final String SELECT_BY_USER_ID = "SELECT id, user_id, name, surname FROM delivery.`admin` WHERE user_id = ?";
-    private static final String EXIST = "SELECT id FROM delivery.`admin` WHERE id=?";
-    private static final String SELECT_ALL = "SELECT id, user_id, name, surname FROM delivery.`admin`";
-    private static final String DELETE = "DELETE FROM delivery.`admin` WHERE id=?";
 
     public AdminDao(ConnectionBuilder builder) {
         super(builder);
@@ -34,7 +27,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
     public boolean insert(Admin entity) {
         boolean result = false;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(INSERT, RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ADMIN_INSERT, RETURN_GENERATED_KEYS)) {
             stat.setLong(1, entity.getUserID());
             stat.setString(2, entity.getName());
             stat.setString(3, entity.getSurname());
@@ -59,7 +52,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
     public boolean insert(User user, Admin admin) {
         boolean result = false;
         Connection connection = builder.getConnection();
-        try (PreparedStatement adminStat = connection.prepareStatement(INSERT, RETURN_GENERATED_KEYS);
+        try (PreparedStatement adminStat = connection.prepareStatement(SQL_QUERY__ADMIN_INSERT, RETURN_GENERATED_KEYS);
              PreparedStatement userStat = connection.prepareStatement(SQL_QUERY__USER_INSERT, RETURN_GENERATED_KEYS)) {
             userStat.setString(1, user.getLogin());
             userStat.setString(2, user.getPassword());
@@ -98,7 +91,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
     public boolean update(Admin entity) {
         boolean result = false;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ADMIN_UPDATE)) {
             stat.setLong(1, entity.getUserID());
             stat.setString(2, entity.getName());
             stat.setString(3, entity.getSurname());
@@ -118,7 +111,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
         logger.info("id=" + id);
         Admin admin = null;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ADMIN_SELECT_BY_ID)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
@@ -139,7 +132,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
     public boolean existsById(Long id) {
         boolean result = false;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ADMIN_EXIST)) {
             stat.setLong(1, id);
             ResultSet rs = stat.executeQuery();
             if (rs.next()) result = true;
@@ -157,7 +150,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
         List<Admin> admins = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
-            try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
+            try (ResultSet rs = stat.executeQuery(SQL_QUERY__ADMIN_SELECT_ALL)) {
                 while (rs.next()) {
                     AdminMapper mapper = new AdminMapper();
                     Admin admin = mapper.mapRow(rs);
@@ -177,7 +170,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
     public boolean deleteById(Long id) {
         boolean result = false;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ADMIN_DELETE)) {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) result = true;
         } catch (SQLException exception) {
@@ -192,7 +185,7 @@ public class AdminDao extends AbstractDao<Admin, Long> {
     public Optional<Admin> getByUserId(Long userID) {
         Admin admin = null;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_USER_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__ADMIN_SELECT_BY_USER_ID)) {
             stat.setLong(1, userID);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
@@ -217,10 +210,10 @@ public class AdminDao extends AbstractDao<Admin, Long> {
         @Override
         public Admin mapRow(ResultSet rs) {
             try {
-                long id = rs.getLong("id");
-                long userID = rs.getLong("user_id");
-                String name = rs.getString("name");
-                String surname = rs.getString("surname");
+                long id = rs.getLong(ADMIN__ID);
+                long userID = rs.getLong(ADMIN__USER_ID);
+                String name = rs.getString(ADMIN__NAME);
+                String surname = rs.getString(ADMIN__SURNAME);
                 Admin admin = new Admin(userID, name, surname);
                 admin.setId(id);
                 return admin;

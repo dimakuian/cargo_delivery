@@ -1,4 +1,4 @@
-package com.epam.delivery.web.command;
+package com.epam.delivery.web.command.outOfControl;
 
 import com.epam.delivery.Path;
 import com.epam.delivery.db.ConnectionPool;
@@ -6,6 +6,7 @@ import com.epam.delivery.db.doa.impl.UserDao;
 import com.epam.delivery.db.entities.Role;
 import com.epam.delivery.db.entities.User;
 import com.epam.delivery.service.PasswordEncoder;
+import com.epam.delivery.web.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -16,16 +17,20 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
+import static com.epam.delivery.service.MessageBuilder.getLocaleMessage;
+
 @WebServlet("/logout")
 public class LoginCommand implements Command {
 
     private static final Logger logger = LogManager.getLogger();
+    private static final String PARAM_LOGIN = "login";
+    private static final String PARAM_PASSWORD = "password";
 
     /**
      * Execution method for command.
      *
-     * @param request
-     * @param response
+     * @param request  HttpServletRequest
+     * @param response HttpServletResponse
      * @return Address to go once the command is executed.
      */
     @Override
@@ -34,26 +39,26 @@ public class LoginCommand implements Command {
 
         HttpSession session = request.getSession(true);
         // obtain login and password from the request
-        String login = request.getParameter("login");
+        String login = request.getParameter(PARAM_LOGIN);
         logger.trace("Request parameter: login --> " + login);
 
-        String password = request.getParameter("password");
+        String password = request.getParameter(PARAM_PASSWORD);
         // error handler
         String errorMessage;
         String forward = Path.PAGE__ERROR_PAGE;
 
         if (login == null || password == null || login.isEmpty() || password.isEmpty()) {
-            errorMessage = "Login/password cannot be empty";
+            errorMessage = getLocaleMessage(session, "message_info_login_must_be_present");
             request.getServletContext().setAttribute("errorMessage", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
             return forward;
         }
         User user = new UserDao(new ConnectionPool()).getByLogin(login).orElse(null);
         if (user == null || !PasswordEncoder.getHash(password).equals(user.getPassword())) {
-            errorMessage = "Cannot find user with such login/password";
-            request.getServletContext().setAttribute("errorMessage", errorMessage);
+            errorMessage = getLocaleMessage(session, "message_info_login_incorrect_login_or_pass");
+            request.getServletContext().setAttribute("message", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            return forward;
+            return Path.PAGE__HOME_PAGE;
 
         } else {
             logger.trace("Found in DB: user --> " + user);

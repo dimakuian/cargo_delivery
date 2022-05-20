@@ -103,7 +103,10 @@
                 <li class="list-group-item"><c:out value="${fare}: ${order.fare} ${currency}"/></li>
 
                 <c:if test="${order.deliveryDate ne null}">
-                    <li class="list-group-item"><c:out value="${order.deliveryDate}"/></li>
+                    <fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${order.deliveryDate}"
+                                    var="deliveryTime"/>
+                    <fmt:message key="inner_text.delivery_date" var="deliveryDate"/>
+                    <li class="list-group-item"><c:out value="${deliveryDate} : ${deliveryTime}"/></li>
                 </c:if>
                 <li class="list-group-item">
                     <fmt:message key="inner_text.shipping_status" var="status"/>

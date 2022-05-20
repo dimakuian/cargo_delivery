@@ -40,23 +40,21 @@
 <!-- end Language switcher -->
 
 <div class="container-fluid">
+    <c:if test="${not empty message}">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>${message}</strong>
+            <!-- close message -->
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <c:remove var="message"/>
+        </div>
+    </c:if>
     <div class="jumbotron jumbotron-fluid">
         <div class="container">
             <h1 class="display-4"><fmt:message key="index.jsp.text.description"/></h1>
             <h1 class="display-4"><fmt:message key="index.jsp.text.description2"/></h1>
             <p class="lead"><fmt:message key="index.jsp.text.description_p"/></p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-sm-4">
-            <p><fmt:message key="index.jsp.text.description_principles"/></p>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.professionalism"/></strong></li>
-                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.prompt"/></strong></li>
-                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.constant"/></strong></li>
-                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.strict"/></strong></li>
-                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.clear"/></strong></li>
-            </ul>
         </div>
     </div>
     <div class="row">
@@ -117,6 +115,18 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-4">
+            <p><fmt:message key="index.jsp.text.description_principles"/></p>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.professionalism"/></strong></li>
+                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.prompt"/></strong></li>
+                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.constant"/></strong></li>
+                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.strict"/></strong></li>
+                <li class="list-group-item"><strong><fmt:message key="index.jsp.text.clear"/></strong></li>
+            </ul>
         </div>
     </div>
 </div>

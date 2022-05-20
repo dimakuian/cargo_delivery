@@ -81,8 +81,10 @@
                             <div class="card-header">
                                 <h6 style="margin-bottom: 0;" class="text-centre">
                                     <fmt:message key="client_view_invoices.jsp.text.from" var="from"/>
+                                    <fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${invoice.creationDatetime}"
+                                                    var="date"/>
                                     <strong>
-                                        <c:out value="${invoice.id} ${from} ${invoice.creationDatetime}"/>
+                                        <c:out value="${invoice.id} ${from} ${date}"/>
                                     </strong>
                                 </h6>
                                 <p style="margin-bottom: 0;"
@@ -198,8 +200,10 @@
                             <div class="card-header">
                                 <h6 style="margin-bottom: 0;" class="text-centre">
                                     <fmt:message key="client_view_invoices.jsp.text.from" var="from"/>
+                                    <fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${invoice.creationDatetime}"
+                                                    var="date2"/>
                                     <strong>
-                                        <c:out value="${invoice.id} ${from} ${invoice.creationDatetime}"/>
+                                        <c:out value="${invoice.id} ${from} ${date2}"/>
                                     </strong>
                                 </h6>
                                 <c:choose>

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.epam.delivery.db.Fields.*;
 import static com.epam.delivery.db.doa.SqlQuery.*;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
@@ -183,13 +184,14 @@ public class UserDao extends AbstractDao<User, Long> {
      * Extracts a user from the result set row.
      */
     private static class UserMapper implements EntityMapper<User> {
+
         @Override
         public User mapRow(ResultSet rs) {
             try {
-                long id = rs.getLong("id");
-                String login = rs.getString("login");
-                String password = rs.getString("password");
-                int roleID = rs.getInt("role_id");
+                long id = rs.getLong(USER__ID);
+                String login = rs.getString(USER__LOGIN);
+                String password = rs.getString(USER__PASSWORD);
+                int roleID = rs.getInt(USER__ROLE_ID);
                 User user = new User(login, password, roleID);
                 user.setId(id);
                 return user;

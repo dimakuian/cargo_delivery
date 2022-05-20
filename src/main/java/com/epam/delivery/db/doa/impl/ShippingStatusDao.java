@@ -8,23 +8,14 @@ import com.epam.delivery.db.entities.bean.StatusDescriptionBean;
 import java.sql.*;
 import java.util.*;
 
+import static com.epam.delivery.db.Fields.SHIPPING_STATUS__ID;
+import static com.epam.delivery.db.Fields.SHIPPING_STATUS__NAME;
+import static com.epam.delivery.db.doa.SqlQuery.*;
+import static java.sql.Statement.RETURN_GENERATED_KEYS;
+
 public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
     private static final long serialVersionUID = 5803902748264449477L;
 
-    private static final String INSERT = "INSERT INTO delivery.`shipping_status` (id, name) VALUES (DEFAULT,?)";
-
-    private static final String UPDATE = "UPDATE delivery.`shipping_status` SET name=? WHERE id=?";
-
-    private static final String SELECT_BY_ID = "SELECT id, name from delivery.`shipping_status` WHERE id=?";
-
-    private static final String EXIST = "SELECT id FROM delivery.`shipping_status` WHERE id=?";
-
-    private static final String SELECT_ALL = "select id, name from delivery.`shipping_status`";
-
-    private static final String DELETE = "DELETE FROM delivery.`shipping_status` WHERE id=?";
-
-    private static final String SELECT_TRANSLATE_BY_STATUS_ID = "SELECT description FROM delivery.`shipping_status_description` " +
-            "WHERE shipping_status_id = ? AND language_id=?";
 
     public ShippingStatusDao(ConnectionBuilder builder) {
         super(builder);
@@ -33,7 +24,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
     @Override
     public boolean insert(ShippingStatus entity) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(INSERT, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__SHIPPING_STATUS_INSERT, RETURN_GENERATED_KEYS)) {
             stat.setString(1, entity.getName());
             if (stat.executeUpdate() > 0) {
                 try (ResultSet rs = stat.getGeneratedKeys()) {
@@ -56,7 +47,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
     @Override
     public boolean update(ShippingStatus entity) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__SHIPPING_STATUS_UPDATE)) {
             stat.setString(1, entity.getName());
             stat.setLong(2, entity.getId());
             if (stat.executeUpdate() > 0) return true;
@@ -72,7 +63,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
     public Optional<ShippingStatus> findById(Long id) {
         ShippingStatus status = null;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__SHIPPING_STATUS_SELECT_BY_ID)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 while (rs.next()) {
@@ -92,7 +83,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
     @Override
     public boolean existsById(Long id) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__SHIPPING_STATUS_EXIST)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) return true;
@@ -111,7 +102,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
         List<ShippingStatus> statusList = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
-            try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
+            try (ResultSet rs = stat.executeQuery(SQL_QUERY__SHIPPING_STATUS_SELECT_ALL)) {
                 while (rs.next()) {
                     ShippingStatusMapper mapper = new ShippingStatusMapper();
                     ShippingStatus status = mapper.mapRow(rs);
@@ -130,7 +121,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
     @Override
     public boolean deleteById(Long id) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__SHIPPING_STATUS_DELETE)) {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
@@ -159,7 +150,7 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
 
     private String getTranslateByStatusIdAndLangId(Long statusID, Long langID) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SELECT_TRANSLATE_BY_STATUS_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(SQL_QUERY__SHIPPING_STATUS_SELECT_TRANSLATE_BY_STATUS_ID)) {
             stat.setLong(1, statusID);
             stat.setLong(2, langID);
             try (ResultSet rs = stat.executeQuery()) {
@@ -196,8 +187,8 @@ public class ShippingStatusDao extends AbstractDao<ShippingStatus, Long> {
         @Override
         public ShippingStatus mapRow(ResultSet rs) {
             try {
-                long statusID = rs.getLong("id");
-                String name = rs.getString("name");
+                long statusID = rs.getLong(SHIPPING_STATUS__ID);
+                String name = rs.getString(SHIPPING_STATUS__NAME);
                 ShippingStatus status = ShippingStatus.createShippingStatus(name);
                 status.setId(statusID);
                 return status;

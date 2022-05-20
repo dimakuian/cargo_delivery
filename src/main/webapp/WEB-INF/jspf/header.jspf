@@ -38,7 +38,8 @@ Header (top area).
                 <!-- create order button -->
                 <li class="nav-item" id="createOrder">
                     <fmt:message key="header.jspf.button.create_order" var="create_order"/>
-                    <a class="nav-link" href="${pageContext.request.contextPath}/controller?command=viewCreateOrderPage">
+                    <a class="nav-link"
+                       href="${pageContext.request.contextPath}/controller?command=viewCreateOrderPage">
                         <c:out value="${create_order}"/>
                     </a>
                 </li>
@@ -47,7 +48,8 @@ Header (top area).
         <c:choose>
             <c:when test="${empty user}">
                 <!-- login user form -->
-                <form class="form-inline my-2 my-lg-0" action="${pageContext.request.contextPath}/controller" method="post">
+                <form class="form-inline my-2 my-lg-0" action="${pageContext.request.contextPath}/controller"
+                      method="post">
                     <input type="hidden" name="command" value="login"/>
                     <fmt:message key="header.jspf.input.username" var="userName"/>
                     <label for="login"></label>
@@ -76,11 +78,14 @@ Header (top area).
                                     aria-haspopup="true" aria-expanded="false">
                                 <c:out value="${user.login}"/></button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=clientOrders">
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/controller?command=clientOrders">
                                     <fmt:message key="header.jspf.button.my_orders"/></a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=clientViewInvoices">
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/controller?command=clientViewInvoices">
                                     <fmt:message key="header.jspf.button.my_invoices"/></a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=viewClientPage">
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/controller?command=viewClientPage">
                                     <fmt:message key="header.jspf.button.user_details"/>
                                 </a>
                             </div>
@@ -93,17 +98,18 @@ Header (top area).
                                     aria-haspopup="true" aria-expanded="false">
                                 <c:out value="${user.login}"/></button>
                             <div class="dropdown-menu">
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=adminOrders">
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/controller?command=adminOrders">
                                     <fmt:message key="header.jspf.button.all_orders"/></a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=adminInvoices">
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/controller?command=adminInvoices">
                                     <fmt:message key="header.jspf.button.all_invoices"/></a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=viewAdminPage">
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/controller?command=viewAdminPage">
                                     <fmt:message key="header.jspf.button.user_details"/>
                                 </a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/reports">
-                                    <fmt:message key="header.jspf.button.reports"/>
-                                </a>
-                                <a class="dropdown-item" href="${pageContext.request.contextPath}/controller?command=viewRegNewAdmin">
+                                <a class="dropdown-item"
+                                   href="${pageContext.request.contextPath}/controller?command=viewRegNewAdmin">
                                     <fmt:message key="header.jspf.button.register_new_admin"/>
                                 </a>
                             </div>
@@ -113,7 +119,7 @@ Header (top area).
                 <form action="${pageContext.request.contextPath}/controller" method="post"
                       style="margin-bottom: auto; margin-top: auto">
                     <input type="hidden" name="command" value="logout">
-                    <button type="submit" class="btn btn-danger" >
+                    <button type="submit" class="btn btn-danger">
                         <fmt:message key="header.jspf.button.logout"/>
                     </button>
                 </form>

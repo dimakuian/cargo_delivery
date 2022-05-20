@@ -41,7 +41,16 @@
 
 <%--</div>--%>
 <div class="container-fluid">
-
+    <c:if test="${not empty message}">
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>${message}</strong>
+            <!-- close message -->
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            <c:remove var="message"/>
+        </div>
+    </c:if>
     <div class="row">
         <div class="col-sm-8">
             <form action="/controller" method="get">
@@ -51,7 +60,7 @@
                 <!-- first filter group: from address, to address, status -->
                 <div class="row">
                     <div class="col-sm-4">
-                        <label for="shipping_address">From</label>
+                        <label for="shipping_address"><fmt:message key="client_orders.jsp.text.from"/></label>
                         <select class="form-control-sm" id="shipping_address" name="shipping_address">
                             <option value=""><fmt:message key="admin_orders.jsp.text.choose_address"/></option>
                             <c:forEach var="shippAddr" items="${localities}">
@@ -92,7 +101,7 @@
                         </select>
                     </div>
                     <div class="col-sm-4">
-                        <label for="delivery_address">To</label>
+                        <label for="delivery_address"><fmt:message key="client_orders.jsp.text.to"/></label>
                         <select class="form-control-sm" id="delivery_address" name="delivery_address">
                             <option value=""><fmt:message key="admin_orders.jsp.text.choose_address"/></option>
                             <c:forEach var="delivAddr" items="${localities}">
@@ -260,7 +269,7 @@
         <div class="col-sm-4">
             <div class="row">
                 <!-- sort content -->
-                <div class="col-sm-6">
+                <div class="col-sm-7">
                     <form action="${pageContext.request.contextPath}/controller" method="get">
                         <input type="hidden" name="command" value="adminOrders">
                         <c:if test="${not empty shipping_address}">
@@ -285,8 +294,8 @@
                             <input type="hidden" name="toSum" value="${toSum}">
                         </c:if>
                         <input type="hidden" name="recordPerPage" value="${recordPerPage}">
-                        <label for="sort" style="margin: auto;display: inline-block">
-                            <fmt:message key="admin_orders.jsp.text.status"/>
+                        <label for="sort" style="margin: auto; display: inline-block">
+                            <fmt:message key="admin_orders.jsp.text.sort"/>
                         </label>
                         <select name="sort" id="sort" class="form-control-sm" onchange="this.form.submit();">
                             <option selected disabled>
@@ -335,9 +344,8 @@
                         </select>
                     </form>
                 </div>
-
                 <!-- change number orders in 1 page -->
-                <div class="col-sm-6">
+                <div class="col-sm-5">
                     <form action="${pageContext.request.contextPath}/controller" method="get">
                         <c:if test="${not empty shipping_address}">
                             <input type="hidden" name="shipping_address" value="${shipping_address}">
@@ -455,7 +463,7 @@
                     </c:choose>
                 </th>
                 <!-- order create time -->
-                <td><fmt:formatDate value="${order.creationTime}" type="both"/></td>
+                <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${order.creationTime}"/></td>
                 <!-- consignee -->
                 <th scope="row"><c:out value="${order.consignee}"/></th>
                 <!-- order fare -->

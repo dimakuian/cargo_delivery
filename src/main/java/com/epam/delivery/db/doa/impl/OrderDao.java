@@ -10,6 +10,7 @@ import com.epam.delivery.db.entities.bean.OrderBean;
 import java.sql.*;
 import java.util.*;
 
+import static com.epam.delivery.db.Fields.*;
 import static com.epam.delivery.db.doa.SqlQuery.*;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
@@ -174,8 +175,10 @@ public class OrderDao extends AbstractDao<Order, Long> {
         stat.setLong(14, entity.getStatusID());
         if (entity.getDeliveryDate() != null) {
             stat.setTimestamp(15, entity.getDeliveryDate());
+        } else {
+            stat.setNull(15, 0);
         }
-        stat.setNull(15, 0);
+
     }
 
     public List<OrderBean> findAllOrderBean(int from, int limit, String sort, double fromSum, double toSum) {
@@ -360,34 +363,35 @@ public class OrderDao extends AbstractDao<Order, Long> {
      */
     private static class OrderMapper implements EntityMapper<Order> {
 
+
         @Override
         public Order mapRow(ResultSet rs) {
             try {
                 Order order = Order.createOrder();
                 Order.Builder builder = order.new Builder(order);
-                builder.withID(rs.getLong("id"))
-                        .withCreationTimestamp(rs.getTimestamp("creation_time"))
-                        .withConsignee(rs.getString("consignee"))
-                        .withLength(rs.getDouble("length"))
-                        .withHeight(rs.getDouble("height"))
-                        .withWidth(rs.getDouble("width"))
-                        .withWeight(rs.getDouble("weight"))
-                        .withVolume(rs.getDouble("volume"))
-                        .withDeliveryDate(rs.getTimestamp("delivery_date"))
-                        .withDescription(rs.getString("description"))
-                        .withDistance(rs.getDouble("distance"))
-                        .withFare(rs.getDouble("fare"));
+                builder.withID(rs.getLong(ORDER__ID))
+                        .withCreationTimestamp(rs.getTimestamp(ORDER__CREATION_TIME))
+                        .withConsignee(rs.getString(ORDER__CONSIGNEE))
+                        .withLength(rs.getDouble(ORDER__LENGTH))
+                        .withHeight(rs.getDouble(ORDER__HEIGHT))
+                        .withWidth(rs.getDouble(ORDER__WIDTH))
+                        .withWeight(rs.getDouble(ORDER__WEIGHT))
+                        .withVolume(rs.getDouble(ORDER__VOLUME))
+                        .withDeliveryDate(rs.getTimestamp(ORDER__DELIVERY_DATE))
+                        .withDescription(rs.getString(ORDER__DESCRIPTION))
+                        .withDistance(rs.getDouble(ORDER__DISTANCE))
+                        .withFare(rs.getDouble(ORDER__FARE));
 
-                long clientId = rs.getLong("client_id");
+                long clientId = rs.getLong(ORDER__CLIENT_ID);
                 builder.withClient(clientId);
 
-                long shippingAddressId = rs.getLong("shipping_address");
+                long shippingAddressId = rs.getLong(ORDER__SHIPPING_ADDRESS);
                 builder.withShippingAddress(shippingAddressId);
 
-                long deliveryAddressId = rs.getLong("delivery_address");
+                long deliveryAddressId = rs.getLong(ORDER__DELIVERY_ADDRESS);
                 builder.withDeliveryAddress(deliveryAddressId);
 
-                long statusId = rs.getLong("shipping_status_id");
+                long statusId = rs.getLong(ORDER__SHIPPING_STATUS_ID);
                 builder.withShippingStatus(statusId);
 
                 return builder.build();
@@ -403,37 +407,37 @@ public class OrderDao extends AbstractDao<Order, Long> {
         @Override
         public OrderBean mapRow(ResultSet rs) {
             try {
-                long orderID = rs.getLong(Fields.USER_ORDER_BEAN__ORDER_ID);
-                long shipping_ID = rs.getLong(Fields.USER_ORDER_BEAN__SHIPPING_ID);
-                String shippingAddressUA = rs.getString(Fields.USER_ORDER_BEAN__SHIPPING_ADDRESS_UA);
-                String shippingAddressEN = rs.getString(Fields.USER_ORDER_BEAN__SHIPPING_ADDRESS_EN);
-                long deliveryID = rs.getLong(Fields.USER_ORDER_BEAN__DELIVERY_ID);
-                String deliveryAddressUA = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_ADDRESS_UA);
-                String deliveryAddressEN = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_ADDRESS_EN);
+                long orderID = rs.getLong(USER_ORDER_BEAN__ORDER_ID);
+                long shipping_ID = rs.getLong(USER_ORDER_BEAN__SHIPPING_ID);
+                String shippingAddressUA = rs.getString(USER_ORDER_BEAN__SHIPPING_ADDRESS_UA);
+                String shippingAddressEN = rs.getString(USER_ORDER_BEAN__SHIPPING_ADDRESS_EN);
+                long deliveryID = rs.getLong(USER_ORDER_BEAN__DELIVERY_ID);
+                String deliveryAddressUA = rs.getString(USER_ORDER_BEAN__DELIVERY_ADDRESS_UA);
+                String deliveryAddressEN = rs.getString(USER_ORDER_BEAN__DELIVERY_ADDRESS_EN);
 
-                Timestamp creationTime = rs.getTimestamp(Fields.USER_ORDER_BEAN__DELIVERY_CREATION_TIME);
-                long clientID = rs.getLong(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_ID);
-                String clientName = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_NAME);
-                String clientSurname = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_SURNAME);
-                String clientPatronymic = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_PATRONYMIC);
-                String consignee = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_CONSIGNEE);
-                String description = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_DESCRIPTION);
-                double distance = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_DISTANCE);
-                double length = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_CLIENT_LENGTH);
-                double height = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_HEIGHT);
-                double width = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_WIDTH);
-                double weight = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_WEIGHT);
-                double volume = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_VOLUME);
-                double fare = rs.getDouble(Fields.USER_ORDER_BEAN__DELIVERY_FARE);
+                Timestamp creationTime = rs.getTimestamp(USER_ORDER_BEAN__DELIVERY_CREATION_TIME);
+                long clientID = rs.getLong(USER_ORDER_BEAN__DELIVERY_CLIENT_ID);
+                String clientName = rs.getString(USER_ORDER_BEAN__DELIVERY_CLIENT_NAME);
+                String clientSurname = rs.getString(USER_ORDER_BEAN__DELIVERY_CLIENT_SURNAME);
+                String clientPatronymic = rs.getString(USER_ORDER_BEAN__DELIVERY_CLIENT_PATRONYMIC);
+                String consignee = rs.getString(USER_ORDER_BEAN__DELIVERY_CLIENT_CONSIGNEE);
+                String description = rs.getString(USER_ORDER_BEAN__DELIVERY_CLIENT_DESCRIPTION);
+                double distance = rs.getDouble(USER_ORDER_BEAN__DELIVERY_CLIENT_DISTANCE);
+                double length = rs.getDouble(USER_ORDER_BEAN__DELIVERY_CLIENT_LENGTH);
+                double height = rs.getDouble(USER_ORDER_BEAN__DELIVERY_HEIGHT);
+                double width = rs.getDouble(USER_ORDER_BEAN__DELIVERY_WIDTH);
+                double weight = rs.getDouble(USER_ORDER_BEAN__DELIVERY_WEIGHT);
+                double volume = rs.getDouble(USER_ORDER_BEAN__DELIVERY_VOLUME);
+                double fare = rs.getDouble(USER_ORDER_BEAN__DELIVERY_FARE);
 
-                long statusID = rs.getLong(Fields.USER_ORDER_BEAN__DELIVERY_STATUS_ID);
-                String statusUA = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_STATUS_UA);
-                String statusEN = rs.getString(Fields.USER_ORDER_BEAN__DELIVERY_STATUS_EN);
+                long statusID = rs.getLong(USER_ORDER_BEAN__DELIVERY_STATUS_ID);
+                String statusUA = rs.getString(USER_ORDER_BEAN__DELIVERY_STATUS_UA);
+                String statusEN = rs.getString(USER_ORDER_BEAN__DELIVERY_STATUS_EN);
                 Map<String, String> statusMap = new HashMap<>();
                 statusMap.put("ua", statusUA);
                 statusMap.put("en", statusEN);
 
-                Timestamp deliveryDate = rs.getTimestamp(Fields.USER_ORDER_BEAN__DELIVERY_DELIVERY_DATE);
+                Timestamp deliveryDate = rs.getTimestamp(USER_ORDER_BEAN__DELIVERY_DELIVERY_DATE);
 
                 OrderBean bean = new OrderBean();
 

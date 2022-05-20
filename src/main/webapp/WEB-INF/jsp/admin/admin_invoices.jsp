@@ -338,7 +338,7 @@
                     <jsp:useBean id="invoice" type="com.epam.delivery.db.entities.Invoice"/>
                     <tr>
                         <th scope="row">${invoice.id}</th>
-                        <td><fmt:formatDate value="${invoice.creationDatetime}" type="both"/></td>
+                        <td><fmt:formatDate pattern="yyyy-MM-dd hh:mm:ss" value="${invoice.creationDatetime}"/></td>
                         <td>
                             <form action="${pageContext.request.contextPath}/controller" method="get">
                                 <input type="hidden" name="command" value="adminViewOrder">

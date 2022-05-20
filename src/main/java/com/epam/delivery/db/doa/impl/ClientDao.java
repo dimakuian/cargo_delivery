@@ -9,33 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.epam.delivery.db.Fields.*;
+import static com.epam.delivery.db.doa.SqlQuery.*;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class ClientDao extends AbstractDao<Client,Long> {
+public class ClientDao extends AbstractDao<Client, Long> {
     private static final long serialVersionUID = 5751739494497157799L;
-
-    private static final String INSERT = "INSERT INTO delivery.`client` (id, user_id, name, surname, patronymic, email, phone, " +
-            "balance) VALUES (DEFAULT,?,?,?,?,?,?,?)";
-
-    private static final String UPDATE = "UPDATE delivery.`client` SET user_id=?,name=?,surname=?,patronymic=?,email=?,phone=?," +
-            "balance=? WHERE id=?";
-
-    private static final String SELECT_BY_ID = "SELECT id, user_id, name, surname, patronymic, email, phone, balance "
-            + "FROM delivery.`client` WHERE id=?";
-
-    private static final String SELECT_BY_USER_ID = "SELECT id, user_id, name, surname, patronymic, email, phone, balance "
-            + "FROM delivery.`client` WHERE user_id=?";
-
-    private static final String EXIST = "SELECT id FROM delivery.`client` WHERE id=?";
-
-    private static final String EXIST_EMAIL = "SELECT email FROM delivery.`client` WHERE email=?";
-
-    private static final String EXIST_PHONE = "SELECT phone FROM delivery.`client` WHERE phone=?";
-
-    private static final String SELECT_ALL = "SELECT id, user_id, name, surname, patronymic, email, phone, balance "
-            + "FROM delivery.`client`";
-
-    private static final String DELETE = "DELETE FROM delivery.`client` WHERE id=?";
 
     public ClientDao(ConnectionBuilder builder) {
         super(builder);
@@ -44,7 +23,7 @@ public class ClientDao extends AbstractDao<Client,Long> {
     @Override
     public boolean insert(Client entity) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(INSERT, RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__CLIENT_INSERT, RETURN_GENERATED_KEYS)) {
             stat.setLong(1, entity.getUserID());
             stat.setString(2, entity.getName());
             stat.setString(3, entity.getSurname());
@@ -73,7 +52,7 @@ public class ClientDao extends AbstractDao<Client,Long> {
     @Override
     public boolean update(Client entity) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__CLIENT_UPDATE)) {
             stat.setLong(1, entity.getUserID());
             stat.setString(2, entity.getName());
             stat.setString(3, entity.getSurname());
@@ -96,17 +75,17 @@ public class ClientDao extends AbstractDao<Client,Long> {
     public Optional<Client> findById(Long id) {
         Client client = null;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__CLIENT_SELECT_BY_ID)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
-                    long userID = rs.getLong("user_id");
+                    long userID = rs.getLong(CLIENT__USER_ID);
                     String name = rs.getString("name");
                     String surname = rs.getString("surname");
                     String patronymic = rs.getString("patronymic");
-                    String email = rs.getString("email");
-                    String phone = rs.getString("phone");
-                    double balance = rs.getDouble("balance");
+                    String email = rs.getString(CLIENT__EMAIL);
+                    String phone = rs.getString(CLIENT__PHONE);
+                    double balance = rs.getDouble(CLIENT__BALANCE);
                     client = Client.createClient(userID, name, surname);
                     client.setId(id);
                     client.setPatronymic(patronymic);
@@ -127,7 +106,7 @@ public class ClientDao extends AbstractDao<Client,Long> {
     @Override
     public boolean existsById(Long id) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__CLIENT_EXIST)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) return true;
@@ -146,7 +125,7 @@ public class ClientDao extends AbstractDao<Client,Long> {
         List<Client> clientList = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
-            try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
+            try (ResultSet rs = stat.executeQuery(QL_QUERY__CLIENT_SELECT_ALL)) {
                 while (rs.next()) {
                     ClientMapper mapper = new ClientMapper();
                     Client client = mapper.mapRow(rs);
@@ -165,7 +144,7 @@ public class ClientDao extends AbstractDao<Client,Long> {
     @Override
     public boolean deleteById(Long id) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__CLIENT_DELETE)) {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
@@ -180,7 +159,7 @@ public class ClientDao extends AbstractDao<Client,Long> {
     public Optional<Client> getByUserId(Long userID) {
         Client client = null;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_USER_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__CLIENT_SELECT_BY_USER_ID)) {
             stat.setLong(1, userID);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
@@ -199,7 +178,7 @@ public class ClientDao extends AbstractDao<Client,Long> {
 
     public boolean existsEmail(String email) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(EXIST_EMAIL)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__CLIENT_EXIST_EMAIL)) {
             stat.setString(1, email);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) return true;
@@ -215,7 +194,7 @@ public class ClientDao extends AbstractDao<Client,Long> {
 
     public boolean existsPhone(String tel) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(EXIST_PHONE)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__CLIENT_EXIST_PHONE)) {
             stat.setString(1, tel);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) return true;
@@ -233,17 +212,18 @@ public class ClientDao extends AbstractDao<Client,Long> {
      * Extracts a client from the result set row.
      */
     private static class ClientMapper implements EntityMapper<Client> {
+
         @Override
         public Client mapRow(ResultSet rs) {
             try {
-                long id = rs.getLong("id");
-                long userID = rs.getLong("user_id");
-                String name = rs.getString("name");
-                String surname = rs.getString("surname");
-                String patronymic = rs.getString("patronymic");
-                String email = rs.getString("email");
-                String phone = rs.getString("phone");
-                double balance = rs.getDouble("balance");
+                long id = rs.getLong(CLIENT__ID);
+                long userID = rs.getLong(CLIENT__USER_ID);
+                String name = rs.getString(CLIENT__NAME);
+                String surname = rs.getString(CLIENT__SURNAME);
+                String patronymic = rs.getString(CLIENT__PATRONYMIC);
+                String email = rs.getString(CLIENT__EMAIL);
+                String phone = rs.getString(CLIENT__PHONE);
+                double balance = rs.getDouble(CLIENT__BALANCE);
                 Client client = Client.createClient(userID, name, surname);
                 client.setId(id);
                 client.setPatronymic(patronymic);

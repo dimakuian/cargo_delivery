@@ -9,22 +9,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static com.epam.delivery.db.Fields.*;
+import static com.epam.delivery.db.doa.SqlQuery.*;
 import static java.sql.Statement.RETURN_GENERATED_KEYS;
 
-public class LanguageDao extends AbstractDao <Language,Long> {
+public class LanguageDao extends AbstractDao<Language, Long> {
     private static final long serialVersionUID = 475113985684365786L;
-
-    private static final String INSERT = "INSERT INTO delivery.`language` (id, short_name, full_name) VALUES (DEFAULT,?,?)";
-
-    private static final String UPDATE = "UPDATE delivery.`language` SET short_name = ?, full_name = ? WHERE id = ?";
-
-    private static final String SELECT_BY_ID = "SELECT id, short_name, full_name FROM delivery.`language` WHERE id = ?";
-
-    private static final String EXIST = "SELECT id FROM delivery.`language` WHERE id=?";
-
-    private static final String SELECT_ALL = "SELECT id, short_name, full_name FROM delivery.`language`";
-
-    private static final String DELETE = "DELETE FROM delivery.`language` WHERE id=?";
 
     public LanguageDao(ConnectionBuilder builder) {
         super(builder);
@@ -33,7 +23,7 @@ public class LanguageDao extends AbstractDao <Language,Long> {
     @Override
     public boolean insert(Language entity) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(INSERT, RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__LANGUAGE_INSERT, RETURN_GENERATED_KEYS)) {
             stat.setString(1, entity.getShortName());
             stat.setString(2, entity.getFullName());
             if (stat.executeUpdate() > 0) {
@@ -57,7 +47,7 @@ public class LanguageDao extends AbstractDao <Language,Long> {
     @Override
     public boolean update(Language entity) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(UPDATE)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__LANGUAGE_UPDATE)) {
             stat.setString(1, entity.getShortName());
             stat.setString(2, entity.getFullName());
             stat.setLong(3, entity.getId());
@@ -74,7 +64,7 @@ public class LanguageDao extends AbstractDao <Language,Long> {
     public Optional<Language> findById(Long id) {
         Language language = null;
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(SELECT_BY_ID)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__LANGUAGE_SELECT_BY_ID)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) {
@@ -94,7 +84,7 @@ public class LanguageDao extends AbstractDao <Language,Long> {
     @Override
     public boolean existsById(Long id) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(EXIST)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__LANGUAGE_EXIST)) {
             stat.setLong(1, id);
             try (ResultSet rs = stat.executeQuery()) {
                 if (rs.next()) return true;
@@ -113,7 +103,7 @@ public class LanguageDao extends AbstractDao <Language,Long> {
         List<Language> languageList = new ArrayList<>();
         Connection connection = builder.getConnection();
         try (Statement stat = connection.createStatement()) {
-            try (ResultSet rs = stat.executeQuery(SELECT_ALL)) {
+            try (ResultSet rs = stat.executeQuery(QL_QUERY__LANGUAGE_SELECT_ALL)) {
                 while (rs.next()) {
                     LanguageMapper mapper = new LanguageMapper();
                     Language language = mapper.mapRow(rs);
@@ -132,7 +122,7 @@ public class LanguageDao extends AbstractDao <Language,Long> {
     @Override
     public boolean deleteById(Long id) {
         Connection connection = builder.getConnection();
-        try (PreparedStatement stat = connection.prepareStatement(DELETE)) {
+        try (PreparedStatement stat = connection.prepareStatement(QL_QUERY__LANGUAGE_DELETE)) {
             stat.setLong(1, id);
             if (stat.executeUpdate() > 0) return true;
         } catch (SQLException exception) {
@@ -152,9 +142,9 @@ public class LanguageDao extends AbstractDao <Language,Long> {
         @Override
         public Language mapRow(ResultSet rs) {
             try {
-                long id = rs.getLong("id");
-                String shortName = rs.getString("short_name");
-                String fullName = rs.getString("full_name");
+                long id = rs.getLong(LANGUAGE__ID);
+                String shortName = rs.getString(LANGUAGE__SHORT_NAME);
+                String fullName = rs.getString(LANGUAGE__FULL_NAME);
                 Language language = Language.createLanguage(shortName, fullName);
                 language.setId(id);
                 return language;
