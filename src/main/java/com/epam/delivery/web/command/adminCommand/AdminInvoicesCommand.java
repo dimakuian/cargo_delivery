@@ -1,17 +1,20 @@
-package com.epam.delivery.web.command;
+package com.epam.delivery.web.command.adminCommand;
 
 import com.epam.delivery.Path;
 import com.epam.delivery.db.ConnectionBuilder;
 import com.epam.delivery.db.ConnectionPool;
 import com.epam.delivery.db.doa.impl.InvoiceDao;
 import com.epam.delivery.db.entities.Invoice;
+import com.epam.delivery.service.MessageBuilder;
 import com.epam.delivery.service.StringToTimestampConverter;
+import com.epam.delivery.web.command.Command;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.List;
@@ -51,6 +54,7 @@ public class AdminInvoicesCommand implements Command {
         double fromSum = DEFAULT_FROM_SUM;
         double toSum;
 
+        HttpSession session = request.getSession();
         try {
 
             if (request.getParameter(PARAM_PAGE_NUMBER) != null && !request.getParameter(PARAM_PAGE_NUMBER).isEmpty()) {
@@ -112,7 +116,7 @@ public class AdminInvoicesCommand implements Command {
                 allInvoices = invoiceDao.findAll(sortType, startPosition, recordsPerPage, fromSum, toSum, statusID,
                         startDay, endDay);
 
-                noOfRecords = invoiceDao.getNoOfFilteredInvoices(fromSum, toSum,statusID, startDay, endDay);
+                noOfRecords = invoiceDao.getNoOfFilteredInvoices(fromSum, toSum, statusID, startDay, endDay);
 
             } else if (request.getParameter(PARAM_STATUS_ID) != null && !request.getParameter(PARAM_STATUS_ID).isEmpty()) {
 
@@ -183,11 +187,16 @@ public class AdminInvoicesCommand implements Command {
 
             forward = Path.PAGE__ADMIN_INVOICES;
 
-        } catch (Exception exception) {
-            errorMessage = "can't read all invoices"; // replace
+        } catch (NumberFormatException ex1) {
+            errorMessage = MessageBuilder.getLocaleMessage(session, "error_message_number");
             request.setAttribute("message", errorMessage);
             logger.error("errorMessage --> " + errorMessage);
-            logger.error("Exception --> " + exception);
+            logger.error("Exception --> " + ex1);
+        } catch (Exception ex2) {
+            errorMessage = MessageBuilder.getLocaleMessage(session, "error_message_unknown");
+            request.setAttribute("message", errorMessage);
+            logger.error("errorMessage --> " + errorMessage);
+            logger.error("Exception --> " + ex2);
         }
 
         logger.debug("Command finished");
